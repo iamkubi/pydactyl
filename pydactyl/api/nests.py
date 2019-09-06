@@ -1,5 +1,2 @@
-from pyteroapi import Pydactyl
-
-
-class Nests(Pydactyl):
+class Nests:
     """Class for interacting with the Pterdactyl Nests API."""

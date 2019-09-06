@@ -1,52 +1,68 @@
-from pyteroapi import Pydactyl
+from .api import Client
+from .api import Locations
+from .api import Nests
+from .api import Nodes
+from .api import Servers
+from .api import User
+from .exceptions import ClientConfigError
 
 
-class Client(Pydactyl):
-    """Class for interacting with the Pterdactyl Client API."""
+class PterodactylClient(object):
+    """Provides a simplified interface to the Pterodactyl Panel API.
 
-    def __init__(self):
-        super(Pydactyl).__init__()
+    Instances of this class allow you to interact with the Pterodactyl Panel API.
+    An example
+    """
 
-    def list_servers(self):
-        """List all servers the client has access to."""
-
-    def get_server(self, id):
-        """Get information for the specified server.
-
-        Args:
-            id(str): UUID of a server
-        """
-
-    def get_server_utilization(self, id):
-        """Get resource utilization information for the specified server.
+    def __init__(self, hostname=None, api_key=None):
+        """Initialize a Pterodactyl class instance.
 
         Args:
-            id(str): UUID of a server
+            hostname(str): The base URL of the panel to connect to.
+            api_key(str): Pterodactyl Panel API key.
         """
+        self._hostname = hostname
+        self._api_key = api_key
 
-    def send_console_command(self, id, cmd):
-        """Sends a console command to the specified server.
+        if not hostname:
+            raise ClientConfigError('You must specify the hostname of a Pterodactyl instance.')
 
-        The server must be online, otherwise API will return a HTTP 412 error.
-        If successful, there will be an empty response body.
+        if not api_key:
+            raise ClientConfigError('You must specify a Pterodactyl API key to authenticate.')
 
-        Args:
-            id(str): UUID of a server
-            cmd(str): Console command to send to the server
-        """
+        self._client = None
+        self._locations = None
+        self._nests = None
+        self._nodes = None
+        self._servers = None
+        self._user = None
 
-    def send_power_action(self, id, signal):
-        """Sends a console command to the specified server.
+    @property
+    def client(self):
+        self._client = Client(self._hostname, self._api_key)
+        return self._client
 
-        The server must be online, otherwise API will return a HTTP 412 error.
-        If successful, there will be an empty response body.
+    @property
+    def locations(self):
+        self._locations = Locations(self._hostname, self._api_key)
+        return self._locations
 
-        Args:
-            id(str): UUID of a server
-            signal(str): Power signal to send to the server.  Possible options include:
-                start - Sends the startup command to the server.
-                stop - Sends the stop command to the server.
-                restart - Stops the server then immediately starts it.
-                kill - Instantly ends all processes and marks the server as stopped.
-                       The kill signal can corrupt server files and should only be used as a last resort.
-        """
+    @property
+    def nests(self):
+        self._nests = Nests(self._hostname, self._api_key)
+        return self._nests
+
+    @property
+    def nodes(self):
+        self._nodes = Nodes(self._hostname, self._api_key)
+        return self._nodes
+
+    @property
+    def servers(self):
+        self._servers = Servers(self._hostname, self._api_key)
+        return self._servers
+
+    @property
+    def user(self):
+        self._user = User(self._hostname, self._api_key)
+        return self._user
