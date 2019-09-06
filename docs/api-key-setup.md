@@ -1,0 +1,1 @@
+How to setup a Pterodactyl API key for use with Pydactyl.
