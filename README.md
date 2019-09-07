@@ -1,7 +1,9 @@
 # pydactyl
-======================
 
 [![Latest docs][docs-img]][docs]
+[![Latest version][pypi-img]][pypi]
+[![Latest build][travis-img]][travis]
+[![Coverage][codecov-img]][codecov]
 
 
 An easy to use Python wrapper for the Pterodactyl Panel API.
@@ -23,3 +25,14 @@ srv_id = my_servers.json()['data'][0]['attributes']['identifier']
 srv_utilization = client.client.get_server_utilization(srv_id)
 srv_utilization.json()
 ```
+
+[docs]: https://pydactyl.readthedocs.io/
+[docs-img]: https://readthedocs.org/projects/pydactyl/badge/?version=latest (Latest docs)
+[pulls]: https://github.com/iamkubi/pydactyl/pulls
+[issues]: https://github.com/iamkubi/pydactyl/issues
+[pypi]: https://pypi.python.org/pypi/py-dactyl/
+[pypi-img]: https://img.shields.io/pypi/v/py-dactyl.svg
+[travis]: https://travis-ci.org/iamkubi/pydactyl
+[travis-img]: https://travis-ci.org/iamkubi/pydactyl.svg?branch=master
+[codecov]: https://codecov.io/gh/iamkubi/pydactyl
+[codecov-img]: https://codecov.io/gh/iamkubi/pydactyl/branch/master/graph/badge.svg

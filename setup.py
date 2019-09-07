@@ -7,6 +7,13 @@ with open("README.md", "r") as fh:
 with open("pydactyl/constants.py") as fh:
     VERSION = re.search('__version__ = \'([^\']+)\'', fh.read()).group(1)
 
+# 'setup.py publish' shortcut.
+if sys.argv[-1] == 'publish':
+    os.system('python setup.py sdist bdist_wheel')
+    os.system('twine upload dist/*')
+    sys.exit()
+
+
 setuptools.setup(
     name="py-dactyl",
     version=VERSION,
@@ -25,9 +32,14 @@ setuptools.setup(
     ],
     python_requires='>=3.4',
     install_requires=[
-        "requests >=2.22.0",
+        "requests >=2.21.0",
     ],
     tests_require=[
-
-    ]
+        "pytest >=3",
+        "pytest-cov",
+    ],
+    project_urls={
+        "Documentation": "https://pydactyl.readthedocs.io/",
+        "Source": "https://github.com/iamkubi/pydactyl",
+    }
 )
