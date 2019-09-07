@@ -4,3 +4,8 @@ venv
 # pip stuff
 dist/*
 py_dactyl.egg-info/*
+
+#docs
+docs/_build
+docs/_static
+docs/_templates
