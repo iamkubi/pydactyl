@@ -10,9 +10,9 @@ class LocationsTests(unittest.TestCase):
         self.client = PterodactylClient(url='dummy', api_key='dummy')
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
-    def test_list_locations_called(self, mock):
+    def test_list_locations_called(self, mock_api):
         expected = {
             'endpoint': 'application/locations',
         }
         self.client.locations.list_locations()
-        mock.assert_called_with(**expected)
+        mock_api.assert_called_with(**expected)

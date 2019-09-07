@@ -15,11 +15,11 @@ class ClientTests(unittest.TestCase):
             self.client.client.send_power_action(1, 'BADSIGNAL')
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
-    def test_valid_power_action_valid_request(self, mock):
+    def test_valid_power_action_valid_request(self, mock_api):
         expected = {
             'endpoint': 'client/servers/1/power',
             'mode': 'POST',
             'data': {'signal': 'start'},
         }
         self.client.client.send_power_action(1, 'start')
-        mock.assert_called_with(**expected)
+        mock_api.assert_called_with(**expected)

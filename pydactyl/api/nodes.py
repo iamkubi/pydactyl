@@ -35,9 +35,9 @@ class Nodes(PterodactylAPI):
             disk_overallocate(int): Percentage of disk space that can be overallocated, e.g. 150
             use_ssl(bool): True to enable SSL, false for insecure HTTP
             behind_proxy(bool): Set to True if running behind a proxy like CloudFlare.  Skips certificate check on boot.
-            daemonBase(str): Directory where server files will be stored.
-            daemonSFTP(int): Port used by daemon for SFTP.
-            daemonListen(int): Port used by the daemon.
+            daemon_base(str): Directory where server files will be stored.
+            daemon_sftp(int): Port used by daemon for SFTP.
+            daemon_listen(int): Port used by the daemon.
             public(bool): Set to False to prevent servers from being created on this node.
             maintenance_mode(bool): Set to True to disable the node or something.
         """
