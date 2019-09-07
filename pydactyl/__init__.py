@@ -5,6 +5,5 @@ Pterodactyl is an open source game control panel.  Pydactyl is a Python package 
 to the API.
 """
 
-from .client import PterodactylClient
-
-__version__ = '0.0.1-alpha'
+from .client import PterodactylClient  # noqa
+from .constants import __version__  # noqa

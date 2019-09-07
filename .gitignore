@@ -1,2 +1,6 @@
 venv
 .idea
+
+# pip stuff
+dist/*
+py_dactyl.egg-info/*

@@ -8,7 +8,7 @@ class Client(PterodactylAPI):
 
     def list_servers(self):
         """List all servers the client has access to."""
-        response = self._request_get('client')
+        response = self._api_request('client')
         return response
 
     def get_server(self, server_id):
@@ -17,7 +17,7 @@ class Client(PterodactylAPI):
         Args:
             server_id(str): UUID of a server
         """
-        response = self._request_get('client/servers/%s' % server_id)
+        response = self._api_request('client/servers/%s' % server_id)
         return response
 
     def get_server_utilization(self, server_id):
@@ -26,7 +26,7 @@ class Client(PterodactylAPI):
         Args:
             id(str): UUID of a server
         """
-        response = self._request_get('client/servers/%s/utilization' % server_id)
+        response = self._api_request('client/servers/%s/utilization' % server_id)
         return response
 
     def send_console_command(self, server_id, cmd):
@@ -40,7 +40,7 @@ class Client(PterodactylAPI):
             cmd(str): Console command to send to the server
         """
         data = {'command': cmd}
-        response = self._request_post('client/servers/%s/command' % server_id, data=data)
+        response = self._api_request('client/servers/%s/command' % server_id, mode='POST', data=data)
         return response
 
     def send_power_action(self, server_id, signal):
@@ -62,5 +62,5 @@ class Client(PterodactylAPI):
             raise BadRequestError('Invalid power signal sent(%s), must be one of: %r' % (signal, POWER_SIGNALS))
 
         data = {'signal': signal}
-        response = self._request_post('client/servers/%s/power' % server_id, data=data)
+        response = self._api_request(endpoint='client/servers/%s/power' % server_id, mode='POST', data=data)
         return response

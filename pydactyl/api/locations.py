@@ -7,7 +7,7 @@ class Locations(PterodactylAPI):
 
     def list_locations(self):
         """List all locations."""
-        response = self._request_get('application/locations')
+        response = self._api_request(endpoint='application/locations')
         return response
 
     def get_location_info(self, location_id):
@@ -16,7 +16,7 @@ class Locations(PterodactylAPI):
         Args:
             location_id(int): Pterodactyl Location ID.
         """
-        response = self._request_get('application/locations/%s' % location_id)
+        response = self._api_request(endpoint='application/locations/%s' % location_id)
         return response
 
     def create_location(self, shortcode, description):
@@ -30,7 +30,7 @@ class Locations(PterodactylAPI):
             raise BadRequestError('Must specify both shortcode and description for create_location.')
 
         data = {'shortcode': shortcode, 'description': description}
-        response = self._request_post('application/locations', data=data)
+        response = self._api_request('application/locations', mode='POST', data=data)
         return response
 
     def edit_location(self, location_id, shortcode=None, description=None):
@@ -50,7 +50,7 @@ class Locations(PterodactylAPI):
         if description:
             data['description'] = description
 
-        response = self._request_patch('application/locations/%s' % location_id, data=data)
+        response = self._api_request('application/locations/%s' % location_id, mode='PATCH', data=data)
         return response
 
     def delete_location(self, location_id):
@@ -59,5 +59,5 @@ class Locations(PterodactylAPI):
         Args:
             location_id(int): Pterodactyl Location ID.
         """
-        response = self._request_delete('application/locations/%s' % location_id)
+        response = self._api_request('application/locations/%s' % location_id, mode='DELETE')
         return response

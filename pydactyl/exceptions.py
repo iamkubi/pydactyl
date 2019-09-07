@@ -3,7 +3,7 @@
 
 class PydactylError(Exception):
     """Base error class."""
-
+    pass
 
 class BadRequestError(PydactylError):
     """Raised when a request is passed invalid parameters."""
