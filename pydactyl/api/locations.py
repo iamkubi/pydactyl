@@ -16,7 +16,8 @@ class Locations(PterodactylAPI):
         Args:
             location_id(int): Pterodactyl Location ID.
         """
-        response = self._api_request(endpoint='application/locations/%s' % location_id)
+        response = self._api_request(
+            endpoint='application/locations/%s' % location_id)
         return response
 
     def create_location(self, shortcode, description):
@@ -26,11 +27,9 @@ class Locations(PterodactylAPI):
             shortcode(str): Short identifier between 1 and 60 characters, e.g. us.nyc.lvl3
             description(str): A long description of the location.  Max 255 characters.
         """
-        if not shortcode or not description:
-            raise BadRequestError('Must specify both shortcode and description for create_location.')
-
         data = {'shortcode': shortcode, 'description': description}
-        response = self._api_request('application/locations', mode='POST', data=data)
+        response = self._api_request(endpoint='application/locations',
+                                     mode='POST', data=data)
         return response
 
     def edit_location(self, location_id, shortcode=None, description=None):
@@ -42,7 +41,8 @@ class Locations(PterodactylAPI):
             description(str): A long description of the location.  Max 255 characters.
         """
         if not shortcode and not description:
-            raise BadRequestError('Must specify either shortcode or description for edit_location.')
+            raise BadRequestError(
+                'Must specify either shortcode or description for edit_location.')
 
         data = {}
         if shortcode:
@@ -50,7 +50,9 @@ class Locations(PterodactylAPI):
         if description:
             data['description'] = description
 
-        response = self._api_request('application/locations/%s' % location_id, mode='PATCH', data=data)
+        response = self._api_request(
+            endpoint='application/locations/%s' % location_id, mode='PATCH',
+            data=data)
         return response
 
     def delete_location(self, location_id):
@@ -59,5 +61,6 @@ class Locations(PterodactylAPI):
         Args:
             location_id(int): Pterodactyl Location ID.
         """
-        response = self._api_request('application/locations/%s' % location_id, mode='DELETE')
+        response = self._api_request(
+            endpoint='application/locations/%s' % location_id, mode='DELETE')
         return response

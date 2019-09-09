@@ -1,8 +1,8 @@
 # pydactyl
 
+[![Latest build][travis-img]][travis]
 [![Latest docs][docs-img]][docs]
 [![Latest version][pypi-img]][pypi]
-[![Latest build][travis-img]][travis]
 [![Coverage][codecov-img]][codecov]
 
 
@@ -18,12 +18,12 @@ client = PterodactylClient('https://panel.mydomain.com', 'MySuperSecretApiKey')
 
 # Get a list of all servers the user has access to
 my_servers = client.client.list_servers()
-# Get the unique identifier for the first server
-srv_id = my_servers.json()['data'][0]['attributes']['identifier']
+# Get the unique identifier for the first server.
+srv_id = my_servers['data'][0]['attributes']['identifier']
 
 # Check the utilization of the server
 srv_utilization = client.client.get_server_utilization(srv_id)
-srv_utilization.json()
+print(srv_utilization)
 ```
 
 [docs]: https://pydactyl.readthedocs.io/

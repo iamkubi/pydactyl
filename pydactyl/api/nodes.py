@@ -7,7 +7,7 @@ class Nodes(PterodactylAPI):
 
     def list_nodes(self):
         """List all nodes."""
-        response = self._api_request('application/nodes')
+        response = self._api_request(endpoint='application/nodes')
         return response
 
     def get_node_info(self, node_id):
@@ -16,7 +16,7 @@ class Nodes(PterodactylAPI):
         Args:
             node_id(int): Pterodactyl Node ID.
         """
-        response = self._api_request('application/nodes/%s' % node_id)
+        response = self._api_request(endpoint='application/nodes/%s' % node_id)
         return response
 
     def create_node(self, name, description, location_id, fqdn, memory, disk, memory_overallocate=0,
@@ -46,7 +46,8 @@ class Nodes(PterodactylAPI):
         del data['use_ssl']
         data['scheme'] = USE_SSL[use_ssl]
 
-        response = self._api_request('application/nodes', mode='POST', data=data)
+        response = self._api_request(endpoint='application/nodes',
+                                     mode='POST', data=data)
         return response
 
     def edit_node(self, node_id, shortcode=None, description=None):
@@ -66,7 +67,8 @@ class Nodes(PterodactylAPI):
         if description:
             data['description'] = description
 
-        response = self._api_request('application/nodes/%s' % node_id, mode='PATCH', data=data)
+        response = self._api_request(endpoint='application/nodes/%s' %
+                                              node_id, mode='PATCH', data=data)
         return response
 
     def delete_node(self, node_id):
@@ -75,5 +77,6 @@ class Nodes(PterodactylAPI):
         Args:
             node_id(int): Pterodactyl Node ID.
         """
-        response = self._api_request('application/nodes/%s' % node_id, mode='DELETE')
+        response = self._api_request(endpoint='application/nodes/%s' %
+                                              node_id, mode='DELETE')
         return response
