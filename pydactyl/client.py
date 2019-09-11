@@ -1,10 +1,10 @@
-from .api import Client
-from .api import Locations
-from .api import Nests
-from .api import Nodes
-from .api import Servers
-from .api import User
-from .exceptions import ClientConfigError
+from pydactyl.api import Client
+from pydactyl.api import Locations
+from pydactyl.api import Nests
+from pydactyl.api import Nodes
+from pydactyl.api import Servers
+from pydactyl.api import User
+from pydactyl.exceptions import ClientConfigError
 
 
 class PterodactylClient(object):
@@ -22,10 +22,12 @@ class PterodactylClient(object):
             api_key(str): Pterodactyl Panel API key.
         """
         if not url:
-            raise ClientConfigError('You must specify the hostname of a Pterodactyl instance.')
+            raise ClientConfigError(
+                'You must specify the hostname of a Pterodactyl instance.')
 
         if not api_key:
-            raise ClientConfigError('You must specify a Pterodactyl API key to authenticate.')
+            raise ClientConfigError(
+                'You must specify a Pterodactyl API key to authenticate.')
 
         self._url = url
         self._api_key = api_key
