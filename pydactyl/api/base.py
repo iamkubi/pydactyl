@@ -18,9 +18,12 @@ def parse_response(response, detail):
          detail(bool): Include additional data from the raw response.
     """
     if detail:
-        data = response.get('data')
+        data = response
     else:
-        data = [item.get('attributes') for item in response.get('data')]
+        if response['object'] == 'list':
+            data = [item.get('attributes') for item in response.get('data')]
+        else:
+            data = response.get('attributes')
 
     return data
 

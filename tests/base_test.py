@@ -35,6 +35,28 @@ class ClientTests(unittest.TestCase):
                          base.url_join('https://asdf.com', '/api/',
                                        'other/things'))
 
+    def test_parse_response_with_detail(self):
+        expected = {'object': 'server', 'attributes': {'id': 12}}
+        self.assertEqual(expected, base.parse_response(expected, detail=True))
+
+    def test_parse_response_without_detail(self):
+        expected = {'id': 12}
+        response = {'object': 'server', 'attributes': {'id': 12}}
+        self.assertEqual(expected, base.parse_response(response, detail=False))
+
+    def test_parse_response_list_object_with_detail(self):
+        expected = {'object': 'list',
+                    'data': [{'object': 'server', 'attributes': {'id': 5}},
+                             {'object': 'server', 'attributes': {'id': 6}}]}
+        self.assertEqual(expected, base.parse_response(expected, detail=True))
+
+    def test_parse_response_list_object_without_detail(self):
+        expected = [{'id': 5}, {'id': 6}]
+        response = {'object': 'list',
+                    'data': [{'object': 'server', 'attributes': {'id': 5}},
+                             {'object': 'server', 'attributes': {'id': 6}}]}
+        self.assertEqual(expected, base.parse_response(response, detail=False))
+
     @mock.patch('requests.get')
     def test_valid_api_get_request(self, mock_request):
         expected = {
