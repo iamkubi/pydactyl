@@ -25,7 +25,7 @@ version should be available soon.
 To install the pip version:
 
 ```shell
-pip install py_dactyl
+pip install py-dactyl
 ```
 
 New versions won't be published to pip every day, so until the rate of change
