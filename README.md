@@ -10,10 +10,8 @@ An easy to use Python wrapper for the Pterodactyl Panel API.
 ## State of the project
 
 This wrapper is still very much a work in progress.  Not all APIs are 
-implemented, and the way results are returned will definitely be changing in 
-the near future.  Yes, that hideous way of getting the server identifier will
-be changed to a server object with properties, because that srv_id example is 
-terrible.
+implemented, and the way results are returned may change until the wrapper is
+feature complete.
 
 If you do encounter problems, find APIs that haven't been implemented, or 
 have a feature request please file a [Github issue][issues].
@@ -45,7 +43,7 @@ client = PterodactylClient('https://panel.mydomain.com', 'MySuperSecretApiKey')
 # Get a list of all servers the user has access to
 my_servers = client.client.list_servers()
 # Get the unique identifier for the first server.
-srv_id = my_servers['data'][0]['attributes']['identifier']
+srv_id = my_servers[0]['identifier']
 
 # Check the utilization of the server
 srv_utilization = client.client.get_server_utilization(srv_id)

@@ -4,12 +4,38 @@ from pydactyl.constants import REQUEST_TYPES
 from pydactyl.exceptions import BadRequestError
 
 
+def parse_response(response, detail):
+    """Parse the response data.
+
+    Optionally includes additional data that specifies the object type
+    and requires accessing the data through a nested dictionary.  The
+    Client API doesn't include any additional information, but the
+    Servers API includes created and updated timestamps in the detailed
+    response.
+
+    Args:
+         response(dict): A request response object.
+         detail(bool): Include additional data from the raw response.
+    """
+    if detail:
+        data = response.get('data')
+    else:
+        data = [item.get('attributes') for item in response.get('data')]
+
+    return data
+
+
+def url_join(*args):
+    """Join combine URL parts to get the full endpoint address."""
+    return '/'.join(arg.strip('/') for arg in args)
+
+
 class PterodactylAPI(object):
     """Pterodactyl API client."""
 
     def __init__(self, url, api_key):
         self._api_key = api_key
-        self._url = self._url_join(url, 'api')
+        self._url = url_join(url, 'api')
 
     def _get_headers(self):
         """Headers to use for API calls."""
@@ -20,10 +46,6 @@ class PterodactylAPI(object):
         }
 
         return headers
-
-    def _url_join(self, *args):
-        """Join combine URL parts to get the full endpoint address."""
-        return '/'.join(arg.strip('/') for arg in args)
 
     def _api_request(self, endpoint, mode='GET', params=None, data=None,
                      json=True):
@@ -45,7 +67,7 @@ class PterodactylAPI(object):
         if not endpoint:
             raise BadRequestError('No API endpoint was specified.')
 
-        url = self._url_join(self._url, endpoint)
+        url = url_join(self._url, endpoint)
         headers = self._get_headers()
 
         if mode == 'GET':

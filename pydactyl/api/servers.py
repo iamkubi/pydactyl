@@ -1,21 +1,26 @@
-from pydactyl.api.base import PterodactylAPI
+from pydactyl.api import base
 from pydactyl.exceptions import BadRequestError
 
 
-class Servers(PterodactylAPI):
+class Servers(base.PterodactylAPI):
     """Class for interacting with the Pterdactyl Servers API."""
 
-    def list_servers(self):
-        """List all servers."""
-        response = self._api_request(endpoint='application/servers')
-        return response
+    def list_servers(self, detail=False):
+        """List all servers.
 
-    def get_server_info(self, server_id=None, external_id=None):
+        Args:
+            detail(bool): If True includes created and updated timestamps.
+        """
+        response = self._api_request(endpoint='application/servers')
+        return base.parse_response(response, detail)
+
+    def get_server_info(self, server_id=None, external_id=None, detail=False):
         """Get detailed info for the specified server.
 
         Args:
             server_id(int): Pterodactyl Server ID.
             external_id(int): Server ID from an external system like WHMCS
+            detail(bool): If True includes created and updated timestamps.
         """
         if not server_id and not external_id:
             raise BadRequestError('Must specify either server_id or '
@@ -30,7 +35,7 @@ class Servers(PterodactylAPI):
             endpoint = 'application/servers/external/%s' % external_id
 
         response = self._api_request(endpoint=endpoint)
-        return response
+        return base.parse_response(response, detail)
 
     def suspend_server(self, server_id):
         """Suspend the server with the specified internal ID.
@@ -93,27 +98,31 @@ class Servers(PterodactylAPI):
         response = self._api_request(endpoint=endpoint, mode='DELETE')
         return response
 
-    def list_server_databases(self, server_id):
+    def list_server_databases(self, server_id, detail=False):
         """List the database servers assigned to the specified server ID.
 
         Args:
             server_id(int): Pterodactyl Server ID.
+            detail(bool): If True includes the object type and a nested data
+                    structure.
         """
         response = self._api_request(
             endpoint='application/servers/%s/databases' % server_id)
-        return response
+        return base.parse_response(response, detail)
 
-    def get_server_database_info(self, server_id, database_id):
+    def get_server_database_info(self, server_id, database_id, detail=False):
         """Get information about the specified database on the specified server.
 
         Args:
             server_id(int): Pterodactyl Server ID.
             database_id(int): Database ID for specified server.
+            detail(bool): If True includes the object type and a nested data
+                    structure.
         """
         response = self._api_request(
             endpoint='application/servers/%s/databases/%s' % (server_id,
                                                               database_id))
-        return response
+        return base.parse_response(response, detail)
 
     def create_server_database(self, server_id):
         """Create a database for the specified server.
@@ -153,10 +162,10 @@ class Servers(PterodactylAPI):
             mode='POST')
         return response
 
-    def create_server(self, name, user_id, nest_id, egg_id,
-                      memory_limit, swap_limit, disk_limit,
-                      environment, location_ids, port_range, cpu_limit=0,
-                      io_limit=500, database_limit=0, allocation_limit=0,
+    def create_server(self, name, user_id, nest_id, egg_id, memory_limit,
+                      swap_limit, disk_limit, location_ids, port_range=[],
+                      environment={}, cpu_limit=0, io_limit=500,
+                      database_limit=0, allocation_limit=0,
                       docker_image=None, startup_cmd=None, dedicated_ip=False,
                       start_on_completion=True):
         """Creates one or more servers in the specified locations.
@@ -201,5 +210,60 @@ class Servers(PterodactylAPI):
                     e.g. quay.io/pterodactyl/core:java-glibc
             startup_cmd(str): Startup command, if specified replaces the
                     egg's default value.
+            dedicated_ip(bool): Limit allocations to IPs without any existing
+                    allocations.
+            start_on_completion(bool): Start server after install completes.
         """
-        pass
+        # Fetch the Egg variables which are required to create the server.
+        egg_info = self._api_request(
+            endpoint='application/nests/%s/eggs/%s' % (
+                nest_id, egg_id), params={'include': 'variables'})['attributes']
+        egg_vars = egg_info['relationships']['variables']['data']
+
+        # Build a dict of environment variables.  Prefer values passed in the
+        # environment parameter, otherwise use the default value from the Egg
+        # config.
+        env_with_defaults = {}
+        for var in egg_vars:
+            var_name = var['attributes']['env_variable']
+            if var_name in environment:
+                env_with_defaults = environment[var_name]
+            else:
+                env_with_defaults[var_name] = var['attributes'].get(
+                    'default_value')
+
+        if not docker_image:
+            docker_image = egg_info.get('docker_image')
+        if not startup_cmd:
+            startup_cmd = egg_info.get('startup')
+
+        data = {
+            'name': name,
+            'user': user_id,
+            'nest': nest_id,
+            'egg': egg_id,
+            'docker_image': docker_image,
+            'startup': startup_cmd,
+            'limits': {
+                'memory': memory_limit,
+                'swap': swap_limit,
+                'disk': disk_limit,
+                'io': io_limit,
+                'cpu': cpu_limit,
+            },
+            'feature_limits': {
+                'databases': database_limit,
+                'allocations': allocation_limit,
+            },
+            'environment': env_with_defaults,
+            'deploy': {
+                'locations': location_ids,
+                'dedicated_ip': dedicated_ip,
+                'port_range': port_range,
+            },
+            'start_on_completion': start_on_completion,
+        }
+
+        response = self._api_request(endpoint='application/servers',
+                                     mode='POST', data=data)
+        return response

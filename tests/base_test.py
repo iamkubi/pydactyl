@@ -5,13 +5,14 @@ try:
 except ImportError:
     import mock
 
-from pydactyl.api.base import PterodactylAPI
+from pydactyl.api import base
 
 
 class ClientTests(unittest.TestCase):
 
     def setUp(self):
-        self.api = PterodactylAPI(url='https://dummy.com', api_key='dummy_key')
+        self.api = base.PterodactylAPI(url='https://dummy.com',
+                                       api_key='dummy_key')
 
     def test_init(self):
         self.assertEqual('dummy_key', self.api._api_key)
@@ -26,13 +27,13 @@ class ClientTests(unittest.TestCase):
         self.assertDictEqual(expected, self.api._get_headers())
 
     def test_url_join(self):
-        self.assertEqual('www.test.com/path', self.api._url_join(
+        self.assertEqual('www.test.com/path', base.url_join(
             'www.test.com', 'path'))
         self.assertEqual('test.com/path/to/thing',
-                         self.api._url_join('test.com', 'path', 'to', 'thing'))
+                         base.url_join('test.com', 'path', 'to', 'thing'))
         self.assertEqual('https://asdf.com/api/other/things',
-                         self.api._url_join('https://asdf.com', '/api/',
-                                            'other/things'))
+                         base.url_join('https://asdf.com', '/api/',
+                                       'other/things'))
 
     @mock.patch('requests.get')
     def test_valid_api_get_request(self, mock_request):
