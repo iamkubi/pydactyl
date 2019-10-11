@@ -48,6 +48,9 @@ srv_id = my_servers[0]['identifier']
 # Check the utilization of the server
 srv_utilization = client.client.get_server_utilization(srv_id)
 print(srv_utilization)
+
+# Turn the server on.
+client.client.send_power_action(srv_id, 'start')
 ```
 
 [docs]: https://pydactyl.readthedocs.io/

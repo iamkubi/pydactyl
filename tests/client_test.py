@@ -50,6 +50,7 @@ class ClientTests(unittest.TestCase):
             'endpoint': 'client/servers/1/power',
             'mode': 'POST',
             'data': {'signal': 'start'},
+            'json': False,
         }
         self.client.client.send_power_action(1, 'start')
         mock_api.assert_called_with(**expected)

@@ -79,5 +79,5 @@ class Client(base.PterodactylAPI):
         data = {'signal': signal}
         response = self._api_request(
             endpoint='client/servers/%s/power' % server_id, mode='POST',
-            data=data)
+            data=data, json=False)
         return response
