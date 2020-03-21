@@ -265,5 +265,5 @@ class Servers(base.PterodactylAPI):
         }
 
         response = self._api_request(endpoint='application/servers',
-                                     mode='POST', data=data)
+                                     mode='POST', data=data, json=False)
         return response

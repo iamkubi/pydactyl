@@ -34,6 +34,13 @@ slows down the only way to get the latest version will be from Github.
 
 ## Getting Started
 
+Pterodactyl has two different types of API keys: Client (also known as Account) and Application.  Any user can generate an Account API key to control their own servers.  The Account API key for an Administrator user will be able to access any server's Client API.  The Client API does not contain any destructive functions, so it is relatively safe to experiment with.
+
+Application API keys can only be generated my administrators.  These keys can be used to create, modify, and delete servers, among other things.  They have access to any server on the panel and can be destructive, so use with care.
+
+### Client API
+The Client API or Account API is accessed by users of the Pterodactyl panel.  Below are examples of how you might get information about y our servers.
+
 ```python
 from pydactyl import PterodactylClient
 
@@ -51,6 +58,40 @@ print(srv_utilization)
 
 # Turn the server on.
 client.client.send_power_action(srv_id, 'start')
+```
+
+### Application API
+The Application API is the administrative API of the Ptoerdactyl panel.  Below are examples of how you might use this API.
+
+```python
+from pydactyl import PterdoactylClient
+
+# Create a client to connect to the panel and authenticate with your API key.
+client = PterodactylClient('https://panel.mydomain.com', 'MySuperSecretApiKey')
+
+# Create a server.  Customize the Nest and Egg IDs to match the IDs in your panel.
+# This server is created with a limit of 8000 MB of memory, no access to swap, unlimited disk space, in location_id 1.
+client.servers.create_server(name='My Paper Server', user_id=1, nest_id=1, 
+                             egg_id=3, memory_limit=8000, swap_limit=0, 
+                             disk_limit=0, location_ids=[1])
+<Response [201]>
+```
+
+A 201 response indicates success, however if there is a problem with the
+ request Pydactyl will raise an exception with additional details.  When
+  updating the location_ids field to an invalid location it displays an error: 
+ 
+ ```python
+client.servers.create_server(name='My Paper Server', user_id=1, nest_id=1, 
+                             egg_id=3, memory_limit=8000, swap_limit=0, 
+                             disk_limit=0, location_ids=[199])
+Traceback (most recent call last):
+  File "<input>", line 6, in <module>
+  File "D:\code\pydactyl\pydactyl\api\servers.py", line 268, in create_server
+    mode='POST', data=data, json=False)
+  File "D:\code\pydactyl\pydactyl\api\base.py", line 98, in _api_request
+    'code'], errors['detail'])
+pydactyl.exceptions.PterodactylApiError: Bad API Request(400) - NoViableNodeException - No nodes satisfying the requirements specified for automatic deployment could be found.
 ```
 
 [docs]: https://pydactyl.readthedocs.io/

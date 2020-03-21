@@ -2,6 +2,7 @@ import requests
 
 from pydactyl.constants import REQUEST_TYPES
 from pydactyl.exceptions import BadRequestError
+from pydactyl.exceptions import PterodactylApiError
 
 
 def parse_response(response, detail):
@@ -88,7 +89,16 @@ class PterodactylAPI(object):
                 'Invalid request type specified(%s).  Must be one of %r.' % (
                     mode, REQUEST_TYPES))
 
-        response.raise_for_status()
+        if response.status_code == 400:
+            # It's likely possible for this to contain more than one error.
+            # Will revisit this once additional error cases are tested.
+            errors = response.json()['errors'][0]
+            raise PterodactylApiError(
+                'Bad API Request(%s) - %s - %s' % (errors['status'], errors[
+                    'code'], errors['detail'])
+            )
+        else:
+            response.raise_for_status()
 
         if json:
             return response.json()

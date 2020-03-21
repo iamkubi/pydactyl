@@ -13,3 +13,8 @@ class BadRequestError(PydactylError):
 class ClientConfigError(PydactylError):
     """Raised when a client configuration error exists."""
     pass
+
+
+class PterodactylApiError(PydactylError):
+    """Used to re-raise errors from the Pterodactyl API."""
+    pass
