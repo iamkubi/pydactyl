@@ -123,6 +123,5 @@ class User(PterodactylAPI):
             user_id = response['attributes']['id']
 
         response = self._api_request(
-            endpoint='application/users/%s' % user_id, mode='DELETE',
-            json=False)
+            endpoint='application/users/%s' % user_id, mode='DELETE')
         return base.parse_response(response, detail=detail)
