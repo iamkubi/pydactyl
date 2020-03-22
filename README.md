@@ -9,11 +9,7 @@ An easy to use Python wrapper for the Pterodactyl Panel API.
 
 ## State of the project
 
-This wrapper is still very much a work in progress.  Not all APIs are 
-implemented, and the way results are returned may change until the wrapper is
-feature complete.
-
-If you do encounter problems, find APIs that haven't been implemented, or 
+This wrapper is mostly complete for Pterodactyl 0.7.  If you encounter problems, find APIs that haven't been implemented, or 
 have a feature request please file a [Github issue][issues].
 
 ## Installing
