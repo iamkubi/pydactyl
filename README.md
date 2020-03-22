@@ -94,6 +94,20 @@ Traceback (most recent call last):
 pydactyl.exceptions.PterodactylApiError: Bad API Request(400) - NoViableNodeException - No nodes satisfying the requirements specified for automatic deployment could be found.
 ```
 
+You can use the User class to add, modify, and delete panel users.
+
+```python
+# Create a new user
+result = client.user.create_user('test_user', 'test@gmail.com', 'Test', 'Name')
+# Get the ID of the created user
+user_id = result['attributes']['id']
+# Get the user info, also returned by create_user()
+client.user.get_user_info(user_id)
+{'object': 'user', 'attributes': {'id': 14, 'external_id': None, ....
+# Delete the user
+client.user.delete_user(user_id=14)
+```
+
 [docs]: https://pydactyl.readthedocs.io/
 [docs-img]: https://readthedocs.org/projects/pydactyl/badge/?version=latest (Latest docs)
 [pulls]: https://github.com/iamkubi/pydactyl/pulls

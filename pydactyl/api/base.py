@@ -89,14 +89,13 @@ class PterodactylAPI(object):
                 'Invalid request type specified(%s).  Must be one of %r.' % (
                     mode, REQUEST_TYPES))
 
-        if response.status_code == 400:
-            # It's likely possible for this to contain more than one error.
-            # Will revisit this once additional error cases are tested.
-            errors = response.json()['errors'][0]
+        if response.status_code in (400, 422):
+            try:
+                errors = response.json()['errors']
+            except json.decoder.JSONDecodeError:
+                errors = []
             raise PterodactylApiError(
-                'Bad API Request(%s) - %s - %s' % (errors['status'], errors[
-                    'code'], errors['detail'])
-            )
+                'API Request resulted in errors: %s' % errors)
         else:
             response.raise_for_status()
 
