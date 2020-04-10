@@ -52,7 +52,7 @@ class Client(base.PterodactylAPI):
         data = {'command': cmd}
         response = self._api_request(
             endpoint='client/servers/%s/command' % server_id, mode='POST',
-            data=data)
+            data=data, json=False)
         return response
 
     def send_power_action(self, server_id, signal):
