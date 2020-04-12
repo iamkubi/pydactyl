@@ -40,6 +40,7 @@ class ClientTests(unittest.TestCase):
             'endpoint': 'client/servers/33/command',
             'mode': 'POST',
             'data': {'command': 'say Test Command'},
+            'json': False,
         }
         self.client.client.send_console_command(33, 'say Test Command')
         mock_api.assert_called_with(**expected)
