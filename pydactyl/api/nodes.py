@@ -1,5 +1,6 @@
 from pydactyl.api.base import PterodactylAPI
 from pydactyl.constants import USE_SSL
+from pydactyl.exceptions import BadRequestError
 
 
 class Nodes(PterodactylAPI):
@@ -19,9 +20,12 @@ class Nodes(PterodactylAPI):
         response = self._api_request(endpoint='application/nodes/%s' % node_id)
         return response
 
-    def create_node(self, name, description, location_id, fqdn, memory, disk, memory_overallocate=0,
-                    disk_overallocate=0, use_ssl=True, behind_proxy=False, daemon_base='/srv/daemon-data',
-                    daemon_sftp=2022, daemon_listen=8080, upload_size=100, public=True, maintenance_mode=False):
+    def create_node(self, name, description, location_id, fqdn, memory, disk,
+                    memory_overallocate=0,
+                    disk_overallocate=0, use_ssl=True, behind_proxy=False,
+                    daemon_base='/srv/daemon-data',
+                    daemon_sftp=2022, daemon_listen=8080, upload_size=100,
+                    public=True, maintenance_mode=False):
         """Creates a new node.
 
         Args:
@@ -59,7 +63,8 @@ class Nodes(PterodactylAPI):
             description(str): A long description of the node.  Max 255 characters.
         """
         if not shortcode and not description:
-            raise BadRequestError('Must specify either shortcode or description for edit_node.')
+            raise BadRequestError(
+                'Must specify either shortcode or description for edit_node.')
 
         data = {}
         if shortcode:
@@ -79,4 +84,48 @@ class Nodes(PterodactylAPI):
         """
         response = self._api_request(endpoint='application/nodes/%s' %
                                               node_id, mode='DELETE')
+        return response
+
+    def list_node_allocations(self, node_id):
+        """Retrieves all allocations for a specified node.
+
+        Args:
+            node_id(int): Pterodactyl Node ID.
+        """
+        response = self._api_request(
+            endpoint='application/nodes/%s/allocations' % node_id)
+        return response
+
+    def create_allocations(self, node_id, ip, ports, alias=None):
+        """Create one or more allocations.
+
+        Args:
+            node_id(int): Pterodactyl Node ID.
+            ip(str): The IP address to create the allocation on.
+            ports(iter): List of strings representing strings.  Can use
+                ranges as supported by Pterodactyl, e.g. ["4000", "4003-4005"]
+            alias(str): Optional IP alias.  Used if you want to display a
+                different IP address to Panel users, for example to display the
+                external IP when behind a NAT.
+        """
+        data = {'ip': ip, 'ports': ports}
+        if alias:
+            data['alias'] = alias
+        response = self._api_request(
+            endpoint='application/nodes/%s/allocations' % node_id,
+            mode='POST', data=data)
+        return response
+
+    def delete_allocation(self, node_id, allocation_id):
+        """Deletes the specified allocation on the specified node.
+
+        Args:
+            node_id(int): Pterodactyl Node ID.
+            allocation_id(int): Pterodactyl Allocation ID.  This is the
+                internal ID assigned to the allocation, not the port number.
+        """
+        response = self._api_request(
+            endpoint='application/nodes/%s/allocations/%s' % (node_id,
+                                                              allocation_id),
+            mode='DELETE')
         return response

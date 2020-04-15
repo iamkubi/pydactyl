@@ -62,6 +62,57 @@ class NodesTests(unittest.TestCase):
 
         mock_api.assert_called_with(**expected)
 
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_list_node_allocations(self, mock_api):
+        expected = {
+            'endpoint': 'application/nodes/12/allocations',
+        }
+        self.client.nodes.list_node_allocations(12)
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_create_allocation_single(self, mock_api):
+        expected = {
+            'endpoint': 'application/nodes/13/allocations',
+            'mode': 'POST',
+            'data': {'ip': '10.2.3.4', 'alias': '1.2.3.4', 'ports': ['5000']},
+        }
+        self.client.nodes.create_allocations(13, '10.2.3.4', ['5000'],
+                                             '1.2.3.4')
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_create_allocation_multiple(self, mock_api):
+        expected = {
+            'endpoint': 'application/nodes/14/allocations',
+            'mode': 'POST',
+            'data': {'ip': '10.2.3.4', 'alias': '1.2.3.4', 'ports': ['5000',
+                                                                     '5005']},
+        }
+        self.client.nodes.create_allocations(14, '10.2.3.4', ['5000', '5005'],
+                                             '1.2.3.4')
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_create_allocation_without_alias(self, mock_api):
+        expected = {
+            'endpoint': 'application/nodes/15/allocations',
+            'mode': 'POST',
+            'data': {'ip': '1.2.3.4', 'ports': ['5001']},
+        }
+        self.client.nodes.create_allocations(
+            15, '1.2.3.4', ['5001'])
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_delete_allocation(self, mock_api):
+        expected = {
+            'endpoint': 'application/nodes/16/allocations/123',
+            'mode': 'DELETE',
+        }
+        self.client.nodes.delete_allocation(16, 123)
+        mock_api.assert_called_with(**expected)
+
 
 if __name__ == '__main__':
     unittest.main()
