@@ -1,5 +1,6 @@
-from pydactyl.api import base
+import urllib.parse
 
+from pydactyl.api import base
 from pydactyl.api.base import PterodactylAPI
 from pydactyl.exceptions import BadRequestError
 
@@ -7,13 +8,17 @@ from pydactyl.exceptions import BadRequestError
 class User(PterodactylAPI):
     """Class for interacting with the Pterdactyl Client API."""
 
-    def list_users(self, detail=True):
+    def list_users(self, search=None, detail=True):
         """List all users.
 
         Args:
+            search(str): Filter user list by search term.
             detail(bool): If True includes created and updated timestamps.
         """
-        response = self._api_request(endpoint='application/users')
+        endpoint = 'application/users'
+        if search is not None:
+            endpoint = 'application/users?search=' + urllib.parse.quote(search)
+        response = self._api_request(endpoint=endpoint)
         return base.parse_response(response, detail=detail)
 
     def get_user_info(self, user_id=None, external_id=None, detail=True):
