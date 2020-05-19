@@ -1,6 +1,7 @@
 from pydactyl.api.base import PterodactylAPI
 from pydactyl.constants import USE_SSL
 from pydactyl.exceptions import BadRequestError
+from pydactyl.responses import PaginatedResponse
 
 
 class Nodes(PterodactylAPI):
@@ -91,10 +92,13 @@ class Nodes(PterodactylAPI):
 
         Args:
             node_id(int): Pterodactyl Node ID.
+
+        Returns:
+            obj: Iterable response that fetches pages as required.
         """
-        response = self._api_request(
-            endpoint='application/nodes/%s/allocations' % node_id)
-        return response
+        endpoint = 'application/nodes/%s/allocations' % node_id
+        response = self._api_request(endpoint=endpoint)
+        return PaginatedResponse(self, endpoint, response)
 
     def create_allocations(self, node_id, ip, ports, alias=None):
         """Create one or more allocations.
