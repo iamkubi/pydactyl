@@ -117,7 +117,7 @@ class Nodes(PterodactylAPI):
             data['alias'] = alias
         response = self._api_request(
             endpoint='application/nodes/%s/allocations' % node_id,
-            mode='POST', data=data)
+            mode='POST', data=data, json=False)
         return response
 
     def delete_allocation(self, node_id, allocation_id):
@@ -131,5 +131,5 @@ class Nodes(PterodactylAPI):
         response = self._api_request(
             endpoint='application/nodes/%s/allocations/%s' % (node_id,
                                                               allocation_id),
-            mode='DELETE')
+            mode='DELETE', json=False)
         return response

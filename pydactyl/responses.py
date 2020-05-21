@@ -43,7 +43,7 @@ class PaginatedResponse(object):
             raise StopIteration
 
     def __str__(self):
-        return f"{self.data}"
+        return '%s' % self.data
 
     def get(self, key, default=None):
         """Retrieves a key from the response data.

@@ -76,6 +76,7 @@ class NodesTests(unittest.TestCase):
             'endpoint': 'application/nodes/13/allocations',
             'mode': 'POST',
             'data': {'ip': '10.2.3.4', 'alias': '1.2.3.4', 'ports': ['5000']},
+            'json': False,
         }
         self.client.nodes.create_allocations(13, '10.2.3.4', ['5000'],
                                              '1.2.3.4')
@@ -88,6 +89,7 @@ class NodesTests(unittest.TestCase):
             'mode': 'POST',
             'data': {'ip': '10.2.3.4', 'alias': '1.2.3.4', 'ports': ['5000',
                                                                      '5005']},
+            'json': False,
         }
         self.client.nodes.create_allocations(14, '10.2.3.4', ['5000', '5005'],
                                              '1.2.3.4')
@@ -99,6 +101,7 @@ class NodesTests(unittest.TestCase):
             'endpoint': 'application/nodes/15/allocations',
             'mode': 'POST',
             'data': {'ip': '1.2.3.4', 'ports': ['5001']},
+            'json': False,
         }
         self.client.nodes.create_allocations(
             15, '1.2.3.4', ['5001'])
@@ -109,6 +112,7 @@ class NodesTests(unittest.TestCase):
         expected = {
             'endpoint': 'application/nodes/16/allocations/123',
             'mode': 'DELETE',
+            'json': False,
         }
         self.client.nodes.delete_allocation(16, 123)
         mock_api.assert_called_with(**expected)
