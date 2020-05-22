@@ -1,4 +1,7 @@
-import urllib.parse
+try:
+    from urllib.parse import quote as url_quote
+except ImportError:
+    from urllib import quote as url_quote
 
 from pydactyl.api import base
 from pydactyl.api.base import PterodactylAPI
@@ -16,9 +19,11 @@ class User(PterodactylAPI):
             detail(bool): If True includes created and updated timestamps.
         """
         endpoint = 'application/users'
+        params = {}
         if search is not None:
-            endpoint = 'application/users?search=' + urllib.parse.quote(search)
-        response = self._api_request(endpoint=endpoint)
+            params = {'search': url_quote(search)}
+        response = self._api_request(endpoint='application/users',
+                                     params=params)
         return base.parse_response(response, detail=detail)
 
     def get_user_info(self, user_id=None, external_id=None, detail=True):

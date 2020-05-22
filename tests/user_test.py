@@ -18,8 +18,18 @@ class UserTests(unittest.TestCase):
     def test_list_users(self, mock_api):
         expected = {
             'endpoint': 'application/users',
+            'params': {},
         }
         self.client.user.list_users()
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_list_users_with_search(self, mock_api):
+        expected = {
+            'endpoint': 'application/users',
+            'params': {'search': 'best%40test.com'}
+        }
+        self.client.user.list_users(search='best@test.com')
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
