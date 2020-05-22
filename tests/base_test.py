@@ -5,6 +5,7 @@ try:
 except ImportError:
     import mock
 
+from requests import Session
 from pydactyl.api import base
 
 
@@ -57,7 +58,7 @@ class ClientTests(unittest.TestCase):
                              {'object': 'server', 'attributes': {'id': 6}}]}
         self.assertEqual(expected, base.parse_response(response, detail=False))
 
-    @mock.patch('requests.get')
+    @mock.patch.object(Session, 'get')
     def test_valid_api_get_request(self, mock_request):
         expected = {
             'params': None,
@@ -67,7 +68,7 @@ class ClientTests(unittest.TestCase):
         mock_request.assert_called_with('https://dummy.com/api/nomorecoffee',
                                         **expected)
 
-    @mock.patch('requests.post')
+    @mock.patch.object(Session, 'post')
     def test_valid_api_post_request(self, mock_request):
         data = {'test': 'data'}
         expected = {
@@ -78,7 +79,7 @@ class ClientTests(unittest.TestCase):
         mock_request.assert_called_with('https://dummy.com/api/foo', json=data,
                                         **expected)
 
-    @mock.patch('requests.patch')
+    @mock.patch.object(Session, 'patch')
     def test_valid_api_patch_request(self, mock_request):
         data = {'patch': 'me'}
         expected = {
@@ -89,7 +90,7 @@ class ClientTests(unittest.TestCase):
         mock_request.assert_called_with('https://dummy.com/api/bar', json=data,
                                         **expected)
 
-    @mock.patch('requests.delete')
+    @mock.patch.object(Session, 'delete')
     def test_valid_api_delete_request(self, mock_request):
         expected = {
             'params': None,

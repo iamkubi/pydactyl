@@ -10,8 +10,7 @@ from pydactyl.exceptions import ClientConfigError
 class PterodactylClient(object):
     """Provides a simplified interface to the Pterodactyl Panel API.
 
-    Instances of this class allow you to interact with the Pterodactyl Panel API.
-    An example
+    Instances of this class allow interaction with the Pterodactyl Panel API.
     """
 
     def __init__(self, url=None, api_key=None):

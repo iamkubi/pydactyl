@@ -6,7 +6,7 @@ class PaginatedResponse(object):
 
     def __init__(self, client, endpoint, data):
         self._client = client
-        self._initial_data = data
+        self._initial_data = data['data']
         self.data = data
         self.endpoint = endpoint
         self.meta = data['meta']
@@ -36,7 +36,7 @@ class PaginatedResponse(object):
             params = {'page': self._iteration}
             response = self._client._api_request(endpoint=self.endpoint,
                                                  params=params)
-            self.data = response['data'][0]
+            self.data = response['data']
             self.meta = response['meta']
             return self
         else:

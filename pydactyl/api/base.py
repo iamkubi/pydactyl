@@ -40,6 +40,7 @@ class PterodactylAPI(object):
     def __init__(self, url, api_key):
         self._api_key = api_key
         self._url = url_join(url, 'api')
+        self._session = requests.Session()
 
     def _get_headers(self):
         """Headers to use for API calls."""
@@ -75,15 +76,15 @@ class PterodactylAPI(object):
         headers = self._get_headers()
 
         if mode == 'GET':
-            response = requests.get(url, params=params, headers=headers)
+            response = self._session.get(url, params=params, headers=headers)
         elif mode == 'POST':
-            response = requests.post(url, params=params, headers=headers,
-                                     json=data)
+            response = self._session.post(url, params=params, headers=headers,
+                                          json=data)
         elif mode == 'PATCH':
-            response = requests.patch(url, params=params, headers=headers,
-                                      json=data)
+            response = self._session.patch(url, params=params, headers=headers,
+                                           json=data)
         elif mode == 'DELETE':
-            response = requests.delete(url, params=params, headers=headers)
+            response = self._session.delete(url, params=params, headers=headers)
         else:
             raise BadRequestError(
                 'Invalid request type specified(%s).  Must be one of %r.' % (
