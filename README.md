@@ -9,24 +9,20 @@ An easy to use Python wrapper for the Pterodactyl Panel API.
 
 ## State of the project
 
-This wrapper is mostly complete for Pterodactyl 0.7.  If you encounter problems, find APIs that haven't been implemented, or 
-have a feature request please file a [Github issue][issues].
+This wrapper is mostly complete for Pterodactyl 0.7.  It will be updated to
+work with the 1.0 release, and it's likely that 0.7 support will be dropped
+at that time.  Older versions that support 0.7 will remain available.
+  
+If you encounter problems, find APIs that haven't been implemented, or have a
+feature request please file a [Github issue][issues].
 
 ## Installing
 
-An early version of the package can be found on pip, however it won't be 
-updated until the interface is more solidified.  A more feature complete 
-version should be available soon.
-
-To install the pip version:
+To install with pip:
 
 ```shell
 pip install py-dactyl
 ```
-
-New versions won't be published to pip every day, so until the rate of change
-slows down the only way to get the latest version will be from Github.
-
 
 ## Getting Started
 
