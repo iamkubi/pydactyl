@@ -100,6 +100,23 @@ client.user.get_user_info(user_id)
 client.user.delete_user(user_id=14)
 ```
 
+### Paginated Responses
+Pydactyl API responses return a PaginatedResponse object that can be iterated
+over to automatically fetch additional pages as required.  It is currently
+ only used by get_node_allocations(), however in time all Pydactyl methods
+ will return this response.
+
+```python
+# Create a list of all ports
+allocs = client.nodes.list_node_allocations(node_id)
+ports = []
+for page in allocs:
+    for item in page.data:
+        ports.append(item['attributes']['port'])
+len(ports)
+151
+```
+
 [docs]: https://pydactyl.readthedocs.io/
 [docs-img]: https://readthedocs.org/projects/pydactyl/badge/?version=latest (Latest docs)
 [pulls]: https://github.com/iamkubi/pydactyl/pulls

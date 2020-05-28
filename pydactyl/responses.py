@@ -12,7 +12,9 @@ class PaginatedResponse(object):
         self.meta = data['meta']
 
     def __getitem__(self, item):
-        return self.data.get(item, None)
+        if hasattr(self, item):
+            return getattr(self, item, None)
+        raise KeyError(item)
 
     def __iter__(self):
         self._iteration = 0
@@ -51,7 +53,7 @@ class PaginatedResponse(object):
         Returns:
             Value for the specified key
         """
-        return self.data.get(key, default)
+        return getattr(self, key, None)
 
     def get_next_page_link(self):
         """Get a link to the next page.
