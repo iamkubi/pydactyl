@@ -53,7 +53,7 @@ class PaginatedResponse(object):
         Returns:
             Value for the specified key
         """
-        return getattr(self, key, None)
+        return getattr(self, key, default)
 
     def get_next_page_link(self):
         """Get a link to the next page.

@@ -27,7 +27,7 @@ class UserTests(unittest.TestCase):
     def test_list_users_with_search(self, mock_api):
         expected = {
             'endpoint': 'application/users',
-            'params': {'search': 'best%40test.com'}
+            'params': {'search': 'best@test.com'}
         }
         self.client.user.list_users(search='best@test.com')
         mock_api.assert_called_with(**expected)

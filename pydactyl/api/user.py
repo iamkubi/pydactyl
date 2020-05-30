@@ -1,8 +1,3 @@
-try:
-    from urllib.parse import quote as url_quote
-except ImportError:
-    from urllib import quote as url_quote
-
 from pydactyl.api import base
 from pydactyl.api.base import PterodactylAPI
 from pydactyl.exceptions import BadRequestError
@@ -18,10 +13,9 @@ class User(PterodactylAPI):
             search(str): Filter user list by search term.
             detail(bool): If True includes created and updated timestamps.
         """
-        endpoint = 'application/users'
         params = {}
         if search is not None:
-            params = {'search': url_quote(search)}
+            params = {'search': search}
         response = self._api_request(endpoint='application/users',
                                      params=params)
         return base.parse_response(response, detail=detail)
