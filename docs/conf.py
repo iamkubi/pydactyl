@@ -11,6 +11,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.abspath('..'))
@@ -23,7 +24,10 @@ copyright = '2019, Ryan Kubiak'
 author = 'Ryan Kubiak'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.1a0'
+with open("../pydactyl/constants.py") as fh:
+    VERSION = re.search('__version__ = \'([^\']+)\'', fh.read()).group(1)
+
+release = VERSION
 
 # -- General configuration ---------------------------------------------------
 
@@ -31,6 +35,9 @@ release = '0.0.1a0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.napoleon",
     "sphinx_rtd_theme",
 ]
 
