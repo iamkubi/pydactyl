@@ -167,7 +167,7 @@ class Servers(base.PterodactylAPI):
                       environment={}, cpu_limit=0, io_limit=500,
                       database_limit=0, allocation_limit=0,
                       docker_image=None, startup_cmd=None, dedicated_ip=False,
-                      start_on_completion=True):
+                      start_on_completion=True, oom_disabled=True):
         """Creates one or more servers in the specified locations.
 
         Creates server instance(s) and begins the install process using the
@@ -213,6 +213,7 @@ class Servers(base.PterodactylAPI):
             dedicated_ip(bool): Limit allocations to IPs without any existing
                     allocations.
             start_on_completion(bool): Start server after install completes.
+            oom_disabled(bool): Disables OOM-killer on the Docker container.
         """
         # Fetch the Egg variables which are required to create the server.
         egg_info = self._api_request(
@@ -244,6 +245,7 @@ class Servers(base.PterodactylAPI):
             'egg': egg_id,
             'docker_image': docker_image,
             'startup': startup_cmd,
+            'oom_disabled': oom_disabled,
             'limits': {
                 'memory': memory_limit,
                 'swap': swap_limit,
