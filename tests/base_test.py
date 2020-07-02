@@ -9,7 +9,7 @@ from requests import Session
 from pydactyl.api import base
 
 
-class ClientTests(unittest.TestCase):
+class BaseTests(unittest.TestCase):
 
     def setUp(self):
         self.api = base.PterodactylAPI(url='https://dummy.com',

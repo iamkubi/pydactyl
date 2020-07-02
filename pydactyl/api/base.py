@@ -53,7 +53,7 @@ class PterodactylAPI(object):
         return headers
 
     def _api_request(self, endpoint, mode='GET', params=None, data=None,
-                     json=True):
+                     return_json=None):
         """Make a request to the Pterodactyl API.
 
         Args:
@@ -62,8 +62,9 @@ class PterodactylAPI(object):
             params(dict): Extra parameters to pass to the endpoint,
                     e.g. a query string
             data(dict): POST data
-            json(bool): Set to False to return the response object, True for
-                    just JSON
+            return_json(bool): Set to False to return the response object,
+                    True for just JSON.  Defaults to returning JSON if possible
+                    otherwise the response object.
 
         Returns:
             response: A HTTP response object or the JSON response depending on
@@ -90,17 +91,20 @@ class PterodactylAPI(object):
                 'Invalid request type specified(%s).  Must be one of %r.' % (
                     mode, REQUEST_TYPES))
 
+        try:
+            response_json = response.json()
+        except ValueError:
+            response_json = {}
+
         if response.status_code in (400, 422):
-            try:
-                errors = response.json()['errors']
-            except json.decoder.JSONDecodeError:
-                errors = []
-            raise PterodactylApiError(
-                'API Request resulted in errors: %s' % errors)
+            raise PterodactylApiError('API Request resulted in errors: %s' %
+                                      response_json.get('errors'))
         else:
             response.raise_for_status()
 
-        if json:
-            return response.json()
-        else:
+        if return_json is True:
+            return response_json
+        elif return_json is False:
             return response
+        else:
+            return response_json or response
