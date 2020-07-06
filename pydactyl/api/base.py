@@ -53,7 +53,7 @@ class PterodactylAPI(object):
         return headers
 
     def _api_request(self, endpoint, mode='GET', params=None, data=None,
-                     return_json=None):
+                     json=None):
         """Make a request to the Pterodactyl API.
 
         Args:
@@ -62,7 +62,7 @@ class PterodactylAPI(object):
             params(dict): Extra parameters to pass to the endpoint,
                     e.g. a query string
             data(dict): POST data
-            return_json(bool): Set to False to return the response object,
+            json(bool): Set to False to return the response object,
                     True for just JSON.  Defaults to returning JSON if possible
                     otherwise the response object.
 
@@ -102,9 +102,9 @@ class PterodactylAPI(object):
         else:
             response.raise_for_status()
 
-        if return_json is True:
+        if json is True:
             return response_json
-        elif return_json is False:
+        elif json is False:
             return response
         else:
             return response_json or response
