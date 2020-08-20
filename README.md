@@ -31,7 +31,7 @@ Pterodactyl has two different types of API keys: Client (also known as Account) 
 Application API keys can only be generated my administrators.  These keys can be used to create, modify, and delete servers, among other things.  They have access to any server on the panel and can be destructive, so use with care.
 
 ### Client API
-The Client API or Account API is accessed by users of the Pterodactyl panel.  Below are examples of how you might get information about y our servers.
+The Client API or Account API is accessed by users of the Pterodactyl panel.  Below are examples of how you might get information about your servers.
 
 ```python
 from pydactyl import PterodactylClient
@@ -53,7 +53,8 @@ client.client.send_power_action(srv_id, 'start')
 ```
 
 ### Application API
-The Application API is the administrative API of the Ptoerdactyl panel.  Below are examples of how you might use this API.
+The Application API is the administrative API of the Pterodactyl panel.
+Below are examples of how you might use this API.
 
 ```python
 from pydactyl import PterdoactylClient

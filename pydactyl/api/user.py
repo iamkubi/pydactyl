@@ -1,7 +1,7 @@
 from pydactyl.api import base
 from pydactyl.api.base import PterodactylAPI
 from pydactyl.exceptions import BadRequestError
-
+from pydactyl.responses import PaginatedResponse
 
 class User(PterodactylAPI):
     """Class for interacting with the Pterdactyl Client API."""
@@ -18,7 +18,7 @@ class User(PterodactylAPI):
             params = {'search': search}
         response = self._api_request(endpoint='application/users',
                                      params=params)
-        return base.parse_response(response, detail=detail)
+        return PaginatedResponse(self, 'application/users', response)
 
     def get_user_info(self, user_id=None, external_id=None, detail=True):
         """List detailed user information for specified user_id.

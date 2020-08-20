@@ -163,11 +163,12 @@ class Servers(base.PterodactylAPI):
         return response
 
     def create_server(self, name, user_id, nest_id, egg_id, memory_limit,
-                      swap_limit, disk_limit, location_ids, port_range=[],
+                      swap_limit, disk_limit, location_ids=[], port_range=[],
                       environment={}, cpu_limit=0, io_limit=500,
                       database_limit=0, allocation_limit=0,
                       docker_image=None, startup_cmd=None, dedicated_ip=False,
-                      start_on_completion=True, oom_disabled=True):
+                      start_on_completion=True, oom_disabled=True,
+                      default_allocation=None, additional_allocations=None):
         """Creates one or more servers in the specified locations.
 
         Creates server instance(s) and begins the install process using the
@@ -214,6 +215,11 @@ class Servers(base.PterodactylAPI):
                     allocations.
             start_on_completion(bool): Start server after install completes.
             oom_disabled(bool): Disables OOM-killer on the Docker container.
+            default_allocation(int): Specify allocation(s) instead of using the
+                    Pterodactyl deployment service.  Uses the allocation's
+                    internal ID and not the port number.
+            additional_allocations(iter): Additional allocations on top of
+                    default_allocation.
         """
         # Fetch the Egg variables which are required to create the server.
         egg_info = self._api_request(
@@ -258,14 +264,129 @@ class Servers(base.PterodactylAPI):
                 'allocations': allocation_limit,
             },
             'environment': env_with_defaults,
-            'deploy': {
-                'locations': location_ids,
-                'dedicated_ip': dedicated_ip,
-                'port_range': port_range,
-            },
             'start_on_completion': start_on_completion,
         }
+
+        if default_allocation is not None:
+            data['allocation'] = {'default': default_allocation,
+                                  'additional': additional_allocations}
+        elif location_ids:
+            data['deploy'] = {'locations': location_ids,
+                              'dedicated_ip': dedicated_ip,
+                              'port_range': port_range}
+        else:
+            raise BadRequestError('Must specify either default_allocation or '
+                                  'location_ids')
 
         response = self._api_request(endpoint='application/servers',
                                      mode='POST', data=data, json=False)
         return response
+
+    def update_server_build(self, server_id, allocation_id, memory_limit=None,
+                            swap_limit=None, disk_limit=None, cpu_limit=None,
+                            io_limit=None, database_limit=None,
+                            allocation_limit=None, add_allocations=None,
+                            remove_allocations=None, oom_disabled=None):
+        """Updates the build configuration for an existing server.
+
+        Modifies an existing server identified by allocation_id and updates
+        any parameters that are passed.
+
+        *** WARNING ***
+        This endpoint has a lot of requirements and it doesn't always surface
+        helpful errors.  Sometimes they're in the panel logs.  I plan to
+        automate some of the painful parts so you can specify only the fields
+        you want to update, however currently you must satisfy the API's
+        requirements by passing in everything.
+
+        Example of a working set of parameters:
+            update_server_build(server_id=12, allocation_id=1964,
+                    memory_limit=8001, swap_limit=0, disk_limit=30000,
+                    cpu_limit=200, io_limit=500, database_limit=0,
+                    allocation_limit=0, oom_disabled=True)
+
+        Args:
+            server_id(int): Internal server ID, e.g. 12
+            allocation_id(int): Base allocation of the server to modify.
+            memory_limit(int): Memory limit in MB for the Docker container.  To
+                    allow unlimited memory limit set to 0.
+            swap_limit(int): Swap limit in MB for the Docker container.  To not
+                    assign any swap set to 0.  For unlimited swap set to -1.
+            disk_limit(int): Disk limit in MB for the Docker container.  To
+                    allow unlimited disk space set to 0.
+            cpu_limit(int): CPU limit for the Docker container.  To allow
+                    unlimited CPU usage set to 0.  To limit to one core set
+                    to 100.  For four cores set to 400.
+            io_limit(int): Block IO weight for the Docker container.
+                    Must be between 10 and 1000.
+            database_limit(int): Maximum number of databases that can be
+                    assigned to this server.
+            allocation_limit(int): Maximum number of allocations that can be
+                    assigned to this server.
+            add_allocations(iter): List of allocation IDs to add to the server.
+            remove_allocations(iter): List of allocation IDs to remove from
+                    the server.
+            oom_disabled(bool): Disables OOM-killer on the Docker container.
+        """
+        data = {
+            'allocation': allocation_id,
+            'limits': {},
+            'feature_limits': {},
+        }
+
+        if memory_limit is not None:
+            data['limits']['memory'] = memory_limit
+        if swap_limit is not None:
+            data['limits']['swap'] = swap_limit
+        if disk_limit is not None:
+            data['limits']['disk'] = disk_limit
+        if cpu_limit is not None:
+            data['limits']['cpu'] = cpu_limit
+        if io_limit is not None:
+            data['limits']['io'] = io_limit
+        if database_limit is not None:
+            data['feature_limits']['databases'] = database_limit
+        if allocation_limit is not None:
+            data['feature_limits']['allocations'] = allocation_limit
+        if add_allocations is not None:
+            data['add_allocations'] = add_allocations
+        if remove_allocations is not None:
+            data['remove_allocations'] = remove_allocations
+        if oom_disabled is not None:
+            data['oom_disabled'] = oom_disabled
+
+        response = self._api_request(
+            endpoint='application/servers/%s/build' % server_id,
+            mode='PATCH', data=data, json=False)
+        return response
+
+    def update_server_startup(self, server_id, nest_id=None, egg_id=None,
+                              pack_id=None, environment=None, docker_image=None,
+                              startup_cmd=None, skip_scripts=None):
+        """Updates the startup config for the specified server.
+
+        Modifies the startup config of an existing server replacing any
+        specified values.  Unspecified values will not be changed.
+
+        Args:
+            nest_id(int): Nest ID to update on the server.
+            egg_id(int): Egg ID to update on the server.
+            pack_id(int): Pack ID to update on the server.
+            environment(dict): Key value pairs of Service Variables to set.
+                    Every variable from the egg must be set or the API will
+                    return an error.  Any keys specified will be overwritten
+                    in the existing environment list.  Unspecified keys will
+                    not be modified.
+            docker_image(str): Name or URL of the Docker server to use.
+                    e.g. quay.io/pterodactyl/core:java-glibc
+            startup_cmd(str): Startup command, if specified replaces the
+                    egg's default value.
+            skip_scripts(bool): True to skip egg scripts.
+        """
+        # TODO: Implement this
+
+        # response = self._api_request(
+        #    endpoint='application/servers/%s/build' % server_id,
+        #    mode='PATCH', data=data, json=False)
+        # return response
+        return 'Not Implemented'
