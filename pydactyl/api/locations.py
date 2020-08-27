@@ -1,5 +1,6 @@
 from pydactyl.api.base import PterodactylAPI
 from pydactyl.exceptions import BadRequestError
+from pydactyl.responses import PaginatedResponse
 
 
 class Locations(PterodactylAPI):
@@ -7,8 +8,9 @@ class Locations(PterodactylAPI):
 
     def list_locations(self):
         """List all locations."""
-        response = self._api_request(endpoint='application/locations')
-        return response
+        endpoint = 'application/locations'
+        response = self._api_request(endpoint=endpoint)
+        return PaginatedResponse(self, endpoint, response)
 
     def get_location_info(self, location_id):
         """Get detailed info for the specified location.

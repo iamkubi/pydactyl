@@ -1,18 +1,16 @@
 from pydactyl.api import base
 from pydactyl.exceptions import BadRequestError
+from pydactyl.responses import PaginatedResponse
 
 
 class Servers(base.PterodactylAPI):
     """Class for interacting with the Pterdactyl Servers API."""
 
-    def list_servers(self, detail=False):
-        """List all servers.
-
-        Args:
-            detail(bool): If True includes created and updated timestamps.
-        """
-        response = self._api_request(endpoint='application/servers')
-        return base.parse_response(response, detail)
+    def list_servers(self):
+        """List all servers."""
+        endpoint = 'application/servers'
+        response = self._api_request(endpoint=endpoint)
+        return PaginatedResponse(self, endpoint, response)
 
     def get_server_info(self, server_id=None, external_id=None, detail=False):
         """Get detailed info for the specified server.
@@ -98,17 +96,15 @@ class Servers(base.PterodactylAPI):
         response = self._api_request(endpoint=endpoint, mode='DELETE')
         return response
 
-    def list_server_databases(self, server_id, detail=False):
+    def list_server_databases(self, server_id):
         """List the database servers assigned to the specified server ID.
 
         Args:
             server_id(int): Pterodactyl Server ID.
-            detail(bool): If True includes the object type and a nested data
-                    structure.
         """
-        response = self._api_request(
-            endpoint='application/servers/%s/databases' % server_id)
-        return base.parse_response(response, detail)
+        endpoint = 'application/servers/%s/databases' % server_id
+        response = self._api_request(endpoint=endpoint)
+        return PaginatedResponse(self, endpoint, response)
 
     def get_server_database_info(self, server_id, database_id, detail=False):
         """Get information about the specified database on the specified server.

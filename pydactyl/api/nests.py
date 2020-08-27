@@ -1,4 +1,5 @@
 from pydactyl.api.base import PterodactylAPI
+from pydactyl.responses import PaginatedResponse
 
 
 class Nests(PterodactylAPI):
@@ -6,8 +7,9 @@ class Nests(PterodactylAPI):
 
     def list_nests(self):
         """List all nests."""
-        response = self._api_request(endpoint='application/nests')
-        return response
+        endpoint = 'application/nests'
+        response = self._api_request(endpoint=endpoint)
+        return PaginatedResponse(self, endpoint, response)
 
     def get_nest_info(self, nest_id):
         """Get detailed info for the specified nest.

@@ -9,8 +9,9 @@ class Nodes(PterodactylAPI):
 
     def list_nodes(self):
         """List all nodes."""
-        response = self._api_request(endpoint='application/nodes')
-        return response
+        endpoint = 'application/nodes'
+        response = self._api_request(endpoint=endpoint)
+        return PaginatedResponse(self, endpoint, response)
 
     def get_node_info(self, node_id):
         """Get detailed info for the specified node.

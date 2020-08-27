@@ -3,22 +3,22 @@ from pydactyl.api.base import PterodactylAPI
 from pydactyl.exceptions import BadRequestError
 from pydactyl.responses import PaginatedResponse
 
+
 class User(PterodactylAPI):
     """Class for interacting with the Pterdactyl Client API."""
 
-    def list_users(self, search=None, detail=True):
+    def list_users(self, search=None):
         """List all users.
 
         Args:
             search(str): Filter user list by search term.
-            detail(bool): If True includes created and updated timestamps.
         """
         params = {}
         if search is not None:
             params = {'search': search}
-        response = self._api_request(endpoint='application/users',
-                                     params=params)
-        return PaginatedResponse(self, 'application/users', response)
+        endpoint = 'application/users'
+        response = self._api_request(endpoint=endpoint, params=params)
+        return PaginatedResponse(self, endpoint, response)
 
     def get_user_info(self, user_id=None, external_id=None, detail=True):
         """List detailed user information for specified user_id.

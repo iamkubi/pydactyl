@@ -1,20 +1,17 @@
 from pydactyl.api import base
 from pydactyl.constants import POWER_SIGNALS
 from pydactyl.exceptions import BadRequestError
+from pydactyl.responses import PaginatedResponse
 
 
 class Client(base.PterodactylAPI):
     """Class for interacting with the Pterdactyl Client API."""
 
-    def list_servers(self, detail=False):
-        """List all servers the client has access to.
-
-        Args:
-            detail(bool): If True includes the object type and a nested data
-                    structure.  This is not particularly useful.
-        """
-        response = self._api_request(endpoint='client')
-        return base.parse_response(response, detail)
+    def list_servers(self):
+        """List all servers the client has access to."""
+        endpoint = 'client'
+        response = self._api_request(endpoint=endpoint)
+        return PaginatedResponse(self, endpoint, response)
 
     def get_server(self, server_id, detail=False):
         """Get information for the specified server.
