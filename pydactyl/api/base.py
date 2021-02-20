@@ -86,6 +86,9 @@ class PterodactylAPI(object):
                                            json=data)
         elif mode == 'DELETE':
             response = self._session.delete(url, params=params, headers=headers)
+        elif mode == 'PUT':
+            response = self._session.put(url, params=params, headers=headers,
+                                         json=data)
         else:
             raise BadRequestError(
                 'Invalid request type specified(%s).  Must be one of %r.' % (

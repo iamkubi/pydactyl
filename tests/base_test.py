@@ -85,10 +85,10 @@ class BaseTests(unittest.TestCase):
         expected = {
             'params': None,
             'headers': self.api._get_headers(),
+            'json': data,
         }
         self.api._api_request(endpoint='bar', mode='PATCH', data=data)
-        mock_request.assert_called_with('https://dummy.com/api/bar', json=data,
-                                        **expected)
+        mock_request.assert_called_with('https://dummy.com/api/bar', **expected)
 
     @mock.patch.object(Session, 'delete')
     def test_valid_api_delete_request(self, mock_request):
@@ -98,4 +98,16 @@ class BaseTests(unittest.TestCase):
         }
         self.api._api_request(endpoint='havecoffee', mode='DELETE')
         mock_request.assert_called_with('https://dummy.com/api/havecoffee',
+                                        **expected)
+
+    @mock.patch.object(Session, 'put')
+    def test_valid_api_put_request(self, mock_request):
+        data = {'put': 'me'}
+        expected = {
+            'params': None,
+            'headers': self.api._get_headers(),
+            'json': data,
+        }
+        self.api._api_request(endpoint='putstuff', mode='PUT', data=data)
+        mock_request.assert_called_with('https://dummy.com/api/putstuff',
                                         **expected)
