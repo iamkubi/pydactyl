@@ -162,7 +162,7 @@ class Servers(base.PterodactylAPI):
     def create_server(self, name, user_id, nest_id, egg_id, memory_limit,
                       swap_limit, disk_limit, location_ids=[], port_range=[],
                       environment={}, cpu_limit=0, io_limit=500,
-                      database_limit=0, allocation_limit=0, backup_limit=0,
+                      database_limit=0, allocation_limit=0,
                       docker_image=None, startup_cmd=None, dedicated_ip=False,
                       start_on_completion=True, oom_disabled=True,
                       default_allocation=None, additional_allocations=None):
@@ -260,8 +260,8 @@ class Servers(base.PterodactylAPI):
             },
             'feature_limits': {
                 'databases': database_limit,
-                'allocations': allocation_limit,
-                'backups': backup_limit
+                'allocations': allocation_limit
+                #'backups': backup_limit
             },
             'environment': env_with_defaults,
             'start_on_completion': start_on_completion,
