@@ -65,7 +65,7 @@ client = PterodactylClient('https://panel.mydomain.com', 'MySuperSecretApiKey')
 # Create a server.  Customize the Nest and Egg IDs to match the IDs in your panel.
 # This server is created with a limit of 8000 MB of memory, no access to swap, unlimited disk space, in location_id 1.
 client.servers.create_server(name='My Paper Server', user_id=1, nest_id=1, 
-                             egg_id=3, memory_limit=8000, swap_limit=0, 
+                             egg_id=3, memory_limit=8000, swap_limit=0, backup_limit=0,
                              disk_limit=0, location_ids=[1])
 <Response [201]>
 ```
