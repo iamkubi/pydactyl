@@ -162,7 +162,7 @@ class Servers(base.PterodactylAPI):
     def create_server(self, name, user_id, nest_id, egg_id, memory_limit,
                       swap_limit, disk_limit, location_ids=[], port_range=[],
                       environment={}, cpu_limit=0, io_limit=500,
-                      database_limit=0, allocation_limit=0,
+                      database_limit=0, allocation_limit=0, backup_limit=0,
                       docker_image=None, startup_cmd=None, dedicated_ip=False,
                       start_on_completion=True, oom_disabled=True,
                       default_allocation=None, additional_allocations=None):
@@ -204,6 +204,8 @@ class Servers(base.PterodactylAPI):
                     assigned to this server.
             allocation_limit(int): Maximum number of allocations that can be
                     assigned to this server.
+            backup_limit(int): Maximum number of backups that can be
+                    created for this server.
             docker_image(str): Name or URL of the Docker server to use.
                     e.g. quay.io/pterodactyl/core:java-glibc
             startup_cmd(str): Startup command, if specified replaces the
@@ -259,6 +261,7 @@ class Servers(base.PterodactylAPI):
             'feature_limits': {
                 'databases': database_limit,
                 'allocations': allocation_limit,
+                'backups': backup_limit
             },
             'environment': env_with_defaults,
             'start_on_completion': start_on_completion,
