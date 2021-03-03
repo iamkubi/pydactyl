@@ -57,7 +57,7 @@ The Application API is the administrative API of the Pterodactyl panel.
 Below are examples of how you might use this API.
 
 ```python
-from pydactyl import PterdoactylClient
+from pydactyl import PterodactylClient
 
 # Create a client to connect to the panel and authenticate with your API key.
 client = PterodactylClient('https://panel.mydomain.com', 'MySuperSecretApiKey')
