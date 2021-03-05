@@ -233,7 +233,7 @@ class Servers(base.PterodactylAPI):
         for var in egg_vars:
             var_name = var['attributes']['env_variable']
             if var_name in environment:
-                env_with_defaults = environment[var_name]
+                env_with_defaults[var_name] = environment[var_name]
             else:
                 env_with_defaults[var_name] = var['attributes'].get(
                     'default_value')
