@@ -1,4 +1,4 @@
-name: pydactyl
+name: lint-and-test
 
 on: [push]
 
