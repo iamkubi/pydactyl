@@ -29,7 +29,7 @@ class ClientTests(unittest.TestCase):
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
     def test_get_server_utilization(self, mock_api):
         expected = {
-            'endpoint': 'client/servers/22/utilization',
+            'endpoint': 'client/servers/22/resources',
         }
         self.client.client.get_server_utilization(22)
         mock_api.assert_called_with(**expected)

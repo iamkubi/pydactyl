@@ -33,7 +33,7 @@ class Client(base.PterodactylAPI):
                     structure.  This is not particularly useful.
         """
         response = self._api_request(
-            endpoint='client/servers/%s/utilization' % server_id)
+            endpoint='client/servers/%s/resources' % server_id)
         return base.parse_response(response, detail)
 
     def send_console_command(self, server_id, cmd):
