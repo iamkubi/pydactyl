@@ -4,14 +4,13 @@
 [![Latest docs][docs-img]][docs]
 [![Coverage][codecov-img]][codecov]
 [![Latest version][pypi-img]][pypi]
+[![Discord][discord-img]][discord-join]
 
 An easy to use Python wrapper for the Pterodactyl Panel API.
 
 ## State of the project
 
-This wrapper is mostly complete for Pterodactyl 0.7.  It will be updated to
-work with the 1.0 release, and it's likely that 0.7 support will be dropped
-at that time.  Older versions that support 0.7 will remain available.
+Support for Pterodactyl 1.x endpoints is being slowly added.  Future versions will not attempt to remain backwards compatible with versions of Pterodactyl before 1.0, however old versions of pydactyl that do support 0.7 will remain available.
   
 If you encounter problems, find APIs that haven't been implemented, or have a
 feature request please file a [Github issue][issues].
@@ -128,3 +127,5 @@ len(ports)
 [travis-img]: https://travis-ci.org/iamkubi/pydactyl.svg?branch=master
 [codecov]: https://codecov.io/gh/iamkubi/pydactyl
 [codecov-img]: https://codecov.io/gh/iamkubi/pydactyl/branch/master/graph/badge.svg
+[discord-img]: https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat
+[discord-join]: https://discord.gg/TgZDHPB
