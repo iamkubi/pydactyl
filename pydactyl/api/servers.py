@@ -10,7 +10,7 @@ class Servers(base.PterodactylAPI):
         """List all servers."""
         endpoint = 'application/servers'
         response = base.parse_response(self._api_request(endpoint=endpoint),
-                                       detail=False)
+                                       detail=True)
         return PaginatedResponse(self, endpoint, response)
 
     def get_server_info(self, server_id=None, external_id=None, detail=False):
