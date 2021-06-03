@@ -24,12 +24,22 @@ class UserTests(unittest.TestCase):
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
-    def test_list_users_with_search(self, mock_api):
+    def test_list_users_with_filter(self, mock_api):
         expected = {
             'endpoint': 'application/users',
-            'params': {'search': 'best@test.com'}
+            'params': {'filter[email]': 'best@test.com'}
         }
-        self.client.user.list_users(search='best@test.com')
+        self.client.user.list_users(email='best@test.com')
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_list_users_with_multiple_filter_params(self, mock_api):
+        expected = {
+            'endpoint': 'application/users',
+            'params': {'filter[email]': 'best@test.com',
+                       'filter[username]': 'best'}
+        }
+        self.client.user.list_users(email='best@test.com', username='best')
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')

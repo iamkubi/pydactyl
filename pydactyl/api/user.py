@@ -7,15 +7,21 @@ from pydactyl.responses import PaginatedResponse
 class User(PterodactylAPI):
     """Class for interacting with the Pterdactyl Client API."""
 
-    def list_users(self, search=None):
+    def list_users(self, email=None, uuid=None, username=None,
+                   external_id=None):
         """List all users.
 
+        Accepts optional filter parameters.  If multiple filters are specified
+        only results that match all filters will be returned.
+
         Args:
-            search(str): Filter user list by search term.
+            email(str): Filter by email
+            uuid(str): Filter by uuid
+            username(str): Filter by username
+            external_id(int): Filter by external_id
         """
-        params = {}
-        if search is not None:
-            params = {'search': search}
+        params = {'filter[{}]'.format(k): v for k, v in locals().items() if v
+                  is not None and k != 'self'}
         endpoint = 'application/users'
         response = self._api_request(endpoint=endpoint, params=params)
         return PaginatedResponse(self, endpoint, response)
