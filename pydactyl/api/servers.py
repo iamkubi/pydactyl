@@ -383,17 +383,18 @@ class Servers(base.PterodactylAPI):
         """
         # See pterodactyl panel source
         # /app/Http/Requests/Api/Application/Servers/UpdateServerStartupRequest.php
-        data = {}
-        if startup_cmd is not None:
-            data['startup'] = startup_cmd
+        existing = self.get_server_info(server_id)
+        container = existing['container']
+        data = {
+            'egg': egg_id if egg_id is not None else existing['egg'],
+            'startup': startup_cmd if startup_cmd is not None else container['startup_command'],
+            'image': docker_image if docker_image is not None else container['image'],
+            'skip_scripts': skip_scripts if skip_scripts is not None else container['installed'] == 1,
+            'environment': container['environment']
+        }
         if environment is not None:
-            data['environment'] = environment
-        if skip_scripts is not None:
-            data['skip_scripts'] = skip_scripts
-        if egg_id is not None:
-            data['egg'] = egg_id
-        if docker_image is not None:
-            data['docker_image'] = docker_image
+            data['environment'].update(environment)
+
         response = self._api_request(
             endpoint='application/servers/%s/startup' % server_id,
             mode='PATCH', data=data, json=False)
