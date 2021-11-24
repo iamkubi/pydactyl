@@ -361,7 +361,7 @@ class Servers(base.PterodactylAPI):
         return response
 
     def update_server_startup(self, server_id, egg_id=None,
-                              environment=None, docker_image=None,
+                              environment={}, docker_image=None,
                               startup_cmd=None, skip_scripts=None):
         """Updates the startup config for the specified server.
 
@@ -374,26 +374,61 @@ class Servers(base.PterodactylAPI):
                     Every variable from the egg must be set or the API will
                     return an error.  Any keys specified will be overwritten
                     in the existing environment list.  Unspecified keys will
-                    not be modified.
+                    not be modified. Extra keys will be dropped.
             docker_image(str): Name or URL of the Docker server to use.
                     e.g. quay.io/pterodactyl/core:java-glibc
             startup_cmd(str): Startup command, if specified replaces the
                     egg's default value.
             skip_scripts(bool): True to skip egg scripts.
         """
-        # See pterodactyl panel source
-        # /app/Http/Requests/Api/Application/Servers/UpdateServerStartupRequest.php
-        existing = self.get_server_info(server_id)
-        container = existing['container']
+        server_info = self._api_request(
+            endpoint='application/servers/%s' % server_id,
+            params={'include':'variables'})['attributes']
+        container = server_info['container']
+        current_env = container['environment']
+        current_egg = server_info['egg']
+        merged_env = {}
+        if egg_id is not None and egg_id != current_egg:
+            nest_id = server_info['nest']
+            egg_info = self._api_request(
+                endpoint='application/nests/%s/eggs/%s' % (
+                    nest_id, egg_id),
+                params={'include': 'variables'})['attributes']
+            egg_vars = egg_info['relationships']['variables']['data']
+
+            # Build a dict of environment variables. Prefer values passed in
+            # the environment parameter, then those set in the current env,
+            # then finally use the default value from the Egg config.
+            for var in egg_vars:
+                var_name = var['attributes']['env_variable']
+                if var_name in environment:
+                    merged_env[var_name] = environment[var_name]
+                elif var_name in current_env:
+                    merged_env[var_name] = current_env[var_name]
+                else:
+                    merged_env[var_name] = var['attributes'].get('default_value')
+            if not docker_image:
+                docker_image = egg_info.get('docker_image')
+            if not startup_cmd:
+                startup_cmd = egg_info.get('startup')
+        elif environment is not None:
+            # If extra values are passed they are silently dropped by the API
+            #   could detect attempts to set invalid variables and throw.
+            # Also could reduce the contents of current_env down to the
+            #   set of variables, there's extra info in here that seems
+            #   to not matter if it's set or not.
+            merged_env = current_env
+            merged_env.update(environment)
+
         data = {
-            'egg': egg_id if egg_id is not None else existing['egg'],
+            'egg': egg_id if egg_id is not None else current_egg,
             'startup': startup_cmd if startup_cmd is not None else container['startup_command'],
             'image': docker_image if docker_image is not None else container['image'],
+            # Cant find a way to get the current value for this setting
+            #   and this seems better than assuming true or false
             'skip_scripts': skip_scripts if skip_scripts is not None else container['installed'] == 1,
-            'environment': container['environment']
+            'environment': merged_env
         }
-        if environment is not None:
-            data['environment'].update(environment)
 
         response = self._api_request(
             endpoint='application/servers/%s/startup' % server_id,
