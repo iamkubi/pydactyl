@@ -395,6 +395,6 @@ class Servers(base.PterodactylAPI):
         if docker_image is not None:
             data['docker_image'] = docker_image
         response = self._api_request(
-            endpoint='application/servers/%s/build' % server_id,
+            endpoint='application/servers/%s/startup' % server_id,
             mode='PATCH', data=data, json=False)
         return response
