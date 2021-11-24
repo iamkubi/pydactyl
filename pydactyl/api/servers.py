@@ -360,8 +360,8 @@ class Servers(base.PterodactylAPI):
             mode='PATCH', data=data, json=False)
         return response
 
-    def update_server_startup(self, server_id, nest_id=None, egg_id=None,
-                              pack_id=None, environment=None, docker_image=None,
+    def update_server_startup(self, server_id, egg_id=None,
+                              environment=None, docker_image=None,
                               startup_cmd=None, skip_scripts=None):
         """Updates the startup config for the specified server.
 
@@ -369,9 +369,7 @@ class Servers(base.PterodactylAPI):
         specified values.  Unspecified values will not be changed.
 
         Args:
-            nest_id(int): Nest ID to update on the server.
             egg_id(int): Egg ID to update on the server.
-            pack_id(int): Pack ID to update on the server.
             environment(dict): Key value pairs of Service Variables to set.
                     Every variable from the egg must be set or the API will
                     return an error.  Any keys specified will be overwritten
@@ -383,10 +381,20 @@ class Servers(base.PterodactylAPI):
                     egg's default value.
             skip_scripts(bool): True to skip egg scripts.
         """
-        # TODO: Implement this
-
-        # response = self._api_request(
-        #    endpoint='application/servers/%s/build' % server_id,
-        #    mode='PATCH', data=data, json=False)
-        # return response
-        return 'Not Implemented'
+        # See pterodactyl panel source
+        # /app/Http/Requests/Api/Application/Servers/UpdateServerStartupRequest.php
+        data = {}
+        if startup_cmd is not None:
+            data['startup'] = startup_cmd
+        if environment is not None:
+            data['environment'] = environment
+        if skip_scripts is not None:
+            data['skip_scripts'] = skip_scripts
+        if egg_id is not None:
+            data['egg'] = egg_id
+        if docker_image is not None:
+            data['docker_image'] = docker_image
+        response = self._api_request(
+            endpoint='application/servers/%s/build' % server_id,
+            mode='PATCH', data=data, json=False)
+        return response
