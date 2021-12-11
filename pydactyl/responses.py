@@ -7,11 +7,13 @@ class PaginatedResponse(object):
     def __init__(self, client, endpoint, data):
         self._client = client
         self._initial_data = data['data']
-        self.data = data
+        self.data = data['data']
         self.endpoint = endpoint
         self.meta = data['meta']
 
     def __getitem__(self, item):
+        if isinstance(item, int):
+            return self.data[item]
         if hasattr(self, item):
             return getattr(self, item, None)
         raise KeyError(item)
