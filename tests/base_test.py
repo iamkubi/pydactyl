@@ -1,11 +1,8 @@
 import unittest
-
-try:
-    from unittest import mock
-except ImportError:
-    import mock
+from unittest import mock
 
 from requests import Session
+
 from pydactyl.api import base
 
 
@@ -17,7 +14,7 @@ class BaseTests(unittest.TestCase):
 
     def test_init(self):
         self.assertEqual('dummy_key', self.api._api_key)
-        self.assertEqual('https://dummy.com/api', self.api._url)
+        self.assertEqual('https://dummy.com', self.api._url)
 
     def test_get_headers(self):
         expected = {
