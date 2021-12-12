@@ -1,9 +1,5 @@
 import unittest
-
-try:
-    from unittest import mock
-except ImportError:
-    import mock
+from unittest import mock
 
 from pydactyl import PterodactylClient
 
@@ -30,7 +26,7 @@ class NodesTests(unittest.TestCase):
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
-    def test_get_create_node(self, mock_api):
+    def test_create_node(self, mock_api):
         expected_data = {
             'name': 'Test-Name 1_2.3',
             'description': 'foo bar',
@@ -57,6 +53,37 @@ class NodesTests(unittest.TestCase):
         expected = {
             'endpoint': 'application/nodes',
             'mode': 'POST',
+            'data': expected_data,
+        }
+
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_edit_node(self, mock_api):
+        expected_data = {
+            'name': 'nodey node',
+            'description': 'does stuff',
+            'location_id': 33,
+            'fqdn': 'nodey.nodeynode.com',
+            'memory': 1024,
+            'disk': 5000,
+            'memory_overallocate': 0,
+            'disk_overallocate': 0,
+            'use_ssl': True,
+            'behind_proxy': False,
+            'daemon_sftp': 2022,
+            'daemon_listen': 8080,
+            'upload_size': 222,
+            'maintenance_mode': False,
+        }
+
+        self.client.nodes.edit_node(11, **expected_data)
+        del expected_data['use_ssl']
+        expected_data['scheme'] = 'https'
+
+        expected = {
+            'endpoint': 'application/nodes/11',
+            'mode': 'PATCH',
             'data': expected_data,
         }
 

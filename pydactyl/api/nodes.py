@@ -1,6 +1,5 @@
 from pydactyl.api.base import PterodactylAPI
 from pydactyl.constants import USE_SSL
-from pydactyl.exceptions import BadRequestError
 from pydactyl.responses import PaginatedResponse
 
 
@@ -56,26 +55,50 @@ class Nodes(PterodactylAPI):
                                      mode='POST', data=data)
         return response
 
-    def edit_node(self, node_id, shortcode=None, description=None):
-        """Modify an existing node.
+    def edit_node(self, node_id, name=None, description=None,
+                  location_id=None, fqdn=None, use_ssl=None,
+                  behind_proxy=None, maintenance_mode=None, memory=None,
+                  memory_overallocate=None, disk=None,
+                  disk_overallocate=None, upload_size=None, daemon_sftp=None,
+                  daemon_listen=None):
+        """Update the configuration for an existing node.
+
+        Modifies an existing node identified by node_id and updates any
+        parameters that are passed.
+
+        *** WARNING ***
+        This endpoint currently requires that you specify all parameters in
+        order to edit a node.  This will be updated in the future to
+        automatically fetch existing values, however since multiple endpoints
+        require this functionality it will be added in a common location.
 
         Args:
             node_id(int): Pterodactyl Node ID.
-            shortcode(str): Short identifier between 1 and 60 characters, e.g. us.nyc.lvl3
+
+            name(str): Node name
             description(str): A long description of the node.  Max 255 characters.
+            location_id(int): Location ID
+            fqdn(str): Fully qualified domain name of the node
+            use_ssl(bool): True to enable SSL, false for insecure HTTP
+            behind_proxy(bool): Sets the node's behind_proxy
+            maintenance_mode(bool): Set the node's maintenance_mode
+            memory(int): Total memory available for the node in MB
+            memory_overallocate(int): A percentage to overallocate, e.g. 20 for 120%
+            disk(int): Total disk available for the node in MB
+            disk_overallocate(int): A percentage to overallocate, e.g. 20 for 120%
+            upload_size(int): Maximum size of uploads in file manager in MB
+            daemon_sftp(int): Node's SFTP port (default 2022)
+            daemon_listen(int): Wings listen port (default 8080)
         """
-        if not shortcode and not description:
-            raise BadRequestError(
-                'Must specify either shortcode or description for edit_node.')
+        data = locals()
+        del data['self']
+        del data['node_id']
+        del data['use_ssl']
+        data['scheme'] = USE_SSL[use_ssl]
 
-        data = {}
-        if shortcode:
-            data['shortcode'] = shortcode
-        if description:
-            data['description'] = description
-
-        response = self._api_request(endpoint='application/nodes/%s' %
-                                              node_id, mode='PATCH', data=data)
+        response = self._api_request(
+            endpoint='application/nodes/{}'.format(node_id), mode='PATCH',
+            data=data)
         return response
 
     def delete_node(self, node_id):
