@@ -50,7 +50,7 @@ class PaginatedResponse(object):
         return '%s' % self.data
 
     def get(self, key, default=None):
-        """Retrieves a key from the response data.
+        """Retrieves a key from the paginated response.
 
         Returns:
             Value for the specified key
