@@ -112,7 +112,7 @@ class ClientTests(unittest.TestCase):
         expected = {
             'endpoint': 'client/account/api-keys',
         }
-        self.client.client.list_api_keys()
+        self.client.client.api_key_list()
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
@@ -122,7 +122,7 @@ class ClientTests(unittest.TestCase):
             'mode': 'POST',
             'data': {'description': 'Test key', 'allowed_ips': ["127.0.0.1"]},
         }
-        self.client.client.create_api_key('Test key', ["127.0.0.1"])
+        self.client.client.api_key_create('Test key', ["127.0.0.1"])
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
@@ -131,7 +131,7 @@ class ClientTests(unittest.TestCase):
             'endpoint': 'client/account/api-keys/abc123',
             'mode': 'DELETE',
         }
-        self.client.client.delete_api_key('abc123')
+        self.client.client.api_key_delete('abc123')
         mock_api.assert_called_with(**expected)
 
 

@@ -125,13 +125,13 @@ class Client(base.PterodactylAPI):
         response = self._api_request(endpoint=endpoint, mode='PUT', data=data)
         return response
 
-    def list_api_keys(self):
+    def api_key_list(self):
         """List client's API keys."""
         endpoint = 'client/account/api-keys'
         response = self._api_request(endpoint=endpoint)
         return base.parse_response(response, detail=False)
 
-    def create_api_key(self, description: str, allowed_ips: list):
+    def api_key_create(self, description: str, allowed_ips: list):
         """Create a client API key.
 
         Args:
@@ -143,7 +143,7 @@ class Client(base.PterodactylAPI):
         response = self._api_request(endpoint=endpoint, mode='POST', data=data)
         return response
 
-    def delete_api_key(self, identifier):
+    def api_key_delete(self, identifier):
         """Delete a client API key.
 
         Args:
