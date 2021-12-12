@@ -124,3 +124,31 @@ class Client(base.PterodactylAPI):
         data = {'root': root, 'files': [{'from': old_name, 'to': new_name}]}
         response = self._api_request(endpoint=endpoint, mode='PUT', data=data)
         return response
+
+    def list_api_keys(self):
+        """List client's API keys."""
+        endpoint = 'client/account/api-keys'
+        response = self._api_request(endpoint=endpoint)
+        return base.parse_response(response, detail=False)
+
+    def create_api_key(self, description: str, allowed_ips: list):
+        """Create a client API key.
+
+        Args:
+            description(str): Note for the API key
+            allowed_ips(iter): List of allowed IPs
+        """
+        endpoint = 'client/account/api-keys'
+        data = {'description': description, 'allowed_ips': allowed_ips}
+        response = self._api_request(endpoint=endpoint, mode='POST', data=data)
+        return response
+
+    def delete_api_key(self, identifier):
+        """Delete a client API key.
+
+        Args:
+            identifier(str): API key identifier
+        """
+        endpoint = 'client/account/api-keys/{}'.format(identifier)
+        response = self._api_request(endpoint=endpoint, mode='DELETE')
+        return response
