@@ -12,9 +12,6 @@ from pydactyl.api.client.servers.settings import Settings
 from pydactyl.api.client.servers.startup import Startup
 from pydactyl.api.client.servers.users import Users
 
-# Client Base APIs
-# from pydactyl.api.client.base import Client
-
 from pydactyl.api.base import PterodactylAPI
 
 
