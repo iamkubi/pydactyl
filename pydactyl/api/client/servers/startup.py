@@ -24,5 +24,5 @@ class Startup(base.PterodactylAPI):
         """
         data = {'key': name, 'value': value}
         endpoint = 'client/servers/{}/startup/variable'.format(server_id)
-        response = self._api_request(endpoint=endpoint, data=data)
+        response = self._api_request(endpoint=endpoint, mode='PUT', data=data)
         return response
