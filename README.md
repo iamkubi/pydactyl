@@ -17,9 +17,7 @@ versions of pydactyl that do support 0.7 will remain available.
 
 The 1.0 release is mostly stable and will not see significant changes until the
 Pterodactyl 2.0 release. Pull Requests will still be accepted and new endpoints
-will continue to be added. Pterodactyl API changes are expected in the 2.0
-release, and there will likely be a refactor of the pydactyl interface at that
-time. pydactyl 2.0 will be released once this work is completed.
+will continue to be added.
 
 If you encounter problems, find APIs that haven't been implemented, or have a
 feature request please file a [Github issue][issues].
