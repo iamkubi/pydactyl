@@ -1,9 +1,9 @@
-from pydactyl.api import Client
-from pydactyl.api import Locations
-from pydactyl.api import Nests
-from pydactyl.api import Nodes
-from pydactyl.api import Servers
-from pydactyl.api import User
+from pydactyl.api.client.client_api import ClientAPI
+from pydactyl.api.locations import Locations
+from pydactyl.api.nests import Nests
+from pydactyl.api.nodes import Nodes
+from pydactyl.api.servers import Servers
+from pydactyl.api.user import User
 from pydactyl.exceptions import ClientConfigError
 
 
@@ -40,7 +40,7 @@ class PterodactylClient(object):
 
     @property
     def client(self):
-        self._client = Client(self._url, self._api_key)
+        self._client = ClientAPI(self._url, self._api_key)
         return self._client
 
     @property

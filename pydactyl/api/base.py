@@ -5,7 +5,7 @@ from pydactyl.exceptions import BadRequestError
 from pydactyl.exceptions import PterodactylApiError
 
 
-def parse_response(response, detail):
+def parse_response(response, detail=False):
     """Parse the response data.
 
     Optionally includes additional data that specifies the object type
@@ -39,7 +39,7 @@ class PterodactylAPI(object):
 
     def __init__(self, url, api_key):
         self._api_key = api_key
-        self._url = url_join(url, 'api')
+        self._url = url
         self._session = requests.Session()
 
     def _get_headers(self):
@@ -73,7 +73,7 @@ class PterodactylAPI(object):
         if not endpoint:
             raise BadRequestError('No API endpoint was specified.')
 
-        url = url_join(self._url, endpoint)
+        url = url_join(self._url, 'api', endpoint)
         headers = self._get_headers()
 
         if mode == 'GET':
