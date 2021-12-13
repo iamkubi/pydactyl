@@ -1,7 +1,9 @@
-name: test-build-and-publish-release-on-tag
+name: test-build-and-publish-on-release
 
-on: push
-  if: startsWith(github.ref, 'refs/tags')
+on:
+  release:
+    types:
+      - created
 
 jobs:
   run-tests:
@@ -56,7 +58,6 @@ jobs:
           --wheel
           --outdir dist/
       - name: Publish package to PyPI
-        if: startsWith(github.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@master
         with:
           password: ${{ secrets.PYPI_TOKEN }}
