@@ -1,4 +1,3 @@
-# from pydactyl.api import Client
 from pydactyl.api.client.client_api import ClientAPI
 from pydactyl.api.locations import Locations
 from pydactyl.api.nests import Nests

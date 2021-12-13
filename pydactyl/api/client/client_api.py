@@ -15,7 +15,7 @@ from pydactyl.api.client.servers.users import Users
 from pydactyl.api.base import PterodactylAPI
 
 
-class ClientAPI(ServersBase, PterodactylAPI):
+class ClientAPI(PterodactylAPI):
     """Provides a simplified interface to the Pterodactyl Panel API.
 
     This class is only used by PterodactylClient.  It provides an interface
@@ -39,7 +39,7 @@ class ClientAPI(ServersBase, PterodactylAPI):
         return self._servers
 
 
-class ClientServersAPI(ClientAPI):
+class ClientServersAPI(ServersBase, ClientAPI):
     """Provides a simplified interface to the Pterodactyl Panel API.
 
     This class is only used by PterodactylClient.  It provides an interface
