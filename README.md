@@ -1,6 +1,6 @@
 # pydactyl
 
-[![Latest build][travis-img]][travis]
+![lint-and-test]
 [![Latest docs][docs-img]][docs]
 [![Coverage][codecov-img]][codecov]
 [![Latest version][pypi-img]][pypi]
@@ -11,16 +11,23 @@ An easy to use Python wrapper for the Pterodactyl Panel API.
 ## State of the project
 
 Support for Pterodactyl 1.x endpoints is mostly completed, however some 
-endpoints are still missing.  Future versions will not attempt to remain backwards compatible with versions of Pterodactyl before 1.0, however old versions of pydactyl that do support 0.7 will remain available.
+endpoints are still missing. Future versions will not attempt to remain
+backwards compatible with versions of Pterodactyl before 1.0, however old
+versions of pydactyl that do support 0.7 will remain available.
 
-The 1.0 release is mostly stable and will not see significant changes until 
-the Pterodactyl 2.0 release.  Pull Requests will still be accepted 
-and new endpoints will continue to be added.  Pterodactyl API changes are 
-expected in the 2.0 release, and there will likely be a refactor of the pydactyl interface at that 
-time.  pydactyl 2.0 will be released once this work is completed.
+The 1.0 release is mostly stable and will not see significant changes until the
+Pterodactyl 2.0 release. Pull Requests will still be accepted and new endpoints
+will continue to be added. Pterodactyl API changes are expected in the 2.0
+release, and there will likely be a refactor of the pydactyl interface at that
+time. pydactyl 2.0 will be released once this work is completed.
 
 If you encounter problems, find APIs that haven't been implemented, or have a
 feature request please file a [Github issue][issues].
+
+## Documentation
+
+Generated documentation can be found at [https://pydactyl.readthedocs.io/][docs]
+.
 
 ## Installing
 
@@ -131,9 +138,10 @@ len(ports)
 [issues]: https://github.com/iamkubi/pydactyl/issues
 [pypi]: https://pypi.python.org/pypi/py-dactyl/
 [pypi-img]: https://img.shields.io/pypi/v/py-dactyl.svg
-[travis]: https://travis-ci.org/iamkubi/pydactyl
-[travis-img]: https://travis-ci.org/iamkubi/pydactyl.svg?branch=master
 [codecov]: https://codecov.io/gh/iamkubi/pydactyl
 [codecov-img]: https://codecov.io/gh/iamkubi/pydactyl/branch/master/graph/badge.svg
 [discord-img]: https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat
+
 [discord-join]: https://discord.gg/TgZDHPB
+
+[lint-and-test]: https://github.com/iamkubi/pydactyl/actions/workflows/lint-and-test.yml/badge.svg?branch=master (https://github.com/iamkubi/pydactyl/actions/workflows/lint-and-test.yml)
