@@ -14,8 +14,13 @@ class ServersBase(base.PterodactylAPI):
         return PaginatedResponse(self, endpoint, response)
 
     def list_permissions(self):
-        """TODO"""
-        pass
+        """Retries all available permissions.
+
+        This is used by the frontend.  I have no idea what this does.
+        """
+        endpoint = 'client/permissions'
+        response = self._api_request(endpoint=endpoint)
+        return response
 
     def get_server(self, server_id, detail=False):
         """Get information for the specified server.
