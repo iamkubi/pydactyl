@@ -26,11 +26,6 @@ jobs:
           --sdist
           --wheel
           --outdir dist/
-      - name: Publish package to Test PyPI
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          password: ${{ secrets.PYPI_TEST_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
       - name: Publish package to PyPI
         if: startsWith(github.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@master
