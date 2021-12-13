@@ -2,8 +2,7 @@ name: test-build-and-publish-on-release
 
 on:
   release:
-    types:
-      - created
+    types: [created]
 
 jobs:
   run-tests:
