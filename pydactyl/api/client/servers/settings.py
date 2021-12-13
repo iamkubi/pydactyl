@@ -13,7 +13,7 @@ class Settings(base.PterodactylAPI):
         """
         data = {'name': name}
         endpoint = 'client/servers/{}/settings/rename'.format(server_id)
-        response = self._api_request(endpoint=endpoint, data=data)
+        response = self._api_request(endpoint=endpoint, mode='POST', data=data)
         return response
 
     def reinstall_server(self, server_id: str):
@@ -23,5 +23,5 @@ class Settings(base.PterodactylAPI):
             server_id(str): Server identifier (abbreviated UUID)
         """
         endpoint = 'client/servers/{}/settings/reinstall'.format(server_id)
-        response = self._api_request(endpoint=endpoint)
+        response = self._api_request(endpoint=endpoint, mode='POST')
         return response
