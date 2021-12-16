@@ -2,7 +2,11 @@ from pydactyl.api import base
 
 
 class Account(base.PterodactylAPI):
-    """Class for interacting with the Pterodactyl Client API."""
+    """Class for interacting with the Pterodactyl Client API.
+
+    Methods in this class appear in the base **client.account** namespace
+    when using PterodactylClient.
+    """
 
     def get_account(self):
         """List details of the account belonging to the client API key."""

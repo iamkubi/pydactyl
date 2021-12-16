@@ -5,7 +5,11 @@ from pydactyl.responses import PaginatedResponse
 
 
 class ServersBase(base.PterodactylAPI):
-    """Pterodactyl Client Server Base API."""
+    """Pterodactyl Client Server Base API.
+
+    Methods in this class appear in the base **client.servers** namespace
+    when using PterodactylClient.
+    """
 
     def list_servers(self):
         """List all servers the client has access to."""
@@ -70,13 +74,14 @@ class ServersBase(base.PterodactylAPI):
 
         Args:
             server_id(str): Server identifier (abbreviated UUID)
-            signal(str): Power signal to send to the server.  Valid options:
+            signal(str): Power signal to send to the server.
+                Valid options:
                 start - Sends the startup command to the server.
                 stop - Sends the stop command to the server.
                 restart - Stops the server then immediately starts it.
                 kill - Instantly ends all processes and marks the server as
-                        stopped.  The kill signal can corrupt server files
-                        and should only be used as a last resort.
+                       stopped.  The kill signal can corrupt server files
+                       and should only be used as a last resort.
         """
         if signal not in POWER_SIGNALS:
             raise BadRequestError(

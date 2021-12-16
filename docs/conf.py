@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'pydactyl'
-copyright = '2019, Ryan Kubiak'
+copyright = '2021, Ryan Kubiak'
 author = 'Ryan Kubiak'
 
 # The full version, including alpha/beta/rc tags
@@ -69,3 +69,13 @@ if not os.environ.get("READTHEDOCS"):
     import sphinx_rtd_theme
 
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+
+def autodoc_remove_class_signatures(app, what, name, obj, options, signature,
+                           return_annotation):
+    if what == "class":
+        # Removes the call signature for Classes since most inherit from
+        # PterodactylAPI.  Classes are only instantiated by PterodactylClient.
+        return (None, None)
+
+def setup(app):
+    app.connect('autodoc-process-signature', autodoc_remove_class_signatures)
