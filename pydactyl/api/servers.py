@@ -285,7 +285,7 @@ class Servers(base.PterodactylAPI):
     def update_server_build(self, server_id, allocation_id, memory_limit=None,
                             swap_limit=None, disk_limit=None, cpu_limit=None,
                             io_limit=None, database_limit=None,
-                            allocation_limit=None, add_allocations=None,
+                            allocation_limit=None, backup_limit=None, add_allocations=None,
                             remove_allocations=None, oom_disabled=None):
         """Updates the build configuration for an existing server.
 
@@ -300,10 +300,12 @@ class Servers(base.PterodactylAPI):
         requirements by passing in everything.
 
         Example of a working set of parameters:
-            update_server_build(server_id=12, allocation_id=1964,
-                    memory_limit=8001, swap_limit=0, disk_limit=30000,
-                    cpu_limit=200, io_limit=500, database_limit=0,
-                    allocation_limit=0, oom_disabled=True)
+            update_server_build(server_id=12, allocation_id=81, 
+                    memory_limit=2048, swap_limit=2048, disk_limit=5120, 
+                    cpu_limit=100, io_limit=500, database_limit=1, 
+                    allocation_limit=2, backup_limt=4, 
+                    add_allocations=None, remove_allocations=None, 
+                    oom_disabled=True)
 
         Args:
             server_id(int): Internal server ID, e.g. 12
@@ -322,6 +324,8 @@ class Servers(base.PterodactylAPI):
             database_limit(int): Maximum number of databases that can be
                     assigned to this server.
             allocation_limit(int): Maximum number of allocations that can be
+                    assigned to this server.
+            backup_limit(int): Maximum number of backups that can be
                     assigned to this server.
             add_allocations(iter): List of allocation IDs to add to the server.
             remove_allocations(iter): List of allocation IDs to remove from
@@ -348,6 +352,8 @@ class Servers(base.PterodactylAPI):
             data['feature_limits']['databases'] = database_limit
         if allocation_limit is not None:
             data['feature_limits']['allocations'] = allocation_limit
+        if backup_limit is not None:
+            data['feature_limits']['backups'] = backup_limit
         if add_allocations is not None:
             data['add_allocations'] = add_allocations
         if remove_allocations is not None:
