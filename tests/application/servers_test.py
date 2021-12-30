@@ -1,9 +1,5 @@
 import unittest
-
-try:
-    from unittest import mock
-except ImportError:
-    import mock
+from unittest import mock
 
 from pydactyl import PterodactylClient
 from pydactyl.exceptions import BadRequestError
@@ -144,6 +140,22 @@ class ServersTests(unittest.TestCase):
         self.client.servers.reset_server_database_password(server_id=333,
                                                            database_id=6)
         mock_api.assert_called_with(**expected)
+
+    def test_create_server_without_allocation_or_location_raises(self):
+        with self.assertRaisesRegex(BadRequestError, 'default_allocation'):
+            self.client.servers.create_server('test server', 1, 1, 1, 0, 0, 0)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_create_server_with_location(self, mock_api):
+        self.client.servers.create_server('test server', 1, 2, 3, 4, 5, 6,
+                                          location_ids=[7])
+        mock_api.assert_called()
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_create_server_with_allocation(self, mock_api):
+        self.client.servers.create_server('test server', 1, 2, 3, 4, 5, 6,
+                                          default_allocation=1234)
+        mock_api.assert_called()
 
 
 if __name__ == '__main__':

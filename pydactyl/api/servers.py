@@ -220,6 +220,10 @@ class Servers(base.PterodactylAPI):
             additional_allocations(iter): Additional allocations on top of
                     default_allocation.
         """
+        if default_allocation is None and not location_ids:
+            raise BadRequestError('Must specify either default_allocation or '
+                                  'location_ids')
+
         # Fetch the Egg variables which are required to create the server.
         egg_info = self._api_request(
             endpoint='application/nests/%s/eggs/%s' % (
@@ -274,9 +278,6 @@ class Servers(base.PterodactylAPI):
             data['deploy'] = {'locations': location_ids,
                               'dedicated_ip': dedicated_ip,
                               'port_range': port_range}
-        else:
-            raise BadRequestError('Must specify either default_allocation or '
-                                  'location_ids')
 
         response = self._api_request(endpoint='application/servers',
                                      mode='POST', data=data, json=False)
