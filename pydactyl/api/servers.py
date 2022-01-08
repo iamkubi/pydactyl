@@ -303,7 +303,7 @@ class Servers(base.PterodactylAPI):
             update_server_build(server_id=12, allocation_id=81, 
                     memory_limit=2048, swap_limit=2048, disk_limit=5120, 
                     cpu_limit=100, io_limit=500, database_limit=1, 
-                    allocation_limit=2, backup_limt=4, 
+                    allocation_limit=2, backup_limit=4, 
                     add_allocations=None, remove_allocations=None, 
                     oom_disabled=True)
 
