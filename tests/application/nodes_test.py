@@ -13,8 +13,18 @@ class NodesTests(unittest.TestCase):
     def test_list_nodes(self, mock_api):
         expected = {
             'endpoint': 'application/nodes',
+            'params': {},
         }
         self.client.nodes.list_nodes()
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_list_nodes_with_includes(self, mock_api):
+        expected = {
+            'endpoint': 'application/nodes',
+            'params': {'include': 'location,other'},
+        }
+        self.client.nodes.list_nodes(include='location,other')
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')

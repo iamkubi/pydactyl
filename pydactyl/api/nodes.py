@@ -6,10 +6,17 @@ from pydactyl.responses import PaginatedResponse
 class Nodes(PterodactylAPI):
     """Class for interacting with the Pterdactyl Nodes API."""
 
-    def list_nodes(self):
-        """List all nodes."""
+    def list_nodes(self, include=None):
+        """List all nodes.
+
+        Args:
+            include(str): Comma separated list of includes
+        """
         endpoint = 'application/nodes'
-        response = self._api_request(endpoint=endpoint)
+        params = {}
+        if include is not None:
+            params['include'] = include
+        response = self._api_request(endpoint=endpoint, params=params)
         return PaginatedResponse(self, endpoint, response)
 
     def get_node_info(self, node_id):

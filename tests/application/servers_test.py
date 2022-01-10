@@ -149,13 +149,13 @@ class ServersTests(unittest.TestCase):
     def test_create_server_with_location(self, mock_api):
         self.client.servers.create_server('test server', 1, 2, 3, 4, 5, 6,
                                           location_ids=[7])
-        mock_api.assert_called_with(mock.ANY)
+        mock_api.assert_called()
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
     def test_create_server_with_allocation(self, mock_api):
         self.client.servers.create_server('test server', 1, 2, 3, 4, 5, 6,
                                           default_allocation=1234)
-        mock_api.assert_called_with(mock.ANY)
+        mock_api.assert_called()
 
 
 if __name__ == '__main__':
