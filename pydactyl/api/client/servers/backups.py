@@ -13,7 +13,7 @@ class Backups(base.PterodactylAPI):
         Args:
             server_id(str): Server identifier (abbreviated UUID)
         """
-        endpoint = 'client/servers/{}/files/list'.format(server_id)
+        endpoint = 'client/servers/{}/backups'.format(server_id)
         response = self._api_request(endpoint=endpoint)
         return response
 
