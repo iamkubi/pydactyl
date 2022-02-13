@@ -12,7 +12,7 @@ class BackupsTests(unittest.TestCase):
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
     def test_list_backups(self, mock_api):
         expected = {
-            'endpoint': 'client/servers/fds173/files/list',
+            'endpoint': 'client/servers/fds173/backups',
         }
         self.api.client.servers.backups.list_backups('fds173')
         mock_api.assert_called_with(**expected)
