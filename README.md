@@ -166,7 +166,7 @@ api.user.delete_user(user_id=14)
 
 ### Paginated Responses
 
-Pydactyl API responses return a PaginatedResponse object that can be iterated
+Pydactyl API responses return a [PaginatedResponse object](pydactyl/responses.py#L4) that can be iterated
 over to automatically fetch additional pages as required. It is currently only
 used by get_node_allocations(), however in time all Pydactyl methods will return
 this response.
