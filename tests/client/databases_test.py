@@ -22,7 +22,7 @@ class DatabasesTest(unittest.TestCase):
     def test_list_databases_with_passwords(self, mock_api):
         expected = {
             'endpoint': 'client/servers/fds173/databases',
-            'params': {'include': 'passwords'},
+            'params': {'include': 'password'},
         }
         self.api.client.servers.databases.list_databases('fds173',
                                                          include_passwords=True)

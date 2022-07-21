@@ -15,7 +15,7 @@ class Databases(base.PterodactylAPI):
         """
         params = {}
         if include_passwords:
-            params['include'] = 'passwords'
+            params['include'] = 'password'
         endpoint = 'client/servers/{}/databases'.format(server_id)
         response = self._api_request(endpoint=endpoint, params=params)
         return response
