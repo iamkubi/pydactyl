@@ -17,14 +17,16 @@ class Backups(base.PterodactylAPI):
         response = self._api_request(endpoint=endpoint)
         return response
 
-    def create_backup(self, server_id: str):
+    def create_backup(self, server_id: str, name: str):
         """Create a new backup of the specified server.
 
         Args:
             server_id(str): Server identifier (abbreviated UUID)
+            name(str): Name for the Backup
         """
+        data = {'name': name}
         endpoint = 'client/servers/{}/backups'.format(server_id)
-        response = self._api_request(endpoint=endpoint, mode='POST')
+        response = self._api_request(endpoint=endpoint, mode='POST', data=data)
         return response
 
     def get_backup_detail(self, server_id: str, backup_id: str):
