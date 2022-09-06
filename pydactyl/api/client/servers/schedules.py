@@ -143,3 +143,15 @@ class Schedules(base.PterodactylAPI):
             server_id, schedule_id, task_id)
         response = self._api_request(endpoint=endpoint, mode='DELETE')
         return response
+
+    def run_schedule(self, server_id: str, schedule_id: int):
+        """Runs the specified schedule.
+        
+        Args:
+            server_id(str): Server identifier (abbreviated UUID)
+            schedule_id(int): Schedule identifier
+        """
+        endpoint = 'client/servers/{}/schedules/{}/execute'.format(
+            server_id, schedule_id)
+        response = self._api_request(endpoint=endpoint, mode="POST")
+        return response
