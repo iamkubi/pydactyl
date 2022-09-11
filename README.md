@@ -10,10 +10,9 @@ An easy to use Python wrapper for the Pterodactyl Panel API.
 
 ## State of the project
 
-Support for Pterodactyl 1.x endpoints is mostly completed, however some 
-endpoints are still missing. Future versions will not attempt to remain
-backwards compatible with versions of Pterodactyl before 1.0, however old
-versions of pydactyl that do support 0.7 will remain available.
+Support for Pterodactyl 1.x endpoints is mostly completed. Future versions will
+not attempt to remain backwards compatible with versions of Pterodactyl before
+1.0, however old versions of pydactyl that do support 0.7 will remain available.
 
 The 1.0 release is mostly stable and will not see significant changes until the
 Pterodactyl 2.0 release. Pull Requests will still be accepted and new endpoints
@@ -182,14 +181,38 @@ len(ports)
 151
 ```
 
+#### collect()
+
+The `collect()` method will fetch the data from all pages of a
+PaginatedResponse. This allows you to easily fetch all results when you want all
+the data without having to iterate over the pages.
+
+The above example to get a list of ports now looks like:
+
+```python
+# Create a list of all ports
+allocs = api.nodes.list_node_allocations(node_id)
+ports = allocs.collect()
+len(ports)
+151
+```
+
 [docs]: https://pydactyl.readthedocs.io/
+
 [docs-img]: https://readthedocs.org/projects/pydactyl/badge/?version=latest (Latest docs)
+
 [pulls]: https://github.com/iamkubi/pydactyl/pulls
+
 [issues]: https://github.com/iamkubi/pydactyl/issues
+
 [pypi]: https://pypi.python.org/pypi/py-dactyl/
+
 [pypi-img]: https://img.shields.io/pypi/v/py-dactyl.svg
+
 [codecov]: https://codecov.io/gh/iamkubi/pydactyl
+
 [codecov-img]: https://codecov.io/gh/iamkubi/pydactyl/branch/master/graph/badge.svg
+
 [discord-img]: https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat
 
 [discord-join]: https://discord.gg/TgZDHPB

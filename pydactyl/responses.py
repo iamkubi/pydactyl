@@ -47,7 +47,7 @@ class PaginatedResponse(object):
             raise StopIteration
 
     def __str__(self):
-        return '%s' % self.data
+        return '{}'.format(self.data)
 
     def get(self, key, default=None):
         """Retrieves a key from the paginated response.
@@ -56,6 +56,17 @@ class PaginatedResponse(object):
             Value for the specified key
         """
         return getattr(self, key, default)
+
+    def collect(self):
+        """Collect all results from all pages.
+
+        Returns:
+            iter: Combined responses from all pages
+        """
+        collected = []
+        for page in self:
+            collected.extend(page.data)
+        return collected
 
     def get_next_page_link(self):
         """Get a link to the next page.

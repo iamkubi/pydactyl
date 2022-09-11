@@ -1,10 +1,6 @@
 import unittest
 from copy import deepcopy
-
-try:
-    from unittest import mock
-except ImportError:
-    import mock
+from unittest import mock
 
 from pydactyl import PterodactylClient
 from pydactyl.responses import PaginatedResponse
@@ -20,6 +16,11 @@ TEST_META = {
 TEST_DATA = {'data': [{'dummy': 'data1'}, {'dummy': 'data2'}], 'meta':
     TEST_META}
 
+MULTIPAGE_TEST_DATA = [
+    {'data': ['thing1', 'thing2'], 'meta': TEST_META},
+    {'data': ['thing3', 'thing4'], 'meta': TEST_META},
+    {'data': ['thing84', 'thing97'], 'meta': TEST_META},
+]
 
 class PaginatedResponseTests(unittest.TestCase):
 
@@ -63,3 +64,33 @@ class PaginatedResponseTests(unittest.TestCase):
         self.assertTrue(PaginatedResponse._next_page_exists(data))
         del data['pagination']['links']['next']
         self.assertFalse(PaginatedResponse._next_page_exists(data))
+
+    def test_paginated_response_fetches_next_page(self):
+        expected = {
+            'endpoint': 'api/asdf',
+            'params': {'page': 2},
+        }
+        self.client._api_request = mock.MagicMock()
+        response = PaginatedResponse(self.client, 'api/asdf', TEST_DATA)
+        test_response = iter(response)
+        test_response.__next__()
+        test_response.__next__()
+
+        self.client._api_request.assert_called_with(**expected)
+
+    def test_paginated_response_data_property_returns_data(self):
+        response = PaginatedResponse(self.client, 'anyendpoint', TEST_DATA)
+        self.assertEqual(response.data, TEST_DATA['data'])
+
+    def test_paginated_response_str_method(self):
+        response = PaginatedResponse(self.client, 'anyendpoint', TEST_DATA)
+        self.assertEqual(str(response), str(TEST_DATA['data']))
+
+    def test_paginated_response_collect_method(self):
+        self.client._api_request = mock.MagicMock()
+        self.client._api_request.side_effect = MULTIPAGE_TEST_DATA[1:]
+        response = PaginatedResponse(self.client, 'asdf',
+                                     MULTIPAGE_TEST_DATA[0])
+        self.assertListEqual(
+            response.collect(),
+            [item for data in MULTIPAGE_TEST_DATA for item in data['data']])
