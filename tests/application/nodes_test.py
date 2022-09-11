@@ -1,10 +1,9 @@
-import unittest
-from unittest import mock
+from unittest import main, mock, TestCase
 
 from pydactyl import PterodactylClient
 
 
-class NodesTests(unittest.TestCase):
+class NodesTests(TestCase):
 
     def setUp(self):
         self.client = PterodactylClient(url='dummy', api_key='dummy')
@@ -156,4 +155,4 @@ class NodesTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    main()

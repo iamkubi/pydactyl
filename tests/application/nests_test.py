@@ -1,14 +1,9 @@
-import unittest
-
-try:
-    from unittest import mock
-except ImportError:
-    import mock
+from unittest import main, mock, TestCase
 
 from pydactyl import PterodactylClient
 
 
-class NestsTests(unittest.TestCase):
+class NestsTests(TestCase):
 
     def setUp(self):
         self.client = PterodactylClient(url='dummy', api_key='dummy')
@@ -82,4 +77,4 @@ class NestsTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    main()
