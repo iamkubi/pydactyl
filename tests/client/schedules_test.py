@@ -96,6 +96,15 @@ class SchedulesTests(unittest.TestCase):
         self.api.client.servers.schedules.delete_task('srv123', 5, 4)
         mock_api.assert_called_with(**expected)
 
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_run_schedule(self, mock_api):
+        expected = {
+            'endpoint': 'client/servers/srv123/schedules/7/execute',
+            'mode': 'POST',
+        }
+        self.api.client.servers.schedules.run_schedule('srv123', 7)
+        mock_api.assert_called_with(**expected)
+        
 
 if __name__ == '__main__':
     unittest.main()

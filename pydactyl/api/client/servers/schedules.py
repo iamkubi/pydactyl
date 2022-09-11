@@ -165,5 +165,5 @@ class Schedules(base.PterodactylAPI):
         """
         endpoint = 'client/servers/{}/schedules/{}/execute'.format(
             server_id, schedule_id)
-        response = self._api_request(endpoint=endpoint, mode="POST")
+        response = self._api_request(endpoint=endpoint, mode='POST')
         return response
