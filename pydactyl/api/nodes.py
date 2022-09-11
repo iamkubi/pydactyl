@@ -25,7 +25,8 @@ class Nodes(PterodactylAPI):
         Args:
             node_id(int): Pterodactyl Node ID.
         """
-        response = self._api_request(endpoint='application/nodes/%s' % node_id)
+        response = self._api_request(
+            endpoint='application/nodes/{}'.format(node_id))
         return response
 
     def create_node(self, name, description, location_id, fqdn, memory, disk,
@@ -114,8 +115,8 @@ class Nodes(PterodactylAPI):
         Args:
             node_id(int): Pterodactyl Node ID.
         """
-        response = self._api_request(endpoint='application/nodes/%s' %
-                                              node_id, mode='DELETE')
+        response = self._api_request(
+            endpoint='application/nodes/{}'.format(node_id), mode='DELETE')
         return response
 
     def list_node_allocations(self, node_id):
@@ -127,7 +128,7 @@ class Nodes(PterodactylAPI):
         Returns:
             obj: Iterable response that fetches pages as required.
         """
-        endpoint = 'application/nodes/%s/allocations' % node_id
+        endpoint = 'application/nodes/{}/allocations'.format(node_id)
         response = self._api_request(endpoint=endpoint)
         return PaginatedResponse(self, endpoint, response)
 
@@ -147,7 +148,7 @@ class Nodes(PterodactylAPI):
         if alias:
             data['alias'] = alias
         response = self._api_request(
-            endpoint='application/nodes/%s/allocations' % node_id,
+            endpoint='application/nodes/{}/allocations'.format(node_id),
             mode='POST', data=data, json=False)
         return response
 
@@ -159,8 +160,8 @@ class Nodes(PterodactylAPI):
             allocation_id(int): Pterodactyl Allocation ID.  This is the
                 internal ID assigned to the allocation, not the port number.
         """
+        endpoint = 'application/nodes/{}/allocations/{}'.format(node_id,
+                                                                allocation_id)
         response = self._api_request(
-            endpoint='application/nodes/%s/allocations/%s' % (node_id,
-                                                              allocation_id),
-            mode='DELETE', json=False)
+            endpoint=endpoint, mode='DELETE', json=False)
         return response
