@@ -24,10 +24,11 @@ class SchedulesTests(unittest.TestCase):
             'mode': 'POST',
             'data': {'name': 'test', 'minute': '*', 'hour': '1',
                      'day_of_week': 'pants', 'day_of_month': 'doggo',
+                     'month': 'may', 'only_when_online': False,
                      'is_active': True},
         }
         self.api.client.servers.schedules.create_schedule(
-            'srv123', 'test', '*', '1', 'pants', 'doggo')
+            'srv123', 'test', '*', '1', 'pants', 'doggo', 'may')
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
@@ -45,10 +46,11 @@ class SchedulesTests(unittest.TestCase):
             'mode': 'POST',
             'data': {'name': 'test', 'minute': '*', 'hour': '1',
                      'day_of_week': 'pants', 'day_of_month': 'doggo',
+                     'month': 'may', 'only_when_online': False,
                      'is_active': True},
         }
         self.api.client.servers.schedules.update_schedule(
-            'srv123', 4, 'test', '*', '1', 'pants', 'doggo')
+            'srv123', 4, 'test', '*', '1', 'pants', 'doggo', 'may')
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
@@ -66,7 +68,7 @@ class SchedulesTests(unittest.TestCase):
             'endpoint': 'client/servers/srv123/schedules/5/tasks',
             'mode': 'POST',
             'data': {'action': 'command', 'payload': 'say Hello World',
-                     'time_offset': '6'}
+                     'time_offset': '6', 'continue_on_failure': False}
         }
         self.api.client.servers.schedules.create_task('srv123', 5, 'command',
                                                       'say Hello World', '6')
@@ -78,10 +80,11 @@ class SchedulesTests(unittest.TestCase):
             'endpoint': 'client/servers/srv123/schedules/5/tasks/4',
             'mode': 'POST',
             'data': {'action': 'command', 'payload': 'say Hello World',
-                     'time_offset': '6'}
+                     'time_offset': '6', 'continue_on_failure': True}
         }
         self.api.client.servers.schedules.update_task('srv123', 5, 4, 'command',
-                                                      'say Hello World', '6')
+                                                      'say Hello World', '6',
+                                                      True)
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
