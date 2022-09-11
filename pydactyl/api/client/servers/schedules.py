@@ -25,7 +25,8 @@ class Schedules(base.PterodactylAPI):
 
     def create_schedule(self, server_id: str, name: str, minute: str,
                         hour: str, day_of_week: str, day_of_month: str,
-                        is_active: bool = True):
+                        month: str, is_active: bool = True, 
+                        only_when_online: bool = False):
         """Creates a new schedule for the specified server.
 
         Args:
@@ -35,11 +36,14 @@ class Schedules(base.PterodactylAPI):
             hour(str): Value for Cron hour field
             day_of_week(str): Value for Cron day_of_week field
             day_of_month(str): Value for Cron day_of_month field
+            month(str): Value for Cron month field
             is_active(bool): False to create the schedule as disabled
+            only_when_online(bool): True to run schedule only when server is running
         """
         data = {'name': name, 'minute': minute, 'hour': hour,
                 'day_of_week': day_of_week, 'day_of_month': day_of_month,
-                'is_active': is_active}
+                'month': month, 'is_active': is_active, 
+                'only_when_online': only_when_online}
         endpoint = 'client/servers/{}/schedules'.format(server_id)
         response = self._api_request(endpoint=endpoint, mode='POST', data=data)
         return response
@@ -58,7 +62,8 @@ class Schedules(base.PterodactylAPI):
 
     def update_schedule(self, server_id: str, schedule_id: int, name: str,
                         minute: str, hour: str, day_of_week: str,
-                        day_of_month: str, is_active: bool = True):
+                        day_of_month: str, month: str, is_active: bool = True, 
+                        only_when_online: bool = False):
         """Updates the specified schedule.
 
         Args:
@@ -70,11 +75,14 @@ class Schedules(base.PterodactylAPI):
             hour(str): Value for Cron hour field
             day_of_week(str): Value for Cron day_of_week field
             day_of_month(str): Value for Cron day_of_month field
+            month(str): Value for Cron month field
             is_active(bool): False to create the schedule as disabled
+            only_when_online(bool): True to run schedule only when server is running
         """
         data = {'name': name, 'minute': minute, 'hour': hour,
                 'day_of_week': day_of_week, 'day_of_month': day_of_month,
-                'is_active': is_active}
+                'month': month, 'is_active': is_active, 
+                'only_when_online': only_when_online}
         endpoint = 'client/servers/{}/schedules/{}'.format(server_id,
                                                            schedule_id)
         response = self._api_request(endpoint=endpoint, mode='POST', data=data)
@@ -93,7 +101,8 @@ class Schedules(base.PterodactylAPI):
         return response
 
     def create_task(self, server_id: str, schedule_id: int, action: str,
-                    payload: str, time_offset: str = '0'):
+                    payload: str, time_offset: str = '0', 
+                    continue_on_failure: bool = False):
         """Creates a new task on the specified schedule.
 
         Args:
@@ -102,17 +111,19 @@ class Schedules(base.PterodactylAPI):
             action(str): Type of action to use
             payload(str): Payload to send for the action
             time_offset(str): Offset in seconds
+            continue_on_failure(bool): True to continue schedule run if this task fails
         """
         check_schedule_action_valid(action)
         data = {'action': action, 'payload': payload,
-                'time_offset': time_offset}
+                'time_offset': time_offset, 'continue_on_failure': continue_on_failure}
         endpoint = 'client/servers/{}/schedules/{}/tasks'.format(server_id,
                                                                  schedule_id)
         response = self._api_request(endpoint=endpoint, mode='POST', data=data)
         return response
 
     def update_task(self, server_id: str, schedule_id: int, task_id: int,
-                    action: str, payload: str, time_offset: str = '0'):
+                    action: str, payload: str, time_offset: str = '0', 
+                    continue_on_failure: bool = False):
         """Updates the specified task.
 
         Args:
@@ -122,10 +133,11 @@ class Schedules(base.PterodactylAPI):
             action(str): Type of action to use
             payload(str): Payload to send for the action
             time_offset(str): Offset in seconds
+            continue_on_failure(bool): True to continue schedule run if this task fails
         """
         check_schedule_action_valid(action)
         data = {'action': action, 'payload': payload,
-                'time_offset': time_offset}
+                'time_offset': time_offset, 'continue_on_failure': continue_on_failure}
         endpoint = 'client/servers/{}/schedules/{}/tasks/{}'.format(
             server_id, schedule_id, task_id)
         response = self._api_request(endpoint=endpoint, mode='POST', data=data)
