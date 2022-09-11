@@ -88,6 +88,8 @@ class FilesTest(unittest.TestCase):
             'mode': 'POST',
             'params': {'file': 'eula.txt'},
             'data': 'All your base are belong to us',
+            'data_as_json': False,
+            'override_headers': {'Content-Type': 'application/text'},
         }
         self.api.client.servers.files.write_file(
             'gudsrvr', 'eula.txt', 'All your base are belong to us')

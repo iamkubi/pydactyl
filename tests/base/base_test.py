@@ -108,3 +108,19 @@ class BaseTests(unittest.TestCase):
         self.api._api_request(endpoint='putstuff', mode='PUT', data=data)
         mock_request.assert_called_with('https://dummy.com/api/putstuff',
                                         **expected)
+
+    @mock.patch.object(Session, 'post')
+    def test_api_request_with_override_headers(self, mock_request):
+        data = {'dummy': 'asdf'}
+        expected_headers = self.api._get_headers()
+        expected_headers['Content-Type'] = 'application/text'
+        expected = {
+            'params': None,
+            'headers': expected_headers,
+            'json': data,
+        }
+        self.api._api_request(
+            endpoint='overridetest', mode='POST', data=data,
+            override_headers={'Content-Type': 'application/text'})
+        mock_request.assert_called_with('https://dummy.com/api/overridetest',
+                                        **expected)

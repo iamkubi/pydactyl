@@ -92,8 +92,10 @@ class Files(base.PterodactylAPI):
         """
         params = {'file': path}
         endpoint = 'client/servers/{}/files/write'.format(server_id)
-        response = self._api_request(endpoint=endpoint, mode='POST',
-                                     params=params, data=contents)
+        response = self._api_request(
+            endpoint=endpoint, mode='POST', params=params, data=contents,
+            override_headers={'Content-Type': 'application/text'},
+            data_as_json=False)
         return response
 
     def compress_files(self, server_id: str, files: iter, path: str = '/'):
