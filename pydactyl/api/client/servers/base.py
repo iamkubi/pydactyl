@@ -93,3 +93,15 @@ class ServersBase(base.PterodactylAPI):
         response = self._api_request(endpoint=endpoint, mode='POST',
                                      data=data, json=False)
         return response
+
+    def get_websocket(self, server_id):
+        """Generates credentials to connect to the server's websocket.
+
+        Args:
+            server_id(str): Server identifier (abbreviated UUID)
+        Returns:
+            response(dict): Response with token and websocket address
+        """
+        endpoint = 'client/servers/{}/websocket'.format(server_id)
+        response = self._api_request(endpoint=endpoint, mode='GET')
+        return response

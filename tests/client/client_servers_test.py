@@ -52,6 +52,15 @@ class ClientServersTests(unittest.TestCase):
         self.api.client.servers.send_power_action(1, 'start')
         mock_api.assert_called_with(**expected)
 
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_get_websocket(self, mock_api):
+        expected = {
+            'endpoint': 'client/servers/44/websocket',
+            'mode': 'GET',
+        }
+        self.api.client.servers.get_websocket(44)
+        mock_api.assert_called_with(**expected)
+
 
 if __name__ == '__main__':
     unittest.main()
