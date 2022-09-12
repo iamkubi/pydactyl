@@ -158,9 +158,9 @@ result = api.user.create_user('test_user', 'test@gmail.com', 'Test', 'Name')
 user_id = result['attributes']['id']
 # Get the user info, also returned by create_user()
 api.user.get_user_info(user_id)
-{'object': 'user', 'attributes': {'id': 14, 'external_id': None, ....
-    # Delete the user
-    api.user.delete_user(user_id=14)
+{'object': 'user', 'attributes': {'id': 14, 'external_id': None, .... }}
+# Delete the user
+api.user.delete_user(user_id=14)
 ```
 
 ### Retries
