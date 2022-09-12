@@ -159,16 +159,42 @@ user_id = result['attributes']['id']
 # Get the user info, also returned by create_user()
 api.user.get_user_info(user_id)
 {'object': 'user', 'attributes': {'id': 14, 'external_id': None, ....
-# Delete the user
-api.user.delete_user(user_id=14)
+    # Delete the user
+    api.user.delete_user(user_id=14)
+```
+
+### Retries
+
+Instances of [PterodactylClient](pydactyl/api_client.py) will automatically
+retry calls that fail with a 429 status code indicating that the request was
+rate-limited by Pterodactyl.
+
+By default it uses a backoff_factor of 1 with 3 retries. You can configure the
+number of retries and backoff_factor when instantiating a client.
+
+```python
+PterodactylClient('panel', 'key', backoff_factor=2, retries=10)
+```
+
+Details on backoff_factor and retires can be found in the
+[urllib3.util.Retry documentation](https://urllib3.readthedocs.io/en/stable/reference/urllib3.util.html#urllib3.util.Retry)
+.
+
+If your server is overloaded or intermittently unavailable you may want to retry
+on other status codes as well. To do this you can pass in a list of integer HTTP
+status codes.
+
+```python
+PterodactylClient('foo', 'bar', extra_retry_codes=[502, 504])
 ```
 
 ### Paginated Responses
 
-Pydactyl API responses return a [PaginatedResponse object](pydactyl/responses.py#L4) that can be iterated
-over to automatically fetch additional pages as required. It is currently only
-used by get_node_allocations(), however in time all Pydactyl methods will return
-this response.
+Pydactyl API responses return
+a [PaginatedResponse object](pydactyl/responses.py#L4) that can be iterated over
+to automatically fetch additional pages as required. It is currently only used
+by get_node_allocations(), however in time all Pydactyl methods will return this
+response.
 
 ```python
 # Create a list of all ports

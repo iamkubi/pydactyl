@@ -37,10 +37,10 @@ def url_join(*args):
 class PterodactylAPI(object):
     """Pterodactyl API client."""
 
-    def __init__(self, url, api_key):
+    def __init__(self, url, api_key, session=None):
         self._api_key = api_key
         self._url = url
-        self._session = requests.Session()
+        self._session = session or requests.Session()
 
     def _get_headers(self):
         """Headers to use for API calls."""
@@ -49,7 +49,6 @@ class PterodactylAPI(object):
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         }
-
         return headers
 
     def _api_request(self, endpoint, mode='GET', params=None, data=None,
@@ -58,7 +57,8 @@ class PterodactylAPI(object):
 
         Args:
             endpoint(str): URI for the API
-            mode(str): Request type, one of ('GET', 'POST', 'PATCH', 'DELETE)
+            mode(str): Request type, one of ('GET', 'POST', 'PATCH',
+                    'DELETE', 'PUT')
             params(dict): Extra parameters to pass to the endpoint,
                     e.g. a query string
             data(dict): POST data
