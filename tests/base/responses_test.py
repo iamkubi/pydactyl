@@ -20,6 +20,8 @@ MULTIPAGE_TEST_DATA = [
     {'data': ['thing1', 'thing2'], 'meta': TEST_META},
     {'data': ['thing3', 'thing4'], 'meta': TEST_META},
     {'data': ['thing84', 'thing97'], 'meta': TEST_META},
+    {'data': ['one', 'two', 'three', 4, 5, '6'], 'meta': TEST_META},
+    {'data': ['lkjskljd'], 'meta': TEST_META},
 ]
 
 
@@ -104,3 +106,14 @@ class PaginatedResponseTests(unittest.TestCase):
                     data['data']]
         self.assertListEqual(expected,
                              [item for page in response for item in page])
+
+    def test_paginated_response_has_correct_number_of_items(self):
+        self.client._api_request = mock.MagicMock()
+        self.client._api_request.side_effect = MULTIPAGE_TEST_DATA[1:]
+        response = PaginatedResponse(self.client, 'asdf',
+                                     MULTIPAGE_TEST_DATA[0])
+        expected = [item for data in MULTIPAGE_TEST_DATA for item in
+                    data['data']]
+        expected_count = 13
+        self.assertEqual(expected_count, len(expected))
+        self.assertEqual(expected_count, len(response.collect()))
