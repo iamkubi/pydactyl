@@ -7,7 +7,7 @@ from pydactyl.responses import PaginatedResponse
 
 TEST_META = {
     'pagination':
-        {'total': 106, 'count': 25, 'per_page': 25, 'current_page': 2,
+        {'total': 106, 'count': 25, 'per_page': 25, 'current_page': 1,
          'total_pages': 5, 'links': {
             'next': 'https://panel.mydomain.com/api/application/nodes/1'
                     '/allocations?page=3',
@@ -21,6 +21,7 @@ MULTIPAGE_TEST_DATA = [
     {'data': ['thing3', 'thing4'], 'meta': TEST_META},
     {'data': ['thing84', 'thing97'], 'meta': TEST_META},
 ]
+
 
 class PaginatedResponseTests(unittest.TestCase):
 
@@ -65,16 +66,15 @@ class PaginatedResponseTests(unittest.TestCase):
         del data['pagination']['links']['next']
         self.assertFalse(PaginatedResponse._next_page_exists(data))
 
-    def test_paginated_response_fetches_next_page(self):
+    def test_paginated_response_fetches_first_page(self):
         expected = {
             'endpoint': 'api/asdf',
             'params': {'page': 2},
         }
         self.client._api_request = mock.MagicMock()
         response = PaginatedResponse(self.client, 'api/asdf', TEST_DATA)
-        test_response = iter(response)
-        test_response.__next__()
-        test_response.__next__()
+        for _ in response:
+            continue
 
         self.client._api_request.assert_called_with(**expected)
 
@@ -94,3 +94,13 @@ class PaginatedResponseTests(unittest.TestCase):
         self.assertListEqual(
             response.collect(),
             [item for data in MULTIPAGE_TEST_DATA for item in data['data']])
+
+    def test_paginated_response_multipage_iterator(self):
+        self.client._api_request = mock.MagicMock()
+        self.client._api_request.side_effect = MULTIPAGE_TEST_DATA[1:]
+        response = PaginatedResponse(self.client, 'asdf',
+                                     MULTIPAGE_TEST_DATA[0])
+        expected = [item for data in MULTIPAGE_TEST_DATA for item in
+                    data['data']]
+        self.assertListEqual(expected,
+                             [item for page in response for item in page])

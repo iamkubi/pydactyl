@@ -10,13 +10,10 @@ An easy to use Python wrapper for the Pterodactyl Panel API.
 
 ## State of the project
 
-Support for Pterodactyl 1.x endpoints is mostly completed. Future versions will
-not attempt to remain backwards compatible with versions of Pterodactyl before
-1.0, however old versions of pydactyl that do support 0.7 will remain available.
-
-The 1.0 release is mostly stable and will not see significant changes until the
-Pterodactyl 2.0 release. Pull Requests will still be accepted and new endpoints
-will continue to be added.
+Support for the Pterodactyl 1.x API is complete.
+The 1.x Pydactyl release is mostly stable and will not see significant changes 
+until the Pterodactyl 2.0 release. Pull Requests will still be accepted and 
+new endpoints will continue to be added.
 
 If you encounter problems, find APIs that haven't been implemented, or have a
 feature request please file a [Github issue][issues].
@@ -33,6 +30,10 @@ To install with pip:
 ```shell
 pip install py-dactyl
 ```
+
+**If you get an error saying `ImportError: cannot import name 
+'PterodactylClient' from 'pydactyl'` this probably means you installed the 
+wrong package from pip.**
 
 ## Getting Started
 
@@ -192,16 +193,16 @@ PterodactylClient('foo', 'bar', extra_retry_codes=[502, 504])
 
 Pydactyl API responses return
 a [PaginatedResponse object](pydactyl/responses.py#L4) that can be iterated over
-to automatically fetch additional pages as required. It is currently only used
-by get_node_allocations(), however in time all Pydactyl methods will return this
-response.
+to automatically fetch additional pages as required. This is currently 
+implemented on many endpoints which frequently return multi-page responses, 
+but not all.
 
 ```python
 # Create a list of all ports
 allocs = api.nodes.list_node_allocations(node_id)
 ports = []
 for page in allocs:
-    for item in page.data:
+    for item in page:
         ports.append(item['attributes']['port'])
 len(ports)
 151

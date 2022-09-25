@@ -19,9 +19,12 @@ class PaginatedResponse(object):
         raise KeyError(item)
 
     def __iter__(self):
-        self._iteration = 0
-        self.data = self._initial_data
-        return self
+        if hasattr(self, '_iteration'):
+            return iter(self.data)
+        else:
+            self._iteration = 0
+            return self
+
 
     def __next__(self):
         """"Retrieves the next page of results.
