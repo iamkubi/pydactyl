@@ -6,7 +6,6 @@ class PaginatedResponse(object):
 
     def __init__(self, client, endpoint, data):
         self._client = client
-        self._initial_data = data['data']
         self.data = data['data']
         self.endpoint = endpoint
         self.meta = data['meta']
@@ -25,7 +24,6 @@ class PaginatedResponse(object):
             self._iteration = 0
             return self
 
-
     def __next__(self):
         """"Retrieves the next page of results.
 
@@ -38,6 +36,7 @@ class PaginatedResponse(object):
         """
         self._iteration += 1
         if self._iteration == 1:
+            # PaginatedResponses are initialized with the first page of results
             return self
         if self._next_page_exists(self.meta):
             params = {'page': self._iteration}

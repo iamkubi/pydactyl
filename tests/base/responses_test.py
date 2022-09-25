@@ -17,11 +17,11 @@ TEST_DATA = {'data': [{'dummy': 'data1'}, {'dummy': 'data2'}], 'meta':
     TEST_META}
 
 MULTIPAGE_TEST_DATA = [
-    {'data': ['thing1', 'thing2'], 'meta': TEST_META},
+    {'data': ['thing1', 'thing2', 'sometimespage1isweird'], 'meta': TEST_META},
     {'data': ['thing3', 'thing4'], 'meta': TEST_META},
     {'data': ['thing84', 'thing97', 'fdas', 'pepperoni'], 'meta': TEST_META},
     {'data': ['one', 'two', 'three', 4, 5, '6'], 'meta': TEST_META},
-    {'data': ['lkjskljd'], 'meta': TEST_META},
+    {'data': ['pineappleisanacceptablepizzatopping'], 'meta': TEST_META},
 ]
 
 
@@ -114,6 +114,6 @@ class PaginatedResponseTests(unittest.TestCase):
                                      MULTIPAGE_TEST_DATA[0])
         expected = [item for data in MULTIPAGE_TEST_DATA for item in
                     data['data']]
-        expected_count = 15
+        expected_count = 16
         self.assertEqual(expected_count, len(expected))
         self.assertEqual(expected_count, len(response.collect()))
