@@ -179,6 +179,18 @@ class ServersTests(TestCase):
             remove_allocations=88, oom_disabled=True)
         mock_api.assert_called_with(**expected)
 
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_update_server_startup(self, mock_api):
+        expected = {
+            'endpoint': 'application/servers/11/startup',
+            'mode': 'PATCH',
+            'data': {'egg': 19, 'startup': 'startup.sh', 'image':
+                'ghcr.io/image:tag', 'skip_scripts': False, 'environment': {}},
+            'json': False}
+        self.client.servers.update_server_startup(
+            server_id=11, egg_id=19, docker_image='ghcr.io/image:tag',
+            startup_cmd='startup.sh', skip_scripts=False)
+        mock_api.assert_called_with(**expected)
 
 if __name__ == '__main__':
     main()
