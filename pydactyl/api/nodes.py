@@ -19,7 +19,7 @@ class Nodes(PterodactylAPI):
         response = self._api_request(endpoint=endpoint, params=params)
         return PaginatedResponse(self, endpoint, response)
 
-    def get_node_info(self, node_id):
+    def get_node_details(self, node_id):
         """Get detailed info for the specified node.
 
         Args:
@@ -28,6 +28,16 @@ class Nodes(PterodactylAPI):
         response = self._api_request(
             endpoint='application/nodes/{}'.format(node_id))
         return response
+
+    def get_node_info(self, node_id):
+        """Get detailed info for the specified node.
+
+        DEPRECATED: Use get_node_details
+
+        Args:
+            node_id(int): Pterodactyl Node ID.
+        """
+        return self.get_node_details(node_id)
 
     def create_node(self, name, description, location_id, fqdn, memory, disk,
                     memory_overallocate=0,
@@ -165,3 +175,4 @@ class Nodes(PterodactylAPI):
         response = self._api_request(
             endpoint=endpoint, mode='DELETE', json=False)
         return response
+

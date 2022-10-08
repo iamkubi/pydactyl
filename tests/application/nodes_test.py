@@ -27,11 +27,11 @@ class NodesTests(TestCase):
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
-    def test_get_node_info(self, mock_api):
+    def test_get_node_details(self, mock_api):
         expected = {
             'endpoint': 'application/nodes/11',
         }
-        self.client.nodes.get_node_info(11)
+        self.client.nodes.get_node_details(11)
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
