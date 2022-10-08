@@ -19,6 +19,16 @@ class Nodes(PterodactylAPI):
         response = self._api_request(endpoint=endpoint, params=params)
         return PaginatedResponse(self, endpoint, response)
 
+    def get_node_config(self, node_id):
+        """Get the Wings configuration for the specified node.
+
+        Args:
+            node_id(int): Pterodactyl Node ID.
+        """
+        response = self._api_request(
+            endpoint='application/nodes/{}/configuration'.format(node_id))
+        return response
+
     def get_node_details(self, node_id):
         """Get detailed info for the specified node.
 

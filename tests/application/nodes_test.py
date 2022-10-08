@@ -35,6 +35,14 @@ class NodesTests(TestCase):
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_get_node_config(self, mock_api):
+        expected = {
+            'endpoint': 'application/nodes/111/configuration',
+        }
+        self.client.nodes.get_node_config(111)
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
     def test_create_node(self, mock_api):
         expected_data = {
             'name': 'Test-Name 1_2.3',
