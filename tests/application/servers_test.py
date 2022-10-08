@@ -156,6 +156,29 @@ class ServersTests(TestCase):
                                           default_allocation=1234)
         mock_api.assert_called()
 
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_update_server_build(self, mock_api):
+        expected = {
+            'endpoint': 'application/servers/42/build',
+            'mode': 'PATCH',
+            'data': {'allocation': 88,
+                     'limits': {'memory': 1024, 'swap': 1, 'disk': 5000,
+                                'cpu': 150, 'io': 500},
+                     'feature_limits': {'databases': 3, 'allocations': 9,
+                                        'backups': 2},
+                     'add_allocations': 89,
+                     'remove_allocations': 88,
+                     'oom_disabled': True,
+                     },
+            'json': False,
+        }
+        self.client.servers.update_server_build(
+            server_id=42, allocation_id=88, memory_limit=1024, swap_limit=1,
+            disk_limit=5000, cpu_limit=150, io_limit=500, database_limit=3,
+            allocation_limit=9, backup_limit=2, add_allocations=89,
+            remove_allocations=88, oom_disabled=True)
+        mock_api.assert_called_with(**expected)
+
 
 if __name__ == '__main__':
     main()

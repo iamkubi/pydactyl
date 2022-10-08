@@ -29,9 +29,9 @@ class Servers(base.PterodactylAPI):
                                   'not both.')
 
         if server_id:
-            endpoint = 'application/servers/%s' % server_id
+            endpoint = 'application/servers/{}'.format(server_id)
         else:
-            endpoint = 'application/servers/external/%s' % external_id
+            endpoint = 'application/servers/external/{}'.format(external_id)
 
         response = self._api_request(endpoint=endpoint)
         return base.parse_response(response, detail)
@@ -43,7 +43,8 @@ class Servers(base.PterodactylAPI):
             server_id(int): Pterodactyl Server ID.
         """
         response = self._api_request(
-            endpoint='application/servers/%s/suspend' % server_id, mode='POST')
+            endpoint='application/servers/{}/suspend'.format(server_id),
+            mode='POST')
         return response
 
     def unsuspend_server(self, server_id):
@@ -53,7 +54,7 @@ class Servers(base.PterodactylAPI):
             server_id(int): Pterodactyl Server ID.
         """
         response = self._api_request(
-            endpoint='application/servers/%s/unsuspend' % server_id,
+            endpoint='application/servers/{}/unsuspend'.format(server_id),
             mode='POST')
         return response
 
@@ -64,7 +65,7 @@ class Servers(base.PterodactylAPI):
             server_id(int): Pterodactyl Server ID.
         """
         response = self._api_request(
-            endpoint='application/servers/%s/reinstall' % server_id,
+            endpoint='application/servers/{}/reinstall'.format(server_id),
             mode='POST')
         return response
 
@@ -75,7 +76,7 @@ class Servers(base.PterodactylAPI):
             server_id(int): Pterodactyl Server ID.
         """
         response = self._api_request(
-            endpoint='application/servers/%s/rebuild' % server_id,
+            endpoint='application/servers/{}/rebuild'.format(server_id),
             mode='POST')
         return response
 
@@ -90,7 +91,7 @@ class Servers(base.PterodactylAPI):
             force(bool): If True the delete action will continue if the panel or
                     daemon reports an error.
         """
-        endpoint = 'application/servers/%s' % server_id
+        endpoint = 'application/servers/{}'.format(server_id)
         if force:
             endpoint += '/force'
 
@@ -103,7 +104,7 @@ class Servers(base.PterodactylAPI):
         Args:
             server_id(int): Pterodactyl Server ID.
         """
-        endpoint = 'application/servers/%s/databases' % server_id
+        endpoint = 'application/servers/{}/databases'.format(server_id)
         response = self._api_request(endpoint=endpoint)
         return PaginatedResponse(self, endpoint, response)
 
@@ -117,8 +118,8 @@ class Servers(base.PterodactylAPI):
                     structure.
         """
         response = self._api_request(
-            endpoint='application/servers/%s/databases/%s' % (server_id,
-                                                              database_id))
+            endpoint='application/servers/{}/databases/{}'.format(server_id,
+                                                                  database_id))
         return base.parse_response(response, detail)
 
     def create_server_database(self, server_id):
@@ -128,7 +129,7 @@ class Servers(base.PterodactylAPI):
             server_id(int): Pterodactyl Server ID.
         """
         response = self._api_request(
-            endpoint='application/servers/%s/databases' % server_id,
+            endpoint='application/servers/{}/databases'.format(server_id),
             mode='POST')
         return response
 
@@ -140,8 +141,8 @@ class Servers(base.PterodactylAPI):
             database_id(int): Database ID for specified server.
         """
         response = self._api_request(
-            endpoint='application/servers/%s/databases/%s' % (server_id,
-                                                              database_id),
+            endpoint='application/servers/{}/databases/{}'.format(server_id,
+                                                                  database_id),
             mode='DELETE')
         return response
 
@@ -153,9 +154,8 @@ class Servers(base.PterodactylAPI):
             database_id(int): Database ID for specified server.
         """
         response = self._api_request(
-            endpoint='application/servers/%s/databases/%s/reset-password' % (
-                server_id,
-                database_id),
+            endpoint='application/servers/{}/databases/{}'
+                     '/reset-password'.format(server_id, database_id),
             mode='POST')
         return response
 
@@ -226,7 +226,7 @@ class Servers(base.PterodactylAPI):
 
         # Fetch the Egg variables which are required to create the server.
         egg_info = self._api_request(
-            endpoint='application/nests/%s/eggs/%s' % (
+            endpoint='application/nests/{}/eggs/{}'.format(
                 nest_id, egg_id), params={'include': 'variables'})['attributes']
         egg_vars = egg_info['relationships']['variables']['data']
 
@@ -286,7 +286,8 @@ class Servers(base.PterodactylAPI):
     def update_server_build(self, server_id, allocation_id, memory_limit=None,
                             swap_limit=None, disk_limit=None, cpu_limit=None,
                             io_limit=None, database_limit=None,
-                            allocation_limit=None, backup_limit=None, add_allocations=None,
+                            allocation_limit=None, backup_limit=None,
+                            add_allocations=None,
                             remove_allocations=None, oom_disabled=None):
         """Updates the build configuration for an existing server.
 
@@ -363,7 +364,7 @@ class Servers(base.PterodactylAPI):
             data['oom_disabled'] = oom_disabled
 
         response = self._api_request(
-            endpoint='application/servers/%s/build' % server_id,
+            endpoint='application/servers/{}/build'.format(server_id),
             mode='PATCH', data=data, json=False)
         return response
 
@@ -389,8 +390,8 @@ class Servers(base.PterodactylAPI):
             skip_scripts(bool): True to skip egg scripts.
         """
         server_info = self._api_request(
-            endpoint='application/servers/%s' % server_id,
-            params={'include':'variables'})['attributes']
+            endpoint='application/servers/{}'.format(server_id),
+            params={'include': 'variables'})['attributes']
         container = server_info['container']
         current_env = container['environment']
         current_egg = server_info['egg']
@@ -398,8 +399,7 @@ class Servers(base.PterodactylAPI):
         if egg_id is not None and egg_id != current_egg:
             nest_id = server_info['nest']
             egg_info = self._api_request(
-                endpoint='application/nests/%s/eggs/%s' % (
-                    nest_id, egg_id),
+                endpoint='application/nests/{}/eggs/{}'.format(nest_id, egg_id),
                 params={'include': 'variables'})['attributes']
             egg_vars = egg_info['relationships']['variables']['data']
 
@@ -413,7 +413,8 @@ class Servers(base.PterodactylAPI):
                 elif var_name in current_env:
                     merged_env[var_name] = current_env[var_name]
                 else:
-                    merged_env[var_name] = var['attributes'].get('default_value')
+                    merged_env[var_name] = var['attributes'].get(
+                        'default_value')
             if not docker_image:
                 docker_image = egg_info.get('docker_image')
             if not startup_cmd:
@@ -429,15 +430,18 @@ class Servers(base.PterodactylAPI):
 
         data = {
             'egg': egg_id if egg_id is not None else current_egg,
-            'startup': startup_cmd if startup_cmd is not None else container['startup_command'],
-            'image': docker_image if docker_image is not None else container['image'],
+            'startup': startup_cmd if startup_cmd is not None else container[
+                'startup_command'],
+            'image': docker_image if docker_image is not None else container[
+                'image'],
             # Cant find a way to get the current value for this setting
             #   and this seems better than assuming true or false
-            'skip_scripts': skip_scripts if skip_scripts is not None else container['installed'] == 1,
+            'skip_scripts': skip_scripts if skip_scripts is not None else
+            container['installed'] == 1,
             'environment': merged_env
         }
 
         response = self._api_request(
-            endpoint='application/servers/%s/startup' % server_id,
+            endpoint='application/servers/{}/startup'.format(server_id),
             mode='PATCH', data=data, json=False)
         return response
