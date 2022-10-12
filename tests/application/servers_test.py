@@ -13,6 +13,7 @@ class ServersTests(TestCase):
     def test_list_servers(self, mock_api):
         expected = {
             'endpoint': 'application/servers',
+            'includes': None,
         }
         self.client.servers.list_servers()
         mock_api.assert_called_with(**expected)
@@ -21,6 +22,7 @@ class ServersTests(TestCase):
     def test_get_server_info_by_external_id(self, mock_api):
         expected = {
             'endpoint': 'application/servers/external/11',
+            'includes': None,
         }
         self.client.servers.get_server_info(external_id=11)
         mock_api.assert_called_with(**expected)
@@ -29,6 +31,7 @@ class ServersTests(TestCase):
     def test_get_server_info_by_server_id(self, mock_api):
         expected = {
             'endpoint': 'application/servers/22',
+            'includes': None,
         }
         self.client.servers.get_server_info(server_id=22)
         mock_api.assert_called_with(**expected)
@@ -99,6 +102,7 @@ class ServersTests(TestCase):
     def test_list_server_databases(self, mock_api):
         expected = {
             'endpoint': 'application/servers/99/databases',
+            'includes': None,
         }
         self.client.servers.list_server_databases(server_id=99)
         mock_api.assert_called_with(**expected)
@@ -107,6 +111,7 @@ class ServersTests(TestCase):
     def test_get_server_database_info(self, mock_api):
         expected = {
             'endpoint': 'application/servers/111/databases/5',
+            'includes': None,
         }
         self.client.servers.get_server_database_info(server_id=111,
                                                      database_id=5)

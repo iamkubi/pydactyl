@@ -6,20 +6,27 @@ from pydactyl.responses import PaginatedResponse
 class Servers(base.PterodactylAPI):
     """Class for interacting with the Pterdactyl Servers API."""
 
-    def list_servers(self):
-        """List all servers."""
+    def list_servers(self, includes=None):
+        """List all servers.
+
+        Args:
+            includes(iter): List of includes, e.g. ('servers', 'allocations')
+        """
         endpoint = 'application/servers'
-        response = base.parse_response(self._api_request(endpoint=endpoint),
-                                       detail=True)
+        response = base.parse_response(
+            self._api_request(endpoint=endpoint, includes=includes),
+            detail=True)
         return PaginatedResponse(self, endpoint, response)
 
-    def get_server_info(self, server_id=None, external_id=None, detail=False):
+    def get_server_info(self, server_id=None, external_id=None, detail=False,
+                        includes=None):
         """Get detailed info for the specified server.
 
         Args:
             server_id(int): Pterodactyl Server ID.
             external_id(int): Server ID from an external system like WHMCS
             detail(bool): If True includes created and updated timestamps.
+            includes(iter): List of includes, e.g. ('egg', 'allocations')
         """
         if not server_id and not external_id:
             raise BadRequestError('Must specify either server_id or '
@@ -33,7 +40,7 @@ class Servers(base.PterodactylAPI):
         else:
             endpoint = 'application/servers/external/{}'.format(external_id)
 
-        response = self._api_request(endpoint=endpoint)
+        response = self._api_request(endpoint=endpoint, includes=includes)
         return base.parse_response(response, detail)
 
     def suspend_server(self, server_id):
@@ -98,17 +105,19 @@ class Servers(base.PterodactylAPI):
         response = self._api_request(endpoint=endpoint, mode='DELETE')
         return response
 
-    def list_server_databases(self, server_id):
+    def list_server_databases(self, server_id, includes=None):
         """List the database servers assigned to the specified server ID.
 
         Args:
             server_id(int): Pterodactyl Server ID.
+            includes(iter): List of includes, e.g. ('password', 'host')
         """
         endpoint = 'application/servers/{}/databases'.format(server_id)
-        response = self._api_request(endpoint=endpoint)
+        response = self._api_request(endpoint=endpoint, includes=includes)
         return PaginatedResponse(self, endpoint, response)
 
-    def get_server_database_info(self, server_id, database_id, detail=False):
+    def get_server_database_info(self, server_id, database_id, detail=False,
+                                 includes=None):
         """Get information about the specified database on the specified server.
 
         Args:
@@ -116,10 +125,11 @@ class Servers(base.PterodactylAPI):
             database_id(int): Database ID for specified server.
             detail(bool): If True includes the object type and a nested data
                     structure.
+            includes(iter): List of includes, e.g. ('password', 'host')
         """
-        response = self._api_request(
-            endpoint='application/servers/{}/databases/{}'.format(server_id,
-                                                                  database_id))
+        endpoint = 'application/servers/{}/databases/{}'.format(server_id,
+                                                                database_id)
+        response = self._api_request(endpoint=endpoint, includes=includes)
         return base.parse_response(response, detail)
 
     def create_server_database(self, server_id):
