@@ -157,3 +157,18 @@ class BaseTests(unittest.TestCase):
             'allocations', 'users', 'servers'), params={'per_page': 300})
         mock_request.assert_called_with('https://dummy.com/api/inptest',
                                         **expected)
+
+    @mock.patch.object(Session, 'post')
+    def test_api_request_with_includes_and_params_and_include_param(
+            self, mock_request):
+        expected = {
+            'params': {'include': 'questionablethings,users,asdf',
+                       'per_page': 300},
+            'headers': self.api._get_headers(),
+            'json': None,
+        }
+        self.api._api_request(
+            endpoint='inptest', mode='POST', includes=('users', 'asdf'),
+            params={'per_page': 300, 'include': 'questionablethings'})
+        mock_request.assert_called_with('https://dummy.com/api/inptest',
+                                        **expected)
