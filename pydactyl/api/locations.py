@@ -19,7 +19,7 @@ class Locations(PterodactylAPI):
             location_id(int): Pterodactyl Location ID.
         """
         response = self._api_request(
-            endpoint='application/locations/%s' % location_id)
+            endpoint='application/locations/{}'.format(location_id))
         return response
 
     def create_location(self, shortcode, description):
@@ -53,8 +53,8 @@ class Locations(PterodactylAPI):
             data['description'] = description
 
         response = self._api_request(
-            endpoint='application/locations/%s' % location_id, mode='PATCH',
-            data=data)
+            endpoint='application/locations/{}'.format(location_id),
+            mode='PATCH', data=data)
         return response
 
     def delete_location(self, location_id):
@@ -64,5 +64,6 @@ class Locations(PterodactylAPI):
             location_id(int): Pterodactyl Location ID.
         """
         response = self._api_request(
-            endpoint='application/locations/%s' % location_id, mode='DELETE')
+            endpoint='application/locations/{}'.format(location_id),
+            mode='DELETE')
         return response
