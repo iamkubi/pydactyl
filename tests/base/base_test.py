@@ -124,3 +124,36 @@ class BaseTests(unittest.TestCase):
             override_headers={'Content-Type': 'application/text'})
         mock_request.assert_called_with('https://dummy.com/api/overridetest',
                                         **expected)
+
+    @mock.patch.object(Session, 'get')
+    def test_api_request_with_includes(self, mock_request):
+        expected = {
+            'params': {'include': 'allocations,users,servers'},
+            'headers': self.api._get_headers(),
+        }
+        self.api._api_request(endpoint='includetest', mode='GET', includes=(
+            'allocations', 'users', 'servers'))
+        mock_request.assert_called_with('https://dummy.com/api/includetest',
+                                        **expected)
+
+    @mock.patch.object(Session, 'get')
+    def test_api_request_with_params(self, mock_request):
+        expected = {
+            'params': {'per_page': 300},
+            'headers': self.api._get_headers(),
+        }
+        self.api._api_request(endpoint='includetest', mode='GET', params={
+            'per_page': 300})
+        mock_request.assert_called_with('https://dummy.com/api/includetest',
+                                        **expected)
+
+    @mock.patch.object(Session, 'get')
+    def test_api_request_with_includes_and_params(self, mock_request):
+        expected = {
+            'params': {'include': 'allocations,users,servers', 'per_page': 300},
+            'headers': self.api._get_headers(),
+        }
+        self.api._api_request(endpoint='inptest', mode='GET', includes=(
+            'allocations', 'users', 'servers'), params={'per_page': 300})
+        mock_request.assert_called_with('https://dummy.com/api/inptest',
+                                        **expected)

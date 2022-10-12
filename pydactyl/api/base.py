@@ -52,7 +52,8 @@ class PterodactylAPI(object):
         return headers
 
     def _api_request(self, endpoint, mode='GET', params=None, data=None,
-                     json=None, override_headers=None, data_as_json=True):
+                     json=None, override_headers=None, data_as_json=True,
+                     includes=None):
         """Make a request to the Pterodactyl API.
 
         Args:
@@ -68,6 +69,8 @@ class PterodactylAPI(object):
             override_headers(dict): Headers to override, e.g. to set the
                     Content-Type
             data_as_json(bool): If True data will be posted as JSON
+            includes(iter): List of includes to be added as a param,
+                    e.g. ('servers', 'users')
 
         Returns:
             response: A HTTP response object or the JSON response depending on
@@ -80,6 +83,15 @@ class PterodactylAPI(object):
         headers = self._get_headers()
         if override_headers:
             headers.update(override_headers)
+
+        if includes:
+            include_str = ','.join(includes)
+            if params and params.get('include'):
+                params['include'] += ',' + include_str
+            elif params:
+                params['include'] = include_str
+            else:
+                params = {'include': include_str}
 
         if mode == 'GET':
             response = self._session.get(url, params=params, headers=headers)
