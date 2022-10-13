@@ -14,6 +14,7 @@ class LocationsTests(TestCase):
         expected = {
             'endpoint': 'application/locations',
             'includes': None,
+            'params': None,
         }
         self.client.locations.list_locations()
         mock_api.assert_called_with(**expected)
@@ -23,6 +24,7 @@ class LocationsTests(TestCase):
         expected = {
             'endpoint': 'application/locations/11',
             'includes': None,
+            'params': None,
         }
         self.client.locations.get_location_info(11)
         mock_api.assert_called_with(**expected)
@@ -34,7 +36,6 @@ class LocationsTests(TestCase):
             'mode': 'POST',
             'data': {'shortcode': 'eu.ams.1-2_3',
                      'description': 'Test Location'},
-            'includes': None,
         }
         self.client.locations.create_location('eu.ams.1-2_3', 'Test Location')
         mock_api.assert_called_with(**expected)
@@ -50,7 +51,6 @@ class LocationsTests(TestCase):
             'mode': 'PATCH',
             'data': {'shortcode': 'us.nyc.lvl3',
                      'description': 'Level3 NYC Server'},
-            'includes': None,
         }
         self.client.locations.edit_location(33, shortcode='us.nyc.lvl3',
                                             description='Level3 NYC Server')
@@ -61,7 +61,6 @@ class LocationsTests(TestCase):
         expected = {
             'endpoint': 'application/locations/44',
             'mode': 'DELETE',
-            'includes': None,
         }
         self.client.locations.delete_location(44)
         mock_api.assert_called_with(**expected)
