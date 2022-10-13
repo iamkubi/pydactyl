@@ -11,10 +11,16 @@ class ServersBase(base.PterodactylAPI):
     when using PterodactylClient.
     """
 
-    def list_servers(self):
-        """List all servers the client has access to."""
+    def list_servers(self, includes=None, params=None):
+        """List all servers the client has access to.
+
+        Args:
+            includes(iter): List of includes, e.g. ('egg', 'subusers')
+            params(dict): Extra parameters to pass, e.g. {'per_page': 300}
+        """
         endpoint = 'client'
-        response = self._api_request(endpoint=endpoint)
+        response = self._api_request(endpoint=endpoint, includes=includes,
+                                     params=params)
         return PaginatedResponse(self, endpoint, response)
 
     def list_permissions(self):
@@ -26,16 +32,19 @@ class ServersBase(base.PterodactylAPI):
         response = self._api_request(endpoint=endpoint)
         return response
 
-    def get_server(self, server_id, detail=False):
+    def get_server(self, server_id, detail=False, includes=None, params=None):
         """Get information for the specified server.
 
         Args:
             server_id(str): Server identifier (abbreviated UUID)
             detail(bool): If True includes the object type and a nested data
                     structure.  This is not particularly useful.
+            includes(iter): List of includes, e.g. ('egg', 'subusers')
+            params(dict): Extra parameters to pass, e.g. {'per_page': 300}
         """
         response = self._api_request(
-            endpoint='client/servers/{}'.format(server_id))
+            endpoint='client/servers/{}'.format(server_id),
+            includes=includes, params=params)
         return base.parse_response(response, detail)
 
     def get_server_utilization(self, server_id, detail=False):

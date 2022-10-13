@@ -4,7 +4,8 @@ from pydactyl.api import base
 class Databases(base.PterodactylAPI):
     """Pterodactyl Client Server Databases API."""
 
-    def list_databases(self, server_id: str, include_passwords: bool = False):
+    def list_databases(self, server_id: str, include_passwords: bool = False,
+                       includes: list = [], params: dict = None):
         """List all databases for a server.
 
         Optionally includes the database user passwords.
@@ -12,12 +13,14 @@ class Databases(base.PterodactylAPI):
         Args:
             server_id(str): Server identifier (abbreviated UUID)
             include_passwords(bool): True to include database user passwords
+            includes(iter): List of includes, e.g. ('password')
+            params(dict): Extra parameters to pass, e.g. {'per_page': 300}
         """
-        params = {}
         if include_passwords:
-            params['include'] = 'password'
+            includes.append('password')
         endpoint = 'client/servers/{}/databases'.format(server_id)
-        response = self._api_request(endpoint=endpoint, params=params)
+        response = self._api_request(endpoint=endpoint,
+                                     includes=includes or None, params=params)
         return response
 
     def create_database(self, server_id: str, name: str, remote: str = '%'):
