@@ -11,9 +11,11 @@ An easy to use Python wrapper for the Pterodactyl Panel API.
 ## State of the project
 
 Support for the Pterodactyl 1.x API is complete.
-The 1.x Pydactyl release is mostly stable and will not see significant changes 
-until the Pterodactyl 2.0 release. Pull Requests will still be accepted and 
-new endpoints will continue to be added.
+The 2.0 Pydactyl release was created to standardize how includes and params 
+are passed.  As a result some endpoints (namely nests) **will break** when 
+upgrading from Pydactyl 1.x to 2.0.
+
+Pull Requests are being accepted and new endpoints will continue to be added.
 
 If you encounter problems, find APIs that haven't been implemented, or have a
 feature request please file a [Github issue][issues].
@@ -162,6 +164,49 @@ api.user.get_user_info(user_id)
 {'object': 'user', 'attributes': {'id': 14, 'external_id': None, .... }}
 # Delete the user
 api.user.delete_user(user_id=14)
+```
+
+### Includes
+
+Pterodactyl API endpoints have different sets of includes you can pass to alter 
+the response.  Using includes will cause additional information to show up 
+in the relationships field of the response data.  Some endpoints have no 
+includes and some have many.
+
+Pydactyl docstrings include examples of 
+valid includes for each endpoint, but they are **not an exhaustive list**.
+
+```
+server_includes = [
+    'allocations', 'user', 'subusers', 'pack', 'nest', 'egg', 'variables',
+    'location', 'node', 'databases']
+```
+
+As an example the application server details endpoint has 10 potential 
+includes according to the API docs.  Note that the API docs are not always 
+accurate either!
+
+Most endpoints that generate lists will have optional includes that can be 
+passed as lists or tuples.
+
+```python
+api.nodes.list_nodes(includes=('allocations', 'location'))
+api.servers.get_server_info(
+    server_id=53,
+    includes=['user', 'subusers', 'location'])
+```
+
+### Params
+
+Most endpoints with includes will also have a `params` parameter.  This can 
+be used to pass additional parameters.  Many endpoint specific `params` are 
+already supported by Pydactyl, however some additional params apply 
+universally like `per_page`.
+
+```python
+api.nodes.list_nodes(params={'per_page': 9001})
+api.servers.list_servers(params={'per_page': 9001})
+api.users.list_users(params={'per_page': 9001})
 ```
 
 ## PterodactylClient
