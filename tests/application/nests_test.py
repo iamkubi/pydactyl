@@ -64,7 +64,7 @@ class NestsTests(TestCase):
             'endpoint': 'application/nests/33/eggs/44',
         }
         self.client.nests.get_egg_info(33, 44)
-        mock_api.assert_called_with(**expected, params=None)
+        mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
     def test_get_egg_info_with_includes(self, mock_api):

@@ -1,4 +1,4 @@
-from pydactyl.api.base import PterodactylAPI
+from pydactyl.api.base import PterodactylAPI, parse_deprecated_includes
 from pydactyl.constants import USE_SSL
 from pydactyl.responses import PaginatedResponse
 
@@ -15,14 +15,7 @@ class Nodes(PterodactylAPI):
             params(dict): Extra parameters to pass, e.g. {'per_page': 300}
         """
         endpoint = 'application/nodes'
-        if include is not None:
-            print('DEPRECATED: Use includes instead of include for '
-                  'list_nodes()!')
-            deprecated_includes = include.split(',')
-            if includes:
-                includes.extend(deprecated_includes)
-            else:
-                includes = deprecated_includes
+        includes = parse_deprecated_includes(include, includes)
         response = self._api_request(endpoint=endpoint,
                                      includes=includes, params=params)
         return PaginatedResponse(self, endpoint, response)
@@ -37,15 +30,17 @@ class Nodes(PterodactylAPI):
             endpoint='application/nodes/{}/configuration'.format(node_id))
         return response
 
-    def get_node_details(self, node_id, includes=None):
+    def get_node_details(self, node_id, includes=None, params=None):
         """Get detailed info for the specified node.
 
         Args:
             node_id(int): Pterodactyl Node ID.
             includes(iter): List of includes, e.g. ('allocations', 'servers')
+            params(dict): Extra parameters to pass, e.g. {'per_page': 300}
         """
         response = self._api_request(
-            endpoint='application/nodes/{}'.format(node_id), includes=includes)
+            endpoint='application/nodes/{}'.format(node_id),
+            includes=includes, params=params)
         return response
 
     def get_node_info(self, node_id):
@@ -181,6 +176,11 @@ class Nodes(PterodactylAPI):
 
     def delete_allocation(self, node_id, allocation_id):
         """Deletes the specified allocation on the specified node.
+
+        The Pterodactyl API currently limits delete_allocation to a single
+        allocation per API call.
+
+        See: https://github.com/pterodactyl/panel/issues/4373
 
         Args:
             node_id(int): Pterodactyl Node ID.
