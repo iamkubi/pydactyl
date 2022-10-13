@@ -12,24 +12,38 @@ class NodesTests(TestCase):
     def test_list_nodes(self, mock_api):
         expected = {
             'endpoint': 'application/nodes',
-            'params': {},
+            'includes': None,
+            'params': None,
         }
         self.client.nodes.list_nodes()
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
-    def test_list_nodes_with_includes(self, mock_api):
+    def test_list_nodes_with_deprecated_includes(self, mock_api):
         expected = {
             'endpoint': 'application/nodes',
-            'params': {'include': 'location,other'},
+            'includes': ['location', 'other'],
+            'params': None,
         }
         self.client.nodes.list_nodes(include='location,other')
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_list_nodes_with_deprecated_include_and_includes(self, mock_api):
+        expected = {
+            'endpoint': 'application/nodes',
+            'includes': ['foo', 'bar', 'location', 'other'],
+            'params': None,
+        }
+        self.client.nodes.list_nodes(include='location,other',
+                                     includes=['foo', 'bar'])
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
     def test_get_node_details(self, mock_api):
         expected = {
             'endpoint': 'application/nodes/11',
+            'includes': None,
         }
         self.client.nodes.get_node_details(11)
         mock_api.assert_called_with(**expected)
@@ -110,6 +124,8 @@ class NodesTests(TestCase):
     def test_list_node_allocations(self, mock_api):
         expected = {
             'endpoint': 'application/nodes/12/allocations',
+            'includes': None,
+            'params': None,
         }
         self.client.nodes.list_node_allocations(12)
         mock_api.assert_called_with(**expected)

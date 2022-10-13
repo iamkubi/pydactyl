@@ -6,17 +6,25 @@ from pydactyl.responses import PaginatedResponse
 class Nodes(PterodactylAPI):
     """Class for interacting with the Pterdactyl Nodes API."""
 
-    def list_nodes(self, include=None):
+    def list_nodes(self, include=None, includes=None, params=None):
         """List all nodes.
 
         Args:
-            include(str): Comma separated list of includes
+            include(str): DEPRECATED, use includes
+            includes(iter): List of includes, e.g. ('allocations', 'servers')
+            params(dict): Extra parameters to pass, e.g. {'per_page': 300}
         """
         endpoint = 'application/nodes'
-        params = {}
         if include is not None:
-            params['include'] = include
-        response = self._api_request(endpoint=endpoint, params=params)
+            print('DEPRECATED: Use includes instead of include for '
+                  'list_nodes()!')
+            deprecated_includes = include.split(',')
+            if includes:
+                includes.extend(deprecated_includes)
+            else:
+                includes = deprecated_includes
+        response = self._api_request(endpoint=endpoint,
+                                     includes=includes, params=params)
         return PaginatedResponse(self, endpoint, response)
 
     def get_node_config(self, node_id):
@@ -29,24 +37,20 @@ class Nodes(PterodactylAPI):
             endpoint='application/nodes/{}/configuration'.format(node_id))
         return response
 
-    def get_node_details(self, node_id):
+    def get_node_details(self, node_id, includes=None):
         """Get detailed info for the specified node.
 
         Args:
             node_id(int): Pterodactyl Node ID.
+            includes(iter): List of includes, e.g. ('allocations', 'servers')
         """
         response = self._api_request(
-            endpoint='application/nodes/{}'.format(node_id))
+            endpoint='application/nodes/{}'.format(node_id), includes=includes)
         return response
 
     def get_node_info(self, node_id):
-        """Get detailed info for the specified node.
-
-        DEPRECATED: Use get_node_details
-
-        Args:
-            node_id(int): Pterodactyl Node ID.
-        """
+        """DEPRECATED: Use get_node_details"""
+        print('DEPRECATED: Use get_node_details() instead of get_node_info()!')
         return self.get_node_details(node_id)
 
     def create_node(self, name, description, location_id, fqdn, memory, disk,
@@ -139,17 +143,20 @@ class Nodes(PterodactylAPI):
             endpoint='application/nodes/{}'.format(node_id), mode='DELETE')
         return response
 
-    def list_node_allocations(self, node_id):
+    def list_node_allocations(self, node_id, includes=None, params=None):
         """Retrieves all allocations for a specified node.
 
         Args:
             node_id(int): Pterodactyl Node ID.
+            includes(iter): List of includes, e.g. ('node', 'server')
+            params(dict): Extra parameters to pass, e.g. {'per_page': 300}
 
         Returns:
             obj: Iterable response that fetches pages as required.
         """
         endpoint = 'application/nodes/{}/allocations'.format(node_id)
-        response = self._api_request(endpoint=endpoint)
+        response = self._api_request(endpoint=endpoint, includes=includes,
+                                     params=params)
         return PaginatedResponse(self, endpoint, response)
 
     def create_allocations(self, node_id, ip, ports, alias=None):
