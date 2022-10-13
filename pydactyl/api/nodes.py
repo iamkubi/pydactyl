@@ -1,4 +1,4 @@
-from pydactyl.api.base import PterodactylAPI, parse_deprecated_includes
+from pydactyl.api.base import PterodactylAPI
 from pydactyl.constants import USE_SSL
 from pydactyl.responses import PaginatedResponse
 
@@ -6,16 +6,14 @@ from pydactyl.responses import PaginatedResponse
 class Nodes(PterodactylAPI):
     """Class for interacting with the Pterdactyl Nodes API."""
 
-    def list_nodes(self, include=None, includes=None, params=None):
+    def list_nodes(self, includes=None, params=None):
         """List all nodes.
 
         Args:
-            include(str): DEPRECATED, use includes
             includes(iter): List of includes, e.g. ('allocations', 'servers')
             params(dict): Extra parameters to pass, e.g. {'per_page': 300}
         """
         endpoint = 'application/nodes'
-        includes = parse_deprecated_includes(include, includes)
         response = self._api_request(endpoint=endpoint,
                                      includes=includes, params=params)
         return PaginatedResponse(self, endpoint, response)

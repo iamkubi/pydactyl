@@ -33,15 +33,6 @@ class BaseTests(unittest.TestCase):
                          base.url_join('https://asdf.com', '/api/',
                                        'other/things'))
 
-    def test_parse_deprecated_includes(self):
-        self.assertCountEqual(
-            ['inc1', 'inc2', 'inc3', 'inc4'],
-            base.parse_deprecated_includes('inc1,inc2', ('inc3', 'inc4')))
-        self.assertCountEqual(
-            [3, 4], base.parse_deprecated_includes(None, (3, 4)))
-        self.assertCountEqual(
-            ['foo', 'bar'], base.parse_deprecated_includes('foo,bar', []))
-
     def test_parse_response_with_detail(self):
         expected = {'object': 'server', 'attributes': {'id': 12}}
         self.assertEqual(expected, base.parse_response(expected, detail=True))

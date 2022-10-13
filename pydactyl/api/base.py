@@ -34,21 +34,6 @@ def url_join(*args):
     return '/'.join(arg.strip('/') for arg in args)
 
 
-def parse_deprecated_includes(include, includes):
-    """Combine old format string and new format list includes."""
-    combined_includes = []
-    if include is not None:
-        print('DEPRECATED: Use includes instead of include!')
-        deprecated_includes = include.split(',')
-        if includes:
-            combined_includes = list(includes) + deprecated_includes
-        else:
-            combined_includes = deprecated_includes
-    else:
-        combined_includes = includes
-    return combined_includes
-
-
 class PterodactylAPI(object):
     """Pterodactyl API client."""
 
