@@ -164,6 +164,13 @@ api.user.get_user_info(user_id)
 api.user.delete_user(user_id=14)
 ```
 
+## PterodactylClient
+
+Each of the classes in pydactyl could be imported independently, but the 
+PterodactylClient class [pydactyl/api_client.py](pydactyl/api_client.py) 
+provides a simplified interface that imports libraries for you and provides 
+some convenience features like retries and debug logging.
+
 ### Retries
 
 Instances of [PterodactylClient](pydactyl/api_client.py) will automatically
@@ -189,7 +196,20 @@ status codes.
 PterodactylClient('foo', 'bar', extra_retry_codes=[502, 504])
 ```
 
-### Paginated Responses
+### Debug logging
+
+Most errors from pydactyl will present as exceptions and there is no logging 
+by default, however sometimes additional logging is helpful.  You can get 
+request logging by passing `debug=True` to PterodactylClient.
+
+```python
+app_api = PterodactylClient('https://why', 'broken', debug=True)
+app_api.servers.list_servers(includes=('egg', 'nest'))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): why:443
+DEBUG:urllib3.connectionpool:https://why:443 "GET /api/application/servers?include=egg%2Cnest HTTP/1.1" 200 None
+```
+
+## Paginated Responses
 
 Pydactyl API responses return
 a [PaginatedResponse object](pydactyl/responses.py#L4) that can be iterated over
