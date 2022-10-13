@@ -13,6 +13,7 @@ class UserTests(TestCase):
     def test_list_users(self, mock_api):
         expected = {
             'endpoint': 'application/users',
+            'includes': None,
             'params': {},
         }
         self.client.user.list_users()
@@ -22,6 +23,7 @@ class UserTests(TestCase):
     def test_list_users_with_filter(self, mock_api):
         expected = {
             'endpoint': 'application/users',
+            'includes': None,
             'params': {'filter[email]': 'best@test.com'}
         }
         self.client.user.list_users(email='best@test.com')
@@ -31,16 +33,48 @@ class UserTests(TestCase):
     def test_list_users_with_multiple_filter_params(self, mock_api):
         expected = {
             'endpoint': 'application/users',
+            'includes': None,
             'params': {'filter[email]': 'best@test.com',
-                       'filter[username]': 'best'}
+                       'filter[uuid]': 2,
+                       'filter[username]': 'best',
+                       'filter[external_id]': 4}
         }
-        self.client.user.list_users(email='best@test.com', username='best')
+        self.client.user.list_users(email='best@test.com', uuid=2,
+                                    username='best', external_id=4)
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_list_users_with_multiple_filter_params_and_includes(
+            self, mock_api):
+        expected = {
+            'endpoint': 'application/users',
+            'params': {'filter[email]': 'best@test.com',
+                       'filter[username]': 'best',
+                       'per_page': 300},
+            'includes': ['servers', 'databases']
+        }
+        self.client.user.list_users(
+            email='best@test.com', username='best', params={'per_page': 300},
+            includes=['servers', 'databases'])
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_list_users_with_one_param_no_filters(
+            self, mock_api):
+        expected = {
+            'endpoint': 'application/users',
+            'includes': None,
+            'params': {'per_page': 300},
+        }
+        self.client.user.list_users(params={'per_page': 300})
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
     def test_get_user_info_by_external_id(self, mock_api):
         expected = {
             'endpoint': 'application/users/external/11',
+            'includes': None,
+            'params': None,
         }
         self.client.user.get_user_info(external_id=11)
         mock_api.assert_called_with(**expected)
@@ -49,6 +83,8 @@ class UserTests(TestCase):
     def test_get_user_info_by_user_id(self, mock_api):
         expected = {
             'endpoint': 'application/users/22',
+            'includes': None,
+            'params': None,
         }
         self.client.user.get_user_info(user_id=22)
         mock_api.assert_called_with(**expected)

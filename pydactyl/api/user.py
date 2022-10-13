@@ -8,7 +8,7 @@ class User(PterodactylAPI):
     """Class for interacting with the Pterdactyl Client API."""
 
     def list_users(self, email=None, uuid=None, username=None,
-                   external_id=None):
+                   external_id=None, includes=None, params=None):
         """List all users.
 
         Accepts optional filter parameters.  If multiple filters are specified
@@ -19,20 +19,36 @@ class User(PterodactylAPI):
             uuid(str): Filter by uuid
             username(str): Filter by username
             external_id(int): Filter by external_id
+            includes(iter): List of includes, e.g. ('servers')
+            params(dict): Extra parameters to pass, e.g. {'per_page': 300}
         """
-        params = {'filter[{}]'.format(k): v for k, v in locals().items() if v
-                  is not None and k != 'self'}
+        filters = {}
+        if email:
+            filters['filter[email]'] = email
+        if uuid:
+            filters['filter[uuid]'] = uuid
+        if username:
+            filters['filter[username]'] = username
+        if external_id:
+            filters['filter[external_id]'] = external_id
+
+        if params:
+            filters.update(params)
         endpoint = 'application/users'
-        response = self._api_request(endpoint=endpoint, params=params)
+        response = self._api_request(endpoint=endpoint,
+                                     includes=includes, params=filters)
         return PaginatedResponse(self, endpoint, response)
 
-    def get_user_info(self, user_id=None, external_id=None, detail=True):
+    def get_user_info(self, user_id=None, external_id=None, detail=True,
+                      includes=None, params=None):
         """List detailed user information for specified user_id.
 
         Args:
             user_id(int): Pterodactyl user ID
             external_id(int): User ID from external system like WHMCS
             detail(bool): If True includes created and updated timestamps.
+            includes(iter): List of includes, e.g. ('servers')
+            params(dict): Extra parameters to pass, e.g. {'per_page': 300}
         """
         if not user_id and not external_id:
             raise BadRequestError('Must specify either user_id or external_id.')
@@ -41,11 +57,12 @@ class User(PterodactylAPI):
                                   'not both.')
 
         if user_id:
-            endpoint = 'application/users/%s' % user_id
+            endpoint = 'application/users/{}'.format(user_id)
         else:
-            endpoint = 'application/users/external/%s' % external_id
+            endpoint = 'application/users/external/{}'.format(external_id)
 
-        response = self._api_request(endpoint=endpoint)
+        response = self._api_request(endpoint=endpoint, includes=includes,
+                                     params=params)
         return base.parse_response(response, detail=detail)
 
     def create_user(self, username, email, first_name, last_name,
@@ -106,8 +123,9 @@ class User(PterodactylAPI):
                 'root_admin': root_admin,
                 'language': language,
                 }
-        response = self._api_request(endpoint='application/users/%s' % user_id,
-                                     mode='PATCH', data=data)
+        response = self._api_request(
+            endpoint='application/users/{}'.format(user_id), mode='PATCH',
+            data=data)
         return base.parse_response(response, detail=True)
 
     def delete_user(self, user_id=None, external_id=None, detail=True):
@@ -129,9 +147,9 @@ class User(PterodactylAPI):
 
         if external_id:
             response = self._api_request(
-                endpoint='application/users/external/%s' % external_id)
+                endpoint='application/users/external/{}'.format(external_id))
             user_id = response['attributes']['id']
 
         response = self._api_request(
-            endpoint='application/users/%s' % user_id, mode='DELETE')
+            endpoint='application/users/{}'.format(user_id), mode='DELETE')
         return base.parse_response(response, detail=detail)
