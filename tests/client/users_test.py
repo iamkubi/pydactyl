@@ -23,10 +23,11 @@ class UsersTests(unittest.TestCase):
             'endpoint': 'client/servers/bofh44/users',
             'mode': 'POST',
             'data': {'email': 'noob@noob.noob', 'permissions': [
-                'control.console']}
+                'control.console'], 'username': 'test'}
         }
-        self.api.client.servers.users.create_user('bofh44', 'noob@noob.noob',
-                                                  ['control.console'])
+        self.api.client.servers.users.create_user(
+            server_id='bofh44', email='noob@noob.noob',
+            permissions=['control.console'], username='test')
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')

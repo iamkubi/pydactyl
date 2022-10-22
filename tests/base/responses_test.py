@@ -40,6 +40,10 @@ class PaginatedResponseTests(unittest.TestCase):
         response = PaginatedResponse(self.client, 'anyendpoint', TEST_DATA)
         self.assertEqual(response.get('meta'), TEST_META)
 
+    def test_paginated_response_get_nonexistant_item(self):
+        response = PaginatedResponse(self.client, 'anyendpoint', TEST_DATA)
+        self.assertEqual(response.get('fountainofyouth'), None)
+
     def test_paginated_response_get_with_default(self):
         response = PaginatedResponse(self.client, 'anyendpoint', TEST_DATA)
         self.assertEqual(response.get('badname', 'test_default'),

@@ -4,6 +4,7 @@ from unittest import mock
 from requests import Session
 
 from pydactyl.api import base
+from pydactyl.exceptions import BadRequestError
 
 
 class BaseTests(unittest.TestCase):
@@ -74,6 +75,18 @@ class BaseTests(unittest.TestCase):
         }
         self.api._api_request(endpoint='foo', mode='POST', data=data)
         mock_request.assert_called_with('https://dummy.com/api/foo', json=data,
+                                        **expected)
+
+    @mock.patch.object(Session, 'post')
+    def test_valid_api_post_request_with_raw_data(self, mock_request):
+        data = {'test': 'data'}
+        expected = {
+            'params': None,
+            'headers': self.api._get_headers(),
+        }
+        self.api._api_request(endpoint='foo', mode='POST', data=data,
+                              data_as_json=False)
+        mock_request.assert_called_with('https://dummy.com/api/foo', data=data,
                                         **expected)
 
     @mock.patch.object(Session, 'patch')
@@ -172,3 +185,10 @@ class BaseTests(unittest.TestCase):
             params={'per_page': 300, 'include': 'questionablethings'})
         mock_request.assert_called_with('https://dummy.com/api/inptest',
                                         **expected)
+    def test_api_request_raises_without_endpoint(self):
+        with self.assertRaises(BadRequestError):
+            self.api._api_request(endpoint=None)
+
+    def test_api_request_raises_with_bad_mode(self):
+        with self.assertRaises(BadRequestError):
+            self.api._api_request(endpoint='any', mode='NOPE')

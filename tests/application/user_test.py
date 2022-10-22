@@ -122,6 +122,41 @@ class UserTests(TestCase):
         with self.assertRaises(BadRequestError):
             self.client.user.delete_user(user_id=1, external_id=2)
 
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_create_user(self, mock_api):
+        expected = {
+            'endpoint': 'application/users',
+            'mode': 'POST',
+            'data': {'username': 'best', 'email': 'best@test.com',
+                     'first_name': 'first', 'last_name': 'last',
+                     'external_id': 42,
+                     'password': 'hunter2', 'root_admin': True, 'language': 'en'
+             },
+        }
+        self.client.user.create_user(
+            username='best', email='best@test.com', first_name='first',
+            last_name='last', external_id=42, password='hunter2',
+            root_admin=True, language='en')
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_edit_user(self, mock_api):
+        expected = {
+            'endpoint': 'application/users/11',
+            'mode': 'PATCH',
+            'data': {'username': 'best', 'email': 'best@test.com',
+                     'first_name': 'first', 'last_name': 'last',
+                     'external_id': 43,
+                     'password': 'hunter2', 'root_admin': False, 'language':
+                         'en'
+             },
+        }
+        self.client.user.edit_user(
+            user_id=11, username='best', email='best@test.com',
+            first_name='first', last_name='last', external_id=43,
+            password='hunter2', root_admin=False, language='en')
+        mock_api.assert_called_with(**expected)
+
 
 if __name__ == '__main__':
     main()
