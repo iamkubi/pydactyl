@@ -1,5 +1,4 @@
 import logging
-
 import requests
 
 from pydactyl.api.client.client_api import ClientAPI
@@ -12,6 +11,7 @@ from pydactyl.exceptions import ClientConfigError
 
 
 def http_adapter(backoff_factor, retries, extra_retry_codes):
+    """Configures an HTTP adapter with retries and backoff."""
     retry_codes = [429] + extra_retry_codes
     retries = requests.packages.urllib3.util.retry.Retry(
         total=retries, status_forcelist=retry_codes,
@@ -20,12 +20,20 @@ def http_adapter(backoff_factor, retries, extra_retry_codes):
     adapter = requests.adapters.HTTPAdapter(max_retries=retries)
     return adapter
 
-def set_logger():
+
+def set_logger(debug):
+    """Configure debug logging if requested."""
+    if debug:
+        level = logging.DEBUG
+    else:
+        level = logging.NOTSET
+
     logging.basicConfig()
-    logging.getLogger().setLevel(logging.DEBUG)
+    logging.getLogger().setLevel(level)
     requests_log = logging.getLogger('requests.packages.urllib3')
-    requests_log.setLevel(logging.DEBUG)
+    requests_log.setLevel(level)
     requests_log.propagate = True
+
 
 class PterodactylClient(object):
     """Provides a simplified interface to the Pterodactyl Panel API.
@@ -64,8 +72,7 @@ class PterodactylClient(object):
         self._session.mount('https://', adapter)
         self._session.mount('http://', adapter)
 
-        if debug:
-            set_logger()
+        set_logger(debug)
 
         self._client = None
         self._locations = None
