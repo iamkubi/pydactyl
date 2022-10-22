@@ -108,6 +108,8 @@ api.client.servers.send_power_action(srv_id, 'start')
 ```
 
 ### Application API
+**As of Pterodactyl 1.8.0 Application API keys are deprecated and client API keys should now be used exclusively.**  
+
 The Application API is the administrative API of the Pterodactyl panel. 
 Below is the layout of the Application API namespace.
 
