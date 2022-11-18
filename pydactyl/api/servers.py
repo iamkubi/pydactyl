@@ -319,7 +319,7 @@ class Servers(base.PterodactylAPI):
 
         data = {
             'name': name,
-            'user_id': user_id,
+            'user': user_id,
             'external_id': external_id,
             'description': description
         }
