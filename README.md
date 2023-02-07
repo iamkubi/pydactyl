@@ -305,10 +305,10 @@ len(ports)
 
 [codecov]: https://codecov.io/gh/iamkubi/pydactyl
 
-[codecov-img]: https://codecov.io/gh/iamkubi/pydactyl/branch/master/graph/badge.svg
+[codecov-img]: https://codecov.io/gh/iamkubi/pydactyl/branch/main/graph/badge.svg
 
 [discord-img]: https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat
 
 [discord-join]: https://discord.gg/TgZDHPB
 
-[lint-and-test]: https://github.com/iamkubi/pydactyl/actions/workflows/lint-and-test.yml/badge.svg?branch=master (https://github.com/iamkubi/pydactyl/actions/workflows/lint-and-test.yml)
+[lint-and-test]: https://github.com/iamkubi/pydactyl/actions/workflows/lint-and-test.yml/badge.svg?branch=main (https://github.com/iamkubi/pydactyl/actions/workflows/lint-and-test.yml)
