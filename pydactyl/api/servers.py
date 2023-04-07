@@ -183,7 +183,8 @@ class Servers(base.PterodactylAPI):
                       database_limit=0, allocation_limit=0, backup_limit=0,
                       docker_image=None, startup_cmd=None, dedicated_ip=False,
                       start_on_completion=True, oom_disabled=True,
-                      default_allocation=None, additional_allocations=None, external_id=None, description=None):
+                      default_allocation=None, additional_allocations=None,
+                      external_id=None, description=None):
         """Creates one or more servers in the specified locations.
 
         Creates server instance(s) and begins the install process using the
@@ -289,7 +290,7 @@ class Servers(base.PterodactylAPI):
             },
             'environment': env_with_defaults,
             'start_on_completion': start_on_completion,
-            'description': description
+            'description': description,
         }
 
         if default_allocation is not None:

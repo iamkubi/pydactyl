@@ -185,6 +185,7 @@ class BaseTests(unittest.TestCase):
             params={'per_page': 300, 'include': 'questionablethings'})
         mock_request.assert_called_with('https://dummy.com/api/inptest',
                                         **expected)
+
     def test_api_request_raises_without_endpoint(self):
         with self.assertRaises(BadRequestError):
             self.api._api_request(endpoint=None)
