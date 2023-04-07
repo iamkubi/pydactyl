@@ -184,7 +184,7 @@ class Servers(base.PterodactylAPI):
                       docker_image=None, startup_cmd=None, dedicated_ip=False,
                       start_on_completion=True, oom_disabled=True,
                       default_allocation=None, additional_allocations=None,
-                      description=None):
+                      external_id=None, description=None):
         """Creates one or more servers in the specified locations.
 
         Creates server instance(s) and begins the install process using the
@@ -238,7 +238,7 @@ class Servers(base.PterodactylAPI):
                     internal ID and not the port number.
             additional_allocations(iter): Additional allocations on top of
                     default_allocation.
-            description(str): Description of the server.
+            description(str): A description of the server if needed
         """
         if default_allocation is None and not location_ids:
             raise BadRequestError('Must specify either default_allocation or '
@@ -270,6 +270,7 @@ class Servers(base.PterodactylAPI):
         data = {
             'name': name,
             'user': user_id,
+            'external_id': external_id,
             'nest': nest_id,
             'egg': egg_id,
             'docker_image': docker_image,
@@ -303,6 +304,35 @@ class Servers(base.PterodactylAPI):
         response = self._api_request(endpoint='application/servers',
                                      mode='POST', data=data, json=False)
         return response
+    
+    def update_server_details(self, server_id, name, user_id, external_id=None, description=None):
+        """Updates the details of an existing server.
+        
+        Modifies an existing server details identified by its Pterodactyl id.
+        
+        Example of a working set of parameters:
+            update_server_details(server_id=10, name='My awesome Server', external_id='some_id2389234', description='This is really an awesome server !'
+            
+        Args:
+            server_id(int): Internal server ID, e.g. 12
+            name(str): Name of the server to display in the panel.
+            user_id(int): User ID that will own the server.
+            external_id(int): Server ID from an external system like WHMCS
+            description(str): A description of the server if needed"""
+
+        data = {
+            'name': name,
+            'user': user_id,
+            'external_id': external_id,
+            'description': description
+        }
+
+        response = self._api_request(
+            endpoint='application/servers/{}/details'.format(server_id),
+            mode='PATCH', data=data, json=False)
+        return response
+
+
 
     def update_server_build(self, server_id, allocation_id, memory_limit=None,
                             swap_limit=None, disk_limit=None, cpu_limit=None,
