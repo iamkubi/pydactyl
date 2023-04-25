@@ -23,17 +23,15 @@ def http_adapter(backoff_factor, retries, extra_retry_codes):
 
 def set_logger(debug):
     """Configure debug logging if requested."""
+    requests_log = logging.getLogger('requests.packages.urllib3')
+
     if debug:
         level = logging.DEBUG
-    else:
-        level = logging.NOTSET
 
-    logging.basicConfig()
-    logging.getLogger().setLevel(level)
-    requests_log = logging.getLogger('requests.packages.urllib3')
-    requests_log.setLevel(level)
-    requests_log.propagate = True
-
+        logging.basicConfig()
+        logging.getLogger().setLevel(level)
+        requests_log.setLevel(level)
+        requests_log.propagate = True
 
 class PterodactylClient(object):
     """Provides a simplified interface to the Pterodactyl Panel API.
