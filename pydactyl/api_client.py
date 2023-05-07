@@ -16,7 +16,7 @@ def http_adapter(backoff_factor, retries, extra_retry_codes):
     retries = requests.packages.urllib3.util.retry.Retry(
         total=retries, status_forcelist=retry_codes,
         backoff_factor=backoff_factor,
-        method_whitelist=['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT'])
+        allowed_methods=['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT'])
     adapter = requests.adapters.HTTPAdapter(max_retries=retries)
     return adapter
 
