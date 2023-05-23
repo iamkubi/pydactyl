@@ -13,7 +13,7 @@ from pydactyl.exceptions import ClientConfigError
 def http_adapter(backoff_factor, retries, extra_retry_codes):
     """Configures an HTTP adapter with retries and backoff."""
     retry_codes = [429] + extra_retry_codes
-    retries = requests.packages.urllib3.util.retry.Retry(
+    retries = requests.adapters.Retry(
         total=retries, status_forcelist=retry_codes,
         backoff_factor=backoff_factor,
         allowed_methods=['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT'])
