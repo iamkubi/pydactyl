@@ -52,7 +52,7 @@ class LocationsTests(TestCase):
             'data': {'short': 'us.nyc.lvl3',
                      'description': 'Level3 NYC Server'},
         }
-        self.client.locations.edit_location(33, short='us.nyc.lvl3',
+        self.client.locations.edit_location(33, shortcode='us.nyc.lvl3',
                                             description='Level3 NYC Server')
         mock_api.assert_called_with(**expected)
 

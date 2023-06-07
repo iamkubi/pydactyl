@@ -31,33 +31,33 @@ class Locations(PterodactylAPI):
             includes=includes, params=params)
         return response
 
-    def create_location(self, short, description):
+    def create_location(self, shortcode, description):
         """Creates a new location.
 
         Args:
-            short(str): Short identifier between 1 and 60 characters, e.g. us.nyc.lvl3
+            shortcode(str): Short identifier between 1 and 60 characters, e.g. us.nyc.lvl3
             description(str): A long description of the location.  Max 255 characters.
         """
-        data = {'short': short, 'description': description}
+        data = {'short': shortcode, 'description': description}
         response = self._api_request(endpoint='application/locations',
                                      mode='POST', data=data)
         return response
 
-    def edit_location(self, location_id, short=None, description=None):
+    def edit_location(self, location_id, shortcode=None, description=None):
         """Modify an existing location.
 
         Args:
             location_id(int): Pterodactyl Location ID.
-            short(str): Short identifier between 1 and 60 characters, e.g. us.nyc.lvl3
+            shortcode(str): Short identifier between 1 and 60 characters, e.g. us.nyc.lvl3
             description(str): A long description of the location.  Max 255 characters.
         """
-        if not short and not description:
+        if not shortcode and not description:
             raise BadRequestError(
                 'Must specify either short or description for edit_location.')
 
         data = {}
-        if short:
-            data['short'] = short
+        if shortcode:
+            data['short'] = shortcode
         if description:
             data['description'] = description
 
