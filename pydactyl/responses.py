@@ -51,6 +51,9 @@ class PaginatedResponse(object):
     def __str__(self):
         return '{}'.format(self.data)
 
+    def __len__(self):
+        return self.meta['pagination']['total']
+
     def get(self, key, default=None):
         """Retrieves a key from the paginated response.
 

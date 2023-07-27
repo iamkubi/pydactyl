@@ -121,3 +121,8 @@ class PaginatedResponseTests(unittest.TestCase):
         expected_count = 16
         self.assertEqual(expected_count, len(expected))
         self.assertEqual(expected_count, len(response.collect()))
+
+    def test_paginated_response_len(self):
+        response = PaginatedResponse(self.client, 'anyendpoint', TEST_DATA)
+
+        self.assertEqual(106, len(response))
