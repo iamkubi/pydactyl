@@ -30,9 +30,9 @@ def set_logger(debug):
 
     logging.basicConfig()
     logging.getLogger().setLevel(level)
-    requests_log = logging.getLogger('requests.packages.urllib3')
-    requests_log.setLevel(level)
-    requests_log.propagate = True
+    logger = logging.getLogger(__name__)
+    logger.setLevel(level)
+    logger.propagate = True
 
 
 class PterodactylClient(object):
