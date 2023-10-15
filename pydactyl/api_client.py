@@ -26,7 +26,7 @@ def set_logger(debug):
     if debug:
         level = logging.DEBUG
     else:
-        level = logging.NOTSET
+        level = logging.ERROR
 
     logging.basicConfig()
     logging.getLogger().setLevel(level)
