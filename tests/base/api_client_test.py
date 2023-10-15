@@ -15,8 +15,8 @@ class ApiClientTests(unittest.TestCase):
 
     def test_pterodactyl_client_debug_param(self):
         logger = logging.getLogger()
-        self.assertEqual(logging.NOTSET, logger.level)
+        self.assertEqual(logging.ERROR, logger.level)
         api_client.PterodactylClient('foo', 'bar', debug=True)
         self.assertEqual(logging.DEBUG, logger.level)
         api_client.PterodactylClient('foo', 'bar', debug=False)
-        self.assertEqual(logging.NOTSET, logger.level)
+        self.assertEqual(logging.ERROR, logger.level)
