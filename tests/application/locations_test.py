@@ -34,7 +34,7 @@ class LocationsTests(TestCase):
         expected = {
             'endpoint': 'application/locations',
             'mode': 'POST',
-            'data': {'shortcode': 'eu.ams.1-2_3',
+            'data': {'short': 'eu.ams.1-2_3',
                      'description': 'Test Location'},
         }
         self.client.locations.create_location('eu.ams.1-2_3', 'Test Location')
@@ -49,7 +49,7 @@ class LocationsTests(TestCase):
         expected = {
             'endpoint': 'application/locations/33',
             'mode': 'PATCH',
-            'data': {'shortcode': 'us.nyc.lvl3',
+            'data': {'short': 'us.nyc.lvl3',
                      'description': 'Level3 NYC Server'},
         }
         self.client.locations.edit_location(33, shortcode='us.nyc.lvl3',

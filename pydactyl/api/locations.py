@@ -38,7 +38,7 @@ class Locations(PterodactylAPI):
             shortcode(str): Short identifier between 1 and 60 characters, e.g. us.nyc.lvl3
             description(str): A long description of the location.  Max 255 characters.
         """
-        data = {'shortcode': shortcode, 'description': description}
+        data = {'short': shortcode, 'description': description}
         response = self._api_request(endpoint='application/locations',
                                      mode='POST', data=data)
         return response
@@ -53,11 +53,11 @@ class Locations(PterodactylAPI):
         """
         if not shortcode and not description:
             raise BadRequestError(
-                'Must specify either shortcode or description for edit_location.')
+                'Must specify either short or description for edit_location.')
 
         data = {}
         if shortcode:
-            data['shortcode'] = shortcode
+            data['short'] = shortcode
         if description:
             data['description'] = description
 
