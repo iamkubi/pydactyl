@@ -29,7 +29,9 @@ def set_logger(debug):
         level = logging.ERROR
 
     logging.basicConfig()
-    logging.getLogger().setLevel(level)
+    # logging.getLogger().setLevel(level)
+    # this causes all python loggers to have their logging levels overriden to whatever Pydactyl is configured to accept
+    # bandaid fix for https://github.com/iamkubi/pydactyl/issues/82
     logger = logging.getLogger(__name__)
     logger.setLevel(level)
     logger.propagate = True
