@@ -34,7 +34,7 @@ class PterodactylClient(object):
     """
 
     def __init__(self, url=None, api_key=None, backoff_factor=1, retries=3,
-                 extra_retry_codes=[], logger: logging.Logger = get_logger():
+                 extra_retry_codes=[], logger: logging.Logger = get_logger()):
         """Initialize a Pterodactyl class instance.
 
         Args:
