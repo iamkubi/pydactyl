@@ -23,7 +23,8 @@ def http_adapter(backoff_factor, retries, extra_retry_codes):
 
 def get_logger() -> logging.Logger:
     """Get the default logger."""
-    return logger = logging.getLogger(__name__)
+    logger = logging.getLogger(__name__)
+    return logger
 
 
 class PterodactylClient(object):
