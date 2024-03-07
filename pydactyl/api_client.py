@@ -21,20 +21,9 @@ def http_adapter(backoff_factor, retries, extra_retry_codes):
     return adapter
 
 
-def set_logger(debug):
-    """Configure debug logging if requested."""
-    if debug:
-        level = logging.DEBUG
-    else:
-        level = logging.ERROR
-
-    logging.basicConfig()
-    # logging.getLogger().setLevel(level)
-    # this causes all python loggers to have their logging levels overriden to whatever Pydactyl is configured to accept
-    # bandaid fix for https://github.com/iamkubi/pydactyl/issues/82
-    logger = logging.getLogger(__name__)
-    logger.setLevel(level)
-    logger.propagate = True
+def get_logger() -> logging.Logger:
+    """Get the default logger."""
+    return logger = logging.getLogger(__name__)
 
 
 class PterodactylClient(object):
@@ -44,7 +33,7 @@ class PterodactylClient(object):
     """
 
     def __init__(self, url=None, api_key=None, backoff_factor=1, retries=3,
-                 extra_retry_codes=[], debug=False):
+                 extra_retry_codes=[], logger: logging.Logger = get_logger():
         """Initialize a Pterodactyl class instance.
 
         Args:
@@ -54,7 +43,7 @@ class PterodactylClient(object):
             retries(int): maximum number of retries per call
             extra_retry_codes(iter): list of additional integer HTTP status
                     codes to retry on, e.g. [502, 504]
-            debug(bool): enable debug logging for requests
+            logger(logging.Logger): the logger that Pydactyl will use
         """
         if not url:
             raise ClientConfigError(
@@ -66,6 +55,7 @@ class PterodactylClient(object):
 
         self._api_key = api_key
         self._url = url
+        self._logger = logger
 
         self._session = requests.Session()
         adapter = http_adapter(backoff_factor=backoff_factor,
@@ -73,8 +63,6 @@ class PterodactylClient(object):
                                extra_retry_codes=extra_retry_codes)
         self._session.mount('https://', adapter)
         self._session.mount('http://', adapter)
-
-        set_logger(debug)
 
         self._client = None
         self._locations = None
