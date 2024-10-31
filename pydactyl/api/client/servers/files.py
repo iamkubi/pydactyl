@@ -36,16 +36,17 @@ class Files(base.PterodactylAPI):
         response = self._api_request(endpoint=endpoint, params=params)
         return response.get('attributes').get('url')
 
-    def get_file_contents(self, server_id: str, path: str) -> str:
+    def get_file_contents(self, server_id: str, path: str, json: bool = True) -> str:
         """Get contents of the specified file on the specified server.
 
         Args:
             server_id(str): Server identifier (abbreviated UUID)
             path(str): URL encoded path to desired file (e.g. 'eula.txt')
+            json(bool): Whether to get the json_response (default: True)
         """
         endpoint = 'client/servers/{}/files/contents'.format(server_id)
         params = {'file': path}
-        response = self._api_request(endpoint=endpoint, params=params)
+        response = self._api_request(endpoint=endpoint, params=params, json=json)
         return response
 
     def rename_file(self, server_id: str, old_name: str, new_name: str,
