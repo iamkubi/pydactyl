@@ -4,14 +4,17 @@ from pydactyl.api import base
 class Settings(base.PterodactylAPI):
     """Pterodactyl Client Server Settings API."""
 
-    def rename_server(self, server_id: str, name: str):
+    def rename_server(self, server_id: str, name: str, description: str = None):
         """Renames the server.
 
         Args:
             server_id(str): Server identifier (abbreviated UUID)
             name(str): New name for the server
+            description(str): New description for the server
         """
         data = {'name': name}
+        if description is not None:
+            data['description'] = description
         endpoint = 'client/servers/{}/settings/rename'.format(server_id)
         response = self._api_request(endpoint=endpoint, mode='POST', data=data)
         return response
