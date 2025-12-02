@@ -20,6 +20,36 @@ class SettingsTests(unittest.TestCase):
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_rename_server_with_description(self, mock_api):
+        expected = {
+            'endpoint': 'client/servers/f1d2s3/settings/rename',
+            'mode': 'POST',
+            'data': {'name': 'newname', 'description': 'newdescription'},
+        }
+        self.api.client.servers.settings.rename_server('f1d2s3', 'newname', 'newdescription')
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_rename_server_no_description(self, mock_api):
+        expected = {
+            'endpoint': 'client/servers/f1d2s3/settings/rename',
+            'mode': 'POST',
+            'data': {'name': 'newname'},
+        }
+        self.api.client.servers.settings.rename_server('f1d2s3', 'newname')
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_rename_server_clear_description(self, mock_api):
+        expected = {
+            'endpoint': 'client/servers/f1d2s3/settings/rename',
+            'mode': 'POST',
+            'data': {'name': 'newname', 'description': ''},
+        }
+        self.api.client.servers.settings.rename_server('f1d2s3', 'newname', '')
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
     def test_reinstall_server(self, mock_api):
         expected = {
             'endpoint': 'client/servers/f1d2s3/settings/reinstall',
