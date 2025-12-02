@@ -1,5 +1,6 @@
 venv/*
 .idea
+**.pyc
 
 # pip stuff
 build/*
@@ -13,3 +14,4 @@ docs/_templates
 
 # test
 .pytest_cache
+__pycache__
