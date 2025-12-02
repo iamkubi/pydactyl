@@ -1,6 +1,6 @@
 """Pydactyl constants."""
 
-__version__ = '2.0.6'
+__version__ = '2.0.7'
 USER_AGENT = 'Pydactyl/' + __version__
 
 POWER_SIGNALS = ('start', 'stop', 'restart', 'kill')
