@@ -42,6 +42,7 @@ class FilesTest(unittest.TestCase):
         expected = {
             'endpoint': 'client/servers/gudsrvr/files/contents',
             'params': {'file': 'backups/today.zip'},
+            'json': True,
         }
         self.api.client.servers.files.get_file_contents('gudsrvr',
                                                         'backups/today.zip')
