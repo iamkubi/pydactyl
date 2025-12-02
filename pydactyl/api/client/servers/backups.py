@@ -50,6 +50,20 @@ class Backups(base.PterodactylAPI):
         response = self._api_request(endpoint=endpoint)
         return response
 
+    def restore_backup(self, server_id: str, backup_id: str, delete_existing_files: bool = True):
+        """Restores the specified backup.
+
+        Args:
+            server_id(str): Server identifier (abbreviated UUID)
+            backup_id(str): Backup identifier (long UUID)
+            delete_existing_files(bool): Delete existing files if True
+        """
+        endpoint = 'client/servers/{}/backups/{}/restore'.format(server_id,
+                                                                 backup_id)
+        data = {'truncate': delete_existing_files}
+        response = self._api_request(endpoint=endpoint, mode='POST', data=data)
+        return response
+
     def delete_backup(self, server_id: str, backup_id: str):
         """Deletes the specified backup.
 
