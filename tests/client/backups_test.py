@@ -45,6 +45,26 @@ class BackupsTests(unittest.TestCase):
         mock_api.assert_called_with(**expected)
 
     @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_restore_backup(self, mock_api):
+        expected = {
+            'endpoint': 'client/servers/abc123/backups/longid1111/restore',
+            'mode': 'POST',
+            'data': {'truncate': True},
+        }
+        self.api.client.servers.backups.restore_backup('abc123', 'longid1111')
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_restore_backup_no_delete_existing_files(self, mock_api):
+        expected = {
+            'endpoint': 'client/servers/abc123/backups/longid1111/restore',
+            'mode': 'POST',
+            'data': {'truncate': False},
+        }
+        self.api.client.servers.backups.restore_backup('abc123', 'longid1111', delete_existing_files=False)
+        mock_api.assert_called_with(**expected)
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
     def test_delete_backup(self, mock_api):
         expected = {
             'endpoint': 'client/servers/abc123/backups/longid1111',
