@@ -1,11 +1,11 @@
 import aiohttp
 import logging
 from pydactyl.api.client.async_client_api import AsyncClientAPI
-from pydactyl.api.async_locations import AsyncLocations
-from pydactyl.api.async_nests import AsyncNests
-from pydactyl.api.async_nodes import AsyncNodes
-from pydactyl.api.async_servers import AsyncServers
-from pydactyl.api.async_user import AsyncUser
+from pydactyl.api.application.async_locations import AsyncLocations
+from pydactyl.api.application.async_nests import AsyncNests
+from pydactyl.api.application.async_nodes import AsyncNodes
+from pydactyl.api.application.async_servers import AsyncServers
+from pydactyl.api.application.async_user import AsyncUser
 from pydactyl.exceptions import ClientConfigError
 
 def get_logger() -> logging.Logger:

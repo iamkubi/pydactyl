@@ -19,8 +19,8 @@ class AsyncNestsTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.nests.list_nests()
+                async with self.api as api:
+                    await api.nests.list_nests()
                 
                 args, _ = mock_get.call_args
                 self.assertIn('application/nests', args[0])
@@ -35,8 +35,8 @@ class AsyncNestsTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.nests.get_nest_info(1)
+                async with self.api as api:
+                    await api.nests.get_nest_info(1)
                 
                 args, _ = mock_get.call_args
                 self.assertIn('application/nests/1', args[0])
@@ -51,8 +51,8 @@ class AsyncNestsTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.nests.get_eggs_in_nest(1)
+                async with self.api as api:
+                    await api.nests.get_eggs_in_nest(1)
                 
                 args, _ = mock_get.call_args
                 self.assertIn('application/nests/1/eggs', args[0])
@@ -67,8 +67,8 @@ class AsyncNestsTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.nests.get_egg_info(1, 2)
+                async with self.api as api:
+                    await api.nests.get_egg_info(1, 2)
                 
                 args, _ = mock_get.call_args
                 self.assertIn('application/nests/1/eggs/2', args[0])

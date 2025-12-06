@@ -62,7 +62,7 @@ class AsyncPterodactylAPI(object):
                 async with self._session.patch(url, params=params, headers=headers, json=data) as response:
                     return await self._handle_response(response, json)
             elif mode == 'DELETE':
-                async with self._session.delete(url, params=params, headers=headers) as response:
+                async with self._session.delete(url, params=params, headers=headers, json=data) as response:
                     return await self._handle_response(response, json)
             elif mode == 'PUT':
                 async with self._session.put(url, params=params, headers=headers, json=data) as response:
