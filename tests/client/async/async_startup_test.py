@@ -16,8 +16,8 @@ class AsyncStartupTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.startup.list_variables('uuid')
+                async with self.api as api:
+                    await api.client.servers.startup.list_variables('uuid')
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/servers/uuid/startup', args[0])
@@ -32,8 +32,8 @@ class AsyncStartupTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_put.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.startup.update_variable('uuid', 'VAR', 'VAL')
+                async with self.api as api:
+                    await api.client.servers.startup.update_variable('uuid', 'VAR', 'VAL')
                 
                 args, kwargs = mock_put.call_args
                 self.assertIn('client/servers/uuid/startup/variable', args[0])

@@ -20,8 +20,8 @@ class AsyncServersBaseTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.list_servers()
+                async with self.api as api:
+                    await api.client.servers.list_servers()
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client', args[0])
@@ -36,8 +36,8 @@ class AsyncServersBaseTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.get_server('uuid')
+                async with self.api as api:
+                    await api.client.servers.get_server('uuid')
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/servers/uuid', args[0])
@@ -52,8 +52,8 @@ class AsyncServersBaseTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.get_server_utilization('uuid')
+                async with self.api as api:
+                    await api.client.servers.get_server_utilization('uuid')
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/servers/uuid/resources', args[0])
@@ -67,8 +67,8 @@ class AsyncServersBaseTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.send_console_command('uuid', 'say hello')
+                async with self.api as api:
+                    await api.client.servers.send_console_command('uuid', 'say hello')
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/command', args[0])
@@ -83,8 +83,8 @@ class AsyncServersBaseTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.send_power_action('uuid', 'start')
+                async with self.api as api:
+                    await api.client.servers.send_power_action('uuid', 'start')
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/power', args[0])
@@ -100,8 +100,8 @@ class AsyncServersBaseTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.get_websocket('uuid')
+                async with self.api as api:
+                    await api.client.servers.get_websocket('uuid')
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/servers/uuid/websocket', args[0])

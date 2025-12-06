@@ -16,8 +16,8 @@ class AsyncSchedulesTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.schedules.list_schedules('uuid')
+                async with self.api as api:
+                    await api.client.servers.schedules.list_schedules('uuid')
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/servers/uuid/schedules', args[0])
@@ -32,8 +32,8 @@ class AsyncSchedulesTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.schedules.create_schedule('uuid', 'Test Schedule', '1', '1', '*', '*', '*')
+                async with self.api as api:
+                    await api.client.servers.schedules.create_schedule('uuid', 'Test Schedule', '1', '1', '*', '*', '*')
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/schedules', args[0])
@@ -49,8 +49,8 @@ class AsyncSchedulesTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.schedules.get_schedule_details('uuid', 1)
+                async with self.api as api:
+                    await api.client.servers.schedules.get_schedule_details('uuid', 1)
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/servers/uuid/schedules/1', args[0])
@@ -65,8 +65,8 @@ class AsyncSchedulesTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.schedules.update_schedule('uuid', 1, 'Updated Schedule', '1', '1', '*', '*', '*')
+                async with self.api as api:
+                    await api.client.servers.schedules.update_schedule('uuid', 1, 'Updated Schedule', '1', '1', '*', '*', '*')
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/schedules/1', args[0])
@@ -81,8 +81,8 @@ class AsyncSchedulesTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_delete.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.schedules.delete_schedule('uuid', 1)
+                async with self.api as api:
+                    await api.client.servers.schedules.delete_schedule('uuid', 1)
                 
                 args, _ = mock_delete.call_args
                 self.assertIn('client/servers/uuid/schedules/1', args[0])
@@ -97,8 +97,8 @@ class AsyncSchedulesTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.schedules.create_task('uuid', 1, 'command', 'say hello')
+                async with self.api as api:
+                    await api.client.servers.schedules.create_task('uuid', 1, 'command', 'say hello')
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/schedules/1/tasks', args[0])
@@ -114,8 +114,8 @@ class AsyncSchedulesTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.schedules.update_task('uuid', 1, 1, 'command', 'say hi')
+                async with self.api as api:
+                    await api.client.servers.schedules.update_task('uuid', 1, 1, 'command', 'say hi')
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/schedules/1/tasks/1', args[0])
@@ -130,8 +130,8 @@ class AsyncSchedulesTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_delete.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.schedules.delete_task('uuid', 1, 1)
+                async with self.api as api:
+                    await api.client.servers.schedules.delete_task('uuid', 1, 1)
                 
                 args, _ = mock_delete.call_args
                 self.assertIn('client/servers/uuid/schedules/1/tasks/1', args[0])
@@ -145,8 +145,8 @@ class AsyncSchedulesTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.schedules.run_schedule('uuid', 1)
+                async with self.api as api:
+                    await api.client.servers.schedules.run_schedule('uuid', 1)
                 
                 args, _ = mock_post.call_args
                 self.assertIn('client/servers/uuid/schedules/1/execute', args[0])
