@@ -1,4 +1,6 @@
 """Classes used for creating responses."""
+import inspect
+
 
 
 class PaginatedResponse(object):
@@ -48,6 +50,27 @@ class PaginatedResponse(object):
         else:
             raise StopIteration
 
+    def __aiter__(self):
+        self._iteration = 0
+        return self
+
+    async def __anext__(self):
+        """Retrieves the next page of results asynchronously."""
+        self._iteration += 1
+        if self._iteration == 1:
+            return self
+        if self._next_page_exists(self.meta):
+            params = {'page': self._iteration}
+            response = self._client._api_request(endpoint=self.endpoint,
+                                                 params=params)
+            if inspect.isawaitable(response):
+                response = await response
+            self.data = response['data']
+            self.meta = response['meta']
+            return self
+        else:
+            raise StopAsyncIteration
+
     def __str__(self):
         return '{}'.format(self.data)
 
@@ -70,6 +93,17 @@ class PaginatedResponse(object):
         """
         collected = []
         for page in self:
+            collected.extend(page.data)
+        return collected
+
+    async def collect_async(self):
+        """Collect all results from all pages asynchronously.
+
+        Returns:
+            iter: Combined responses from all pages
+        """
+        collected = []
+        async for page in self:
             collected.extend(page.data)
         return collected
 
