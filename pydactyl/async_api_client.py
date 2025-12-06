@@ -2,6 +2,10 @@ import aiohttp
 import logging
 from pydactyl.api.client.async_client_api import AsyncClientAPI
 from pydactyl.api.async_locations import AsyncLocations
+from pydactyl.api.async_nests import AsyncNests
+from pydactyl.api.async_nodes import AsyncNodes
+from pydactyl.api.async_servers import AsyncServers
+from pydactyl.api.async_user import AsyncUser
 from pydactyl.exceptions import ClientConfigError
 
 def get_logger() -> logging.Logger:
@@ -27,6 +31,10 @@ class AsyncPterodactylClient(object):
         self._session = None
         self._client = None
         self._locations = None
+        self._nests = None
+        self._nodes = None
+        self._servers = None
+        self._user = None
 
     async def __aenter__(self):
         self._session = aiohttp.ClientSession()
@@ -50,3 +58,22 @@ class AsyncPterodactylClient(object):
         self._locations = AsyncLocations(self._url, self._api_key, self._session)
         return self._locations
 
+    @property
+    def nests(self):
+        self._nests = AsyncNests(self._url, self._api_key, self._session)
+        return self._nests
+
+    @property
+    def nodes(self):
+        self._nodes = AsyncNodes(self._url, self._api_key, self._session)
+        return self._nodes
+
+    @property
+    def servers(self):
+        self._servers = AsyncServers(self._url, self._api_key, self._session)
+        return self._servers
+
+    @property
+    def user(self):
+        self._user = AsyncUser(self._url, self._api_key, self._session)
+        return self._user
