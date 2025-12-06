@@ -1,0 +1,30 @@
+from pydactyl.api.async_base import AsyncPterodactylAPI
+
+
+class AsyncSettings(AsyncPterodactylAPI):
+    """Async Pterodactyl Client Server Settings API."""
+
+    async def rename_server(self, server_id: str, name: str, description: str = None):
+        """Renames the server.
+
+        Args:
+            server_id(str): Server identifier (abbreviated UUID)
+            name(str): New name for the server
+            description(str): New description for the server
+        """
+        data = {'name': name}
+        if description is not None:
+            data['description'] = description
+        endpoint = 'client/servers/{}/settings/rename'.format(server_id)
+        response = await self._api_request(endpoint=endpoint, mode='POST', data=data)
+        return response
+
+    async def reinstall_server(self, server_id: str):
+        """Reinstalls the specified server.
+
+        Args:
+            server_id(str): Server identifier (abbreviated UUID)
+        """
+        endpoint = 'client/servers/{}/settings/reinstall'.format(server_id)
+        response = await self._api_request(endpoint=endpoint, mode='POST')
+        return response

@@ -1,4 +1,3 @@
-import logging
 import unittest
 
 from pydactyl.exceptions import ClientConfigError
