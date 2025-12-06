@@ -12,6 +12,8 @@ jobs:
     name: Build and Publish Release
     needs: run-tests
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for pypi Trusted Publishing
 
     steps:
       - uses: actions/checkout@v6
@@ -34,3 +36,4 @@ jobs:
           --outdir dist/
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        
