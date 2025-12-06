@@ -3,7 +3,7 @@ name: lint-and-test
 on: [push, pull_request, workflow_call]
 
 jobs:
-  build:
+  lint-and-test:
 
     runs-on: "ubuntu-latest"
     strategy:
