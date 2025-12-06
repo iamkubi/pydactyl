@@ -16,8 +16,8 @@ class AsyncAccountTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.account.get_account()
+                async with self.api as api:
+                    await api.client.account.get_account()
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/account', args[0])
@@ -32,8 +32,8 @@ class AsyncAccountTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.account.get_2fa_setup_code()
+                async with self.api as api:
+                    await api.client.account.get_2fa_setup_code()
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/account/two-factor', args[0])
@@ -48,8 +48,8 @@ class AsyncAccountTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.account.enable_2fa('123456')
+                async with self.api as api:
+                    await api.client.account.enable_2fa('123456')
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/account/two-factor', args[0])
@@ -65,8 +65,8 @@ class AsyncAccountTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_delete.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.account.disable_2fa('password')
+                async with self.api as api:
+                    await api.client.account.disable_2fa('password')
                 
                 args, kwargs = mock_delete.call_args
                 self.assertIn('client/account/two-factor', args[0])
@@ -82,8 +82,8 @@ class AsyncAccountTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_put.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.account.update_email('new@test.com', 'password')
+                async with self.api as api:
+                    await api.client.account.update_email('new@test.com', 'password')
                 
                 args, kwargs = mock_put.call_args
                 self.assertIn('client/account/email', args[0])
@@ -99,8 +99,8 @@ class AsyncAccountTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_put.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.account.update_password('curr', 'new', 'new')
+                async with self.api as api:
+                    await api.client.account.update_password('curr', 'new', 'new')
                 
                 args, kwargs = mock_put.call_args
                 self.assertIn('client/account/password', args[0])
@@ -116,8 +116,8 @@ class AsyncAccountTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.account.api_key_list()
+                async with self.api as api:
+                    await api.client.account.api_key_list()
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/account/api-keys', args[0])
@@ -132,8 +132,8 @@ class AsyncAccountTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.account.api_key_create('desc', ['1.1.1.1'])
+                async with self.api as api:
+                    await api.client.account.api_key_create('desc', ['1.1.1.1'])
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/account/api-keys', args[0])
@@ -149,8 +149,8 @@ class AsyncAccountTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_delete.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.account.api_key_delete('key_id')
+                async with self.api as api:
+                    await api.client.account.api_key_delete('key_id')
                 
                 args, kwargs = mock_delete.call_args
                 self.assertIn('client/account/api-keys/key_id', args[0])

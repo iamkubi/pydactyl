@@ -16,8 +16,8 @@ class AsyncFilesTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.files.list_files('uuid', 'path/to/dir')
+                async with self.api as api:
+                    await api.client.servers.files.list_files('uuid', 'path/to/dir')
                 
                 args, kwargs = mock_get.call_args
                 self.assertIn('client/servers/uuid/files/list', args[0])
@@ -33,8 +33,8 @@ class AsyncFilesTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    url = await client.client.servers.files.download_file('uuid', 'file.txt')
+                async with self.api as api:
+                    url = await api.client.servers.files.download_file('uuid', 'file.txt')
                 
                 args, kwargs = mock_get.call_args
                 self.assertIn('client/servers/uuid/files/download', args[0])
@@ -51,8 +51,8 @@ class AsyncFilesTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.files.get_file_contents('uuid', 'file.txt')
+                async with self.api as api:
+                    await api.client.servers.files.get_file_contents('uuid', 'file.txt')
                 
                 args, kwargs = mock_get.call_args
                 self.assertIn('client/servers/uuid/files/contents', args[0])
@@ -67,8 +67,8 @@ class AsyncFilesTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_put.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.files.rename_file('uuid', 'old.txt', 'new.txt')
+                async with self.api as api:
+                    await api.client.servers.files.rename_file('uuid', 'old.txt', 'new.txt')
                 
                 args, kwargs = mock_put.call_args
                 self.assertIn('client/servers/uuid/files/rename', args[0])
@@ -84,8 +84,8 @@ class AsyncFilesTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.files.copy_file('uuid', 'file.txt')
+                async with self.api as api:
+                    await api.client.servers.files.copy_file('uuid', 'file.txt')
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/files/copy', args[0])
@@ -100,8 +100,8 @@ class AsyncFilesTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.files.write_file('uuid', 'file.txt', 'contents')
+                async with self.api as api:
+                    await api.client.servers.files.write_file('uuid', 'file.txt', 'contents')
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/files/write', args[0])
@@ -120,8 +120,8 @@ class AsyncFilesTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.files.compress_files('uuid', ['file1.txt'])
+                async with self.api as api:
+                    await api.client.servers.files.compress_files('uuid', ['file1.txt'])
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/files/compress', args[0])
@@ -136,8 +136,8 @@ class AsyncFilesTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.files.decompress_file('uuid', 'archive.tar.gz')
+                async with self.api as api:
+                    await api.client.servers.files.decompress_file('uuid', 'archive.tar.gz')
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/files/decompress', args[0])
@@ -152,8 +152,8 @@ class AsyncFilesTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.files.delete_files('uuid', ['file1.txt'])
+                async with self.api as api:
+                    await api.client.servers.files.delete_files('uuid', ['file1.txt'])
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/files/delete', args[0])
@@ -168,8 +168,8 @@ class AsyncFilesTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.files.create_folder('uuid', 'new_folder')
+                async with self.api as api:
+                    await api.client.servers.files.create_folder('uuid', 'new_folder')
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/files/create-folder', args[0])
@@ -185,8 +185,8 @@ class AsyncFilesTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    url = await client.client.servers.files.get_upload_file_url('uuid')
+                async with self.api as api:
+                    url = await api.client.servers.files.get_upload_file_url('uuid')
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/servers/uuid/files/upload', args[0])

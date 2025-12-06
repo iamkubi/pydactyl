@@ -16,8 +16,8 @@ class AsyncUsersTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.users.list_users('uuid')
+                async with self.api as api:
+                    await api.client.servers.users.list_users('uuid')
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/servers/uuid/users', args[0])
@@ -32,8 +32,8 @@ class AsyncUsersTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.users.create_user('uuid', 'test@test.com', ['control.start'])
+                async with self.api as api:
+                    await api.client.servers.users.create_user('uuid', 'test@test.com', ['control.start'])
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/users', args[0])
@@ -49,8 +49,8 @@ class AsyncUsersTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.users.get_user('uuid', 'uid')
+                async with self.api as api:
+                    await api.client.servers.users.get_user('uuid', 'uid')
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/servers/uuid/users/uid', args[0])
@@ -65,8 +65,8 @@ class AsyncUsersTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.users.update_user('uuid', 'uid', ['control.stop'])
+                async with self.api as api:
+                    await api.client.servers.users.update_user('uuid', 'uid', ['control.stop'])
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/users/uid', args[0])
@@ -81,8 +81,8 @@ class AsyncUsersTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_delete.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.users.delete_user('uuid', 'uid')
+                async with self.api as api:
+                    await api.client.servers.users.delete_user('uuid', 'uid')
                 
                 args, _ = mock_delete.call_args
                 self.assertIn('client/servers/uuid/users/uid', args[0])

@@ -16,8 +16,8 @@ class AsyncDatabasesTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.databases.list_databases('uuid')
+                async with self.api as api:
+                    await api.client.servers.databases.list_databases('uuid')
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/servers/uuid/databases', args[0])
@@ -32,8 +32,8 @@ class AsyncDatabasesTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.databases.create_database('uuid', 'dbname')
+                async with self.api as api:
+                    await api.client.servers.databases.create_database('uuid', 'dbname')
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/databases', args[0])
@@ -49,8 +49,8 @@ class AsyncDatabasesTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.databases.rotate_database_password('uuid', 'dbid')
+                async with self.api as api:
+                    await api.client.servers.databases.rotate_database_password('uuid', 'dbid')
                 
                 args, _ = mock_post.call_args
                 self.assertIn('client/servers/uuid/databases/dbid/rotate-password', args[0])
@@ -64,8 +64,8 @@ class AsyncDatabasesTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_delete.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.databases.delete_database('uuid', 'dbid')
+                async with self.api as api:
+                    await api.client.servers.databases.delete_database('uuid', 'dbid')
                 
                 args, _ = mock_delete.call_args
                 self.assertIn('client/servers/uuid/databases/dbid', args[0])

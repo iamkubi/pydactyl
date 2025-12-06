@@ -16,8 +16,8 @@ class AsyncNetworkTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_get.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.network.list_allocations('uuid')
+                async with self.api as api:
+                    await api.client.servers.network.list_allocations('uuid')
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/servers/uuid/network/allocations', args[0])
@@ -32,8 +32,8 @@ class AsyncNetworkTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.network.assign_allocation('uuid')
+                async with self.api as api:
+                    await api.client.servers.network.assign_allocation('uuid')
                 
                 args, _ = mock_post.call_args
                 self.assertIn('client/servers/uuid/network/allocations', args[0])
@@ -48,8 +48,8 @@ class AsyncNetworkTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.network.set_allocation_note('uuid', 1, 'note')
+                async with self.api as api:
+                    await api.client.servers.network.set_allocation_note('uuid', 1, 'note')
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/network/allocations/1', args[0])
@@ -65,8 +65,8 @@ class AsyncNetworkTests(unittest.TestCase):
                 mock_response.status = 200
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.network.set_primary_allocation('uuid', 1)
+                async with self.api as api:
+                    await api.client.servers.network.set_primary_allocation('uuid', 1)
                 
                 args, _ = mock_post.call_args
                 self.assertIn('client/servers/uuid/network/allocations/1/primary', args[0])
@@ -80,8 +80,8 @@ class AsyncNetworkTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_delete.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.network.unassign_allocation('uuid', 1)
+                async with self.api as api:
+                    await api.client.servers.network.unassign_allocation('uuid', 1)
                 
                 args, _ = mock_delete.call_args
                 self.assertIn('client/servers/uuid/network/allocations/1', args[0])

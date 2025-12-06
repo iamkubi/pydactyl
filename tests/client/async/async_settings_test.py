@@ -15,8 +15,8 @@ class AsyncSettingsTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.settings.rename_server('uuid', 'new name', 'new desc')
+                async with self.api as api:
+                    await api.client.servers.settings.rename_server('uuid', 'new name', 'new desc')
                 
                 args, kwargs = mock_post.call_args
                 self.assertIn('client/servers/uuid/settings/rename', args[0])
@@ -32,8 +32,8 @@ class AsyncSettingsTests(unittest.TestCase):
                 mock_response.status = 204
                 mock_post.return_value.__aenter__.return_value = mock_response
 
-                async with self.api as client:
-                    await client.client.servers.settings.reinstall_server('uuid')
+                async with self.api as api:
+                    await api.client.servers.settings.reinstall_server('uuid')
                 
                 args, _ = mock_post.call_args
                 self.assertIn('client/servers/uuid/settings/reinstall', args[0])
