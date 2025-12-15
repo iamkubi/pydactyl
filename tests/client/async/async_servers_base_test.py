@@ -1,6 +1,7 @@
+import asyncio
 import unittest
 from unittest import mock
-import asyncio
+from pydactyl.api.client.servers.async_websocket_client import AsyncWebsocketClient
 from pydactyl.async_api_client import AsyncPterodactylClient
 
 class AsyncServersBaseTests(unittest.TestCase):
@@ -105,6 +106,23 @@ class AsyncServersBaseTests(unittest.TestCase):
                 
                 args, _ = mock_get.call_args
                 self.assertIn('client/servers/uuid/websocket', args[0])
+
+        asyncio.run(run_test())
+
+    def test_get_websocket_client(self):
+        async def run_test():
+            with mock.patch('aiohttp.ClientSession.get') as mock_get:
+                mock_response = mock.Mock()
+                mock_response.json = mock.AsyncMock(return_value={'data': {'token': 'abc', 'socket': 'wss://test.com'}})
+                mock_response.status = 200
+                mock_get.return_value.__aenter__.return_value = mock_response
+
+                async with self.api as api:
+                    ws_client = await api.client.servers.get_websocket_client('uuid')
+                    
+                self.assertIsInstance(ws_client, AsyncWebsocketClient)
+                self.assertEqual(ws_client._token, 'abc')
+                self.assertEqual(ws_client._url, 'wss://test.com')
 
         asyncio.run(run_test())
 

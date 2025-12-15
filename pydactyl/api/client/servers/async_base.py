@@ -1,5 +1,6 @@
 from pydactyl.api import base
 from pydactyl.api.async_base import AsyncPterodactylAPI
+from pydactyl.api.client.servers.async_websocket_client import AsyncWebsocketClient
 from pydactyl.constants import POWER_SIGNALS
 from pydactyl.exceptions import BadRequestError
 from pydactyl.responses import PaginatedResponse
@@ -115,3 +116,22 @@ class AsyncServersBase(AsyncPterodactylAPI):
         endpoint = 'client/servers/{}/websocket'.format(server_id)
         response = await self._api_request(endpoint=endpoint, mode='GET')
         return response
+
+    async def get_websocket_client(self, server_id):
+        """Get an authenticated websocket client for the server.
+
+        Args:
+            server_id(str): Server identifier (abbreviated UUID)
+
+        Returns:
+            WebsocketClient: An instantiated and ready-to-connect websocket client.
+        """
+        response = await self.get_websocket(server_id)
+        data = response['data']
+
+        async def refresh_token():
+            return await self.get_websocket(server_id)
+
+        return AsyncWebsocketClient(url=data['socket'], token=data['token'],
+                                    session=self._session,
+                                    token_refresher=refresh_token)
