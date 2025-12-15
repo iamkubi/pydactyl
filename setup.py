@@ -34,12 +34,14 @@ setuptools.setup(
     ],
     python_requires='>=3.4',
     install_requires=[
-        "aiohttp"
+        "aiohttp",
         "requests >=2.21.0",
+        "websocket-client",
     ],
     tests_require=[
         "pytest >=3",
         "pytest-cov",
+        "asyncio",
     ],
     project_urls={
         "Documentation": "https://pydactyl.readthedocs.io/",
