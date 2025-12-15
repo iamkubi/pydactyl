@@ -78,7 +78,7 @@ class WebsocketClient:
         """Request server stats, e.g. CPU, memory, disk usage."""
         self.send("stats")
 
-    def listen(self, events : list[str] = (), exclude_events : list[str] = ()):
+    def listen(self, events = (), exclude_events = ()):
         """Generator that yields events from the server.
         
         Args:

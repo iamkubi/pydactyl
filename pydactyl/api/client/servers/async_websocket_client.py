@@ -49,7 +49,7 @@ class AsyncWebsocketClient:
         """Authenticate with the server."""
         await self.send("auth", [self._token])
 
-    async def send(self, event: str, args: list[str] = None):
+    async def send(self, event: str, args = None):
         """Send an event to the server.
 
         Args:
@@ -86,7 +86,7 @@ class AsyncWebsocketClient:
         """Request server stats."""
         await self.send("send stats")
 
-    async def listen(self, events: list[str] = (), exclude_events: list[str] = ()):
+    async def listen(self, events = (), exclude_events = ()):
         """Async generator that yields messages from the server.
         
         Args:
