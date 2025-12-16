@@ -1,0 +1,4 @@
+body[data-theme="dark"] {
+  --color-api-name: #71adff;
+  --color-api-pre-name: #71adff;
+}
