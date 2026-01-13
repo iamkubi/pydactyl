@@ -15,6 +15,8 @@ The 2.0 Pydactyl release was created to standardize how includes and params
 are passed. As a result some endpoints (namely nests) **will break** when
 upgrading from Pydactyl 1.x to 2.0.
 
+The 2.1 Pydactyl release introduced an async client and greatly improved websocket support.
+
 Pull Requests are being accepted and new endpoints will continue to be added.
 
 If you encounter problems, find APIs that haven't been implemented, or have a
