@@ -37,10 +37,11 @@ def url_join(*args):
 class PterodactylAPI(object):
     """Pterodactyl API client."""
 
-    def __init__(self, url, api_key, session=None):
+    def __init__(self, url, api_key, session=None, origin=None):
         self._api_key = api_key
         self._url = url
         self._session = session or requests.Session()
+        self._origin = origin
 
     def _get_headers(self):
         """Headers to use for API calls."""

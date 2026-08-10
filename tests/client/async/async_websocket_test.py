@@ -19,12 +19,25 @@ class AsyncWebsocketTests(unittest.TestCase):
                 
                 await self.ws_client.connect()
                 
-                mock_ws_connect.assert_called_with(self.url)
+                mock_ws_connect.assert_called_with(self.url, headers=None)
                 # Check authentication message
                 expected_auth = {"event": "auth", "args": [self.token]}
                 # The first send_json call should be auth
                 args, _ = mock_ws.send_json.call_args
                 self.assertEqual(args[0], expected_auth)
+
+        asyncio.run(run_test())
+
+    def test_connect_with_origin(self):
+        async def run_test():
+            ws_client = AsyncWebsocketClient(self.url, self.token, origin='https://panel.dummy.com')
+            with mock.patch('aiohttp.ClientSession.ws_connect', new_callable=mock.AsyncMock) as mock_ws_connect:
+                mock_ws = mock.AsyncMock()
+                mock_ws_connect.return_value = mock_ws
+                
+                await ws_client.connect()
+                
+                mock_ws_connect.assert_called_with(self.url, headers={'Origin': 'https://panel.dummy.com'})
 
         asyncio.run(run_test())
 

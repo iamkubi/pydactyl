@@ -123,6 +123,38 @@ class AsyncServersBaseTests(unittest.TestCase):
                 self.assertIsInstance(ws_client, AsyncWebsocketClient)
                 self.assertEqual(ws_client._token, 'abc')
                 self.assertEqual(ws_client._url, 'wss://test.com')
+                self.assertIsNone(ws_client._origin)
+
+        asyncio.run(run_test())
+
+    def test_get_websocket_client_with_origin(self):
+        async def run_test():
+            with mock.patch('aiohttp.ClientSession.get') as mock_get:
+                mock_response = mock.Mock()
+                mock_response.json = mock.AsyncMock(return_value={'data': {'token': 'abc', 'socket': 'wss://test.com'}})
+                mock_response.status = 200
+                mock_get.return_value.__aenter__.return_value = mock_response
+
+                async with self.api as api:
+                    ws_client = await api.client.servers.get_websocket_client('uuid', origin='https://custom.origin.com')
+                    
+                self.assertEqual(ws_client._origin, 'https://custom.origin.com')
+
+        asyncio.run(run_test())
+
+    def test_get_websocket_client_client_level_origin(self):
+        async def run_test():
+            with mock.patch('aiohttp.ClientSession.get') as mock_get:
+                mock_response = mock.Mock()
+                mock_response.json = mock.AsyncMock(return_value={'data': {'token': 'abc', 'socket': 'wss://test.com'}})
+                mock_response.status = 200
+                mock_get.return_value.__aenter__.return_value = mock_response
+
+                api_inst = AsyncPterodactylClient(url='https://dummy.com', api_key='dummy', origin='https://client.origin.com')
+                async with api_inst as api:
+                    ws_client = await api.client.servers.get_websocket_client('uuid')
+                    
+                self.assertEqual(ws_client._origin, 'https://client.origin.com')
 
         asyncio.run(run_test())
 

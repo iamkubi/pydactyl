@@ -116,11 +116,13 @@ class ServersBase(base.PterodactylAPI):
         response = self._api_request(endpoint=endpoint, mode='GET')
         return response
 
-    def get_websocket_client(self, server_id):
+    def get_websocket_client(self, server_id, origin=None):
         """Get an authenticated websocket client for the server.
 
         Args:
             server_id(str): Server identifier (abbreviated UUID)
+            origin(str, optional): Custom origin header for websocket connection.
+                    If not specified, uses origin from client instance.
 
         Returns:
             WebsocketClient: An instantiated and ready-to-connect websocket client.
@@ -131,5 +133,6 @@ class ServersBase(base.PterodactylAPI):
         def refresh_token():
             return self.get_websocket(server_id)
 
+        ws_origin = origin if origin is not None else getattr(self, '_origin', None)
         return WebsocketClient(url=data['socket'], token=data['token'],
-                               token_refresher=refresh_token)
+                               token_refresher=refresh_token, origin=ws_origin)

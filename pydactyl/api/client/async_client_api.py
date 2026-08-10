@@ -21,12 +21,15 @@ class AsyncClientAPI(AsyncPterodactylAPI):
 
     @property
     def account(self):
-        self._account = AsyncAccount(self._url, self._api_key, self._session)
+        self._account = AsyncAccount(self._url, self._api_key, self._session,
+                                     origin=self._origin)
         return self._account
 
     @property
     def servers(self):
-        self._servers = AsyncClientServersAPI(self._url, self._api_key, self._session)
+        self._servers = AsyncClientServersAPI(self._url, self._api_key,
+                                              self._session,
+                                              origin=self._origin)
         return self._servers
 
 

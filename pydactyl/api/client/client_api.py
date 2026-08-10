@@ -30,12 +30,14 @@ class ClientAPI(PterodactylAPI):
 
     @property
     def account(self):
-        self._account = Account(self._url, self._api_key)
+        self._account = Account(self._url, self._api_key, self._session,
+                                origin=self._origin)
         return self._account
 
     @property
     def servers(self):
-        self._servers = ClientServersAPI(self._url, self._api_key)
+        self._servers = ClientServersAPI(self._url, self._api_key,
+                                         self._session, origin=self._origin)
         return self._servers
 
 

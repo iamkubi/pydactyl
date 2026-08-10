@@ -16,7 +16,8 @@ def get_logger() -> logging.Logger:
 class AsyncPterodactylClient(object):
     """Async Pterodactyl Client."""
 
-    def __init__(self, url=None, api_key=None, logger: logging.Logger = get_logger()):
+    def __init__(self, url=None, api_key=None, origin=None,
+                 logger: logging.Logger = get_logger()):
         if not url:
             raise ClientConfigError(
                 'You must specify the hostname of a Pterodactyl instance.')
@@ -27,6 +28,7 @@ class AsyncPterodactylClient(object):
 
         self._api_key = api_key
         self._url = url
+        self._origin = origin
         self._logger = logger
         self._session = None
         self._client = None
@@ -50,7 +52,8 @@ class AsyncPterodactylClient(object):
 
     @property
     def client(self):
-        self._client = AsyncClientAPI(self._url, self._api_key, self._session)
+        self._client = AsyncClientAPI(self._url, self._api_key, self._session,
+                                      origin=self._origin)
         return self._client
 
     @property

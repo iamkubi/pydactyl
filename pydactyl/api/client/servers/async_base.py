@@ -117,14 +117,16 @@ class AsyncServersBase(AsyncPterodactylAPI):
         response = await self._api_request(endpoint=endpoint, mode='GET')
         return response
 
-    async def get_websocket_client(self, server_id):
+    async def get_websocket_client(self, server_id, origin=None):
         """Get an authenticated websocket client for the server.
 
         Args:
             server_id(str): Server identifier (abbreviated UUID)
+            origin(str, optional): Custom origin header for websocket connection.
+                    If not specified, uses origin from client instance.
 
         Returns:
-            WebsocketClient: An instantiated and ready-to-connect websocket client.
+            AsyncWebsocketClient: An instantiated and ready-to-connect websocket client.
         """
         response = await self.get_websocket(server_id)
         data = response['data']
@@ -132,6 +134,8 @@ class AsyncServersBase(AsyncPterodactylAPI):
         async def refresh_token():
             return await self.get_websocket(server_id)
 
+        ws_origin = origin if origin is not None else getattr(self, '_origin', None)
         return AsyncWebsocketClient(url=data['socket'], token=data['token'],
                                     session=self._session,
-                                    token_refresher=refresh_token)
+                                    token_refresher=refresh_token,
+                                    origin=ws_origin)

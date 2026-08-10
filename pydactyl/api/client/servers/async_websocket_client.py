@@ -10,7 +10,7 @@ class AsyncWebsocketClient:
     and receive events from the server console.
     """
 
-    def __init__(self, url, token, session=None, token_refresher=None):
+    def __init__(self, url, token, session=None, token_refresher=None, origin=None):
         """Initialize the Websocket client.
 
         Args:
@@ -18,11 +18,13 @@ class AsyncWebsocketClient:
             token (str): The authentication token.
             session (aiohttp.ClientSession, optional): Existing aiohttp session.
             token_refresher (function, optional): Async function to refresh the token.
+            origin (str, optional): Custom origin header for websocket connection.
         """
         self._url = url
         self._token = token
         self._session = session
         self._token_refresher = token_refresher
+        self._origin = origin
         self._ws = None
         self._logger = logging.getLogger(__name__)
 
@@ -31,7 +33,12 @@ class AsyncWebsocketClient:
         if self._session is None or self._session.closed:
             self._session = aiohttp.ClientSession()
 
-        self._ws = await self._session.ws_connect(self._url)
+        headers = {}
+        if self._origin:
+            headers['Origin'] = self._origin
+
+        self._ws = await self._session.ws_connect(
+            self._url, headers=headers if headers else None)
         await self.authenticate()
 
     async def close(self):

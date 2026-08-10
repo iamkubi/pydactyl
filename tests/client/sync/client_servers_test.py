@@ -81,6 +81,19 @@ class ClientServersTests(unittest.TestCase):
         self.api.client.servers.get_websocket(44)
         mock_api.assert_called_with(**expected)
 
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_get_websocket_client_with_origin(self, mock_api):
+        mock_api.return_value = {'data': {'token': 'abc', 'socket': 'wss://test.com'}}
+        ws_client = self.api.client.servers.get_websocket_client(44, origin='https://custom.origin.com')
+        self.assertEqual(ws_client._origin, 'https://custom.origin.com')
+
+    @mock.patch('pydactyl.api.base.PterodactylAPI._api_request')
+    def test_get_websocket_client_client_level_origin(self, mock_api):
+        mock_api.return_value = {'data': {'token': 'abc', 'socket': 'wss://test.com'}}
+        api = PterodactylClient(url='dummy', api_key='dummy', origin='https://client.origin.com')
+        ws_client = api.client.servers.get_websocket_client(44)
+        self.assertEqual(ws_client._origin, 'https://client.origin.com')
+
 
 if __name__ == '__main__':
     unittest.main()

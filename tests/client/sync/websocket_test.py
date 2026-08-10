@@ -21,6 +21,16 @@ class WebsocketTests(unittest.TestCase):
             
             mock_ws.send.assert_called_with(expected_auth)
 
+    def test_connect_with_origin(self):
+        ws_client = WebsocketClient(self.url, self.token, origin='https://panel.dummy.com')
+        with mock.patch('websocket.create_connection') as mock_create_connection:
+            mock_ws = mock.Mock()
+            mock_create_connection.return_value = mock_ws
+            
+            ws_client.connect()
+            
+            mock_create_connection.assert_called_with(self.url, origin='https://panel.dummy.com')
+
     def test_send_command(self):
         self.ws_client._ws = mock.Mock()
         self.ws_client.send_command('help')

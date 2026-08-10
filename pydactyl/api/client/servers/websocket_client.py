@@ -9,23 +9,28 @@ class WebsocketClient:
     and receive events from the server console.
     """
 
-    def __init__(self, url, token, token_refresher=None):
+    def __init__(self, url, token, token_refresher=None, origin=None):
         """Initialize the Websocket client.
 
         Args:
             url (str): The websocket URL to connect to.
             token (str): The authentication token.
             token_refresher (callable, optional): Function to refresh the token.
+            origin (str, optional): Custom origin header for websocket connection.
         """
         self._url = url
         self._token = token
         self._token_refresher = token_refresher
+        self._origin = origin
         self._ws = None
         self._logger = logging.getLogger(__name__)
 
     def connect(self):
         """Connect to the websocket."""
-        self._ws = websocket.create_connection(self._url)
+        kwargs = {}
+        if self._origin:
+            kwargs['origin'] = self._origin
+        self._ws = websocket.create_connection(self._url, **kwargs)
         self.authenticate()
 
     def close(self):

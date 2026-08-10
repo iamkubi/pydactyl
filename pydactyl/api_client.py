@@ -34,7 +34,8 @@ class PterodactylClient(object):
     """
 
     def __init__(self, url=None, api_key=None, backoff_factor=1, retries=3,
-                 extra_retry_codes=[], logger: logging.Logger = get_logger()):
+                 extra_retry_codes=[], origin=None,
+                 logger: logging.Logger = get_logger()):
         """Initialize a Pterodactyl class instance.
 
         Args:
@@ -44,6 +45,7 @@ class PterodactylClient(object):
             retries(int): maximum number of retries per call
             extra_retry_codes(iter): list of additional integer HTTP status
                     codes to retry on, e.g. [502, 504]
+            origin(str, optional): Custom origin header for websocket connections.
             logger(logging.Logger): the logger that Pydactyl will use
         """
         if not url:
@@ -56,6 +58,7 @@ class PterodactylClient(object):
 
         self._api_key = api_key
         self._url = url
+        self._origin = origin
         self._logger = logger
 
         self._session = requests.Session()
@@ -74,7 +77,8 @@ class PterodactylClient(object):
 
     @property
     def client(self):
-        self._client = ClientAPI(self._url, self._api_key, self._session)
+        self._client = ClientAPI(self._url, self._api_key, self._session,
+                                 origin=self._origin)
         return self._client
 
     @property
