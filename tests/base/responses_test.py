@@ -3,7 +3,7 @@ from copy import deepcopy
 from unittest import mock
 
 from pydactyl import PterodactylClient
-from pydactyl.responses import PaginatedResponse
+from pydactyl.responses import Page, PaginatedResponse
 
 TEST_META = {
     'pagination':
@@ -15,13 +15,20 @@ TEST_META = {
                         '/allocations?page=1'}}}
 TEST_DATA = {'data': [{'dummy': 'data1'}, {'dummy': 'data2'}], 'meta':
     TEST_META}
+LAST_PAGE_META = {
+    'pagination':
+        {'total': 106, 'count': 1, 'per_page': 25, 'current_page': 5,
+         'total_pages': 5, 'links': {
+            'previous': 'https://panel.mydomain.com/api/application/nodes/1'
+                        '/allocations?page=4'}}}
 
 MULTIPAGE_TEST_DATA = [
     {'data': ['thing1', 'thing2', 'sometimespage1isweird'], 'meta': TEST_META},
     {'data': ['thing3', 'thing4'], 'meta': TEST_META},
     {'data': ['thing84', 'thing97', 'fdas', 'pepperoni'], 'meta': TEST_META},
     {'data': ['one', 'two', 'three', 4, 5, '6'], 'meta': TEST_META},
-    {'data': ['pineappleisanacceptablepizzatopping'], 'meta': TEST_META},
+    {'data': ['pineappleisanacceptablepizzatopping'],
+     'meta': LAST_PAGE_META},
 ]
 
 
@@ -126,3 +133,68 @@ class PaginatedResponseTests(unittest.TestCase):
         response = PaginatedResponse(self.client, 'anyendpoint', TEST_DATA)
 
         self.assertEqual(106, len(response))
+
+    def test_paginated_response_yields_page_objects(self):
+        self.client._api_request = mock.MagicMock()
+        self.client._api_request.side_effect = MULTIPAGE_TEST_DATA[1:]
+        response = PaginatedResponse(self.client, 'asdf',
+                                     MULTIPAGE_TEST_DATA[0])
+        pages = list(response)
+        self.assertEqual(len(MULTIPAGE_TEST_DATA), len(pages))
+        for number, (page, expected) in enumerate(
+                zip(pages, MULTIPAGE_TEST_DATA), start=1):
+            self.assertIsInstance(page, Page)
+            self.assertEqual(number, page.number)
+            self.assertEqual(expected['data'], page.data)
+            self.assertEqual(expected['meta'], page.meta)
+            self.assertEqual(len(expected['data']), len(page))
+            self.assertEqual(expected['data'], list(page))
+
+    def test_paginated_response_requests_sequential_pages(self):
+        self.client._api_request = mock.MagicMock()
+        self.client._api_request.side_effect = MULTIPAGE_TEST_DATA[1:]
+        response = PaginatedResponse(self.client, 'asdf',
+                                     MULTIPAGE_TEST_DATA[0])
+        list(response)
+        self.assertEqual(
+            [mock.call(endpoint='asdf', params={'page': n})
+             for n in range(2, len(MULTIPAGE_TEST_DATA) + 1)],
+            self.client._api_request.call_args_list)
+
+    def test_paginated_response_can_be_iterated_repeatedly(self):
+        self.client._api_request = mock.MagicMock()
+        self.client._api_request.side_effect = (MULTIPAGE_TEST_DATA[1:]
+                                                * 2)
+        response = PaginatedResponse(self.client, 'asdf',
+                                     MULTIPAGE_TEST_DATA[0])
+        expected = [item for data in MULTIPAGE_TEST_DATA for item in
+                    data['data']]
+        self.assertListEqual(expected,
+                             [item for page in response for item in page])
+        self.assertListEqual(expected, response.collect())
+
+    def test_paginated_response_data_is_first_page_after_iteration(self):
+        self.client._api_request = mock.MagicMock()
+        self.client._api_request.side_effect = MULTIPAGE_TEST_DATA[1:]
+        response = PaginatedResponse(self.client, 'asdf',
+                                     MULTIPAGE_TEST_DATA[0])
+        list(response)
+        self.assertEqual(MULTIPAGE_TEST_DATA[0]['data'], response.data)
+        self.assertEqual(MULTIPAGE_TEST_DATA[0]['meta'], response.meta)
+
+    def test_paginated_response_iter_of_iter_is_same_iterator(self):
+        response = PaginatedResponse(self.client, 'anyendpoint', TEST_DATA)
+        it = iter(response)
+        self.assertIs(it, iter(it))
+
+    def test_page_accessors(self):
+        page = Page(TEST_DATA['data'], TEST_META, 1)
+        self.assertEqual('data1', page[0]['dummy'])
+        self.assertEqual(TEST_META, page['meta'])
+        self.assertEqual(TEST_META, page.get('meta'))
+        self.assertEqual('dflt', page.get('nope', 'dflt'))
+        self.assertEqual(str(TEST_DATA['data']), str(page))
+        self.assertEqual(TEST_META['pagination']['links']['next'],
+                         page.get_next_page_link())
+        self.assertEqual(TEST_META['pagination']['links']['previous'],
+                         page.get_previous_page_link())

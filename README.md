@@ -384,10 +384,14 @@ Example scripts for using the websocket clients can be found at:
 ## Paginated Responses
 
 Pydactyl API responses return
-a [PaginatedResponse object](pydactyl/responses.py#L4) that can be iterated over
+a [PaginatedResponse object](pydactyl/responses.py) that can be iterated over
 to automatically fetch additional pages as required. This is currently
 implemented on many endpoints which frequently return multi-page responses,
 but not all.
+
+Iterating over a `PaginatedResponse` yields a `Page` object for each page of
+results. Iterating over a `Page` yields the individual items on that page.
+Each `Page` also exposes `data`, `meta` and `number` (1-based page number).
 
 ```python
 # Create a list of all ports
@@ -399,6 +403,11 @@ for page in allocs:
 len(ports)
 151
 ```
+
+Every iteration starts again from the first page, so a `PaginatedResponse` can
+be iterated over more than once (each pass re-fetches pages 2 onwards). The
+`data` and `meta` attributes of the `PaginatedResponse` itself always refer to
+the first page.
 
 #### collect()
 
